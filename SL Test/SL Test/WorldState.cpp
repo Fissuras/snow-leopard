@@ -1,35 +1,28 @@
-#include <string>
-using namespace std;
-class WorldState
+#include "WorldState.h"
+#include "GameObject.h"
+
+bool WorldState::insertObject(GameObject* gameObject, int location[2])
 {
-	typedef List<GameObject*>[][] MatrixType;
-	private MatrixType worldMatrix; //2d array of gameobjects. (each x,y holds a list)
+	return true;
+}
 
-	bool insertObject(GameObject* gameObject, int[2] location)
-	{
+bool WorldState::deleteObject(GameObject* gameObject)
+{
+	return true;
+}
 
-	}
+bool WorldState::moveObject(GameObject* gameObject, int location[2])
+{
+	return true;
+}
 
-	bool deleteObject(GameObject* gameObject)
-	{
+bool WorldState::getEnvironment(int location[2], int size, MatrixType* memory)
+{
+	return true;
+}
 
-	}
-
-	bool moveObject(GameObject* gameObject, int[2] location)
-	{
-
-	}
-
-	bool getEnvironment(int[2] location, int size, MatrixType* memory)
-	{
-
-	}
-
-	List<GameObject*> getAtLocation(int[2])
-	{
-
-	}
-
-
-
+GameObjectList WorldState::getAtLocation(int location[2])
+{
+	GameObjectList empty;
+	return empty;
 }
