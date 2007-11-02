@@ -1,29 +1,14 @@
-#include <string>
+#include "GameObject.h"
+#include "WorldState.h"
 using namespace std;
-class GameObject
+
+bool GameObject::doActions(WorldState* worldState)
 {
-	string displayName; 
-	private float velocity [2];
-	int faction;
-	int displaySize;
-	int[2] location;
+	return true;
+}
 
-	int displayID;
-	int sourceSize;
-	int displayOffset; // if there are multiple display frames in one bitmap, choose which one the GameObject has
-
-	
-
-	bool doActions(WorldState* worldState)
-	{
-		return true;
-	}
-
-	bool registerCollision(list<GameObject*> collisions)
-	{
-		return true;
-	}
-
-
+bool GameObject::registerCollision(list<GameObject*> collisions)
+{
+	return true;
 }
 
