@@ -178,10 +178,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GameObject.h"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -190,15 +186,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Matrix.h"
+				RelativePath=".\Renderer.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\WorldState.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\WorldState.h"
 				>
 			</File>
 		</Filter>
@@ -207,6 +199,22 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\GameObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Matrix.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Renderer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\WorldState.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
