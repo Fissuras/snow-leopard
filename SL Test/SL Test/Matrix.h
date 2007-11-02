@@ -1,8 +1,14 @@
 // Matrix.h: interface for the Matrix class.
 //
 //////////////////////////////////////////////////////////////////////
+#include <assert.h>
 
 template <class T>
+
+
+
+#define ASSERT(x) assert(x)
+
 class Container2DRow
 {
 public:
@@ -13,6 +19,8 @@ public:
 	int m_nXSize;
 };
 ///Class container
+
+
 
 template<class T> 
 const T& Container2DRow<T>::operator [] (int j) const 

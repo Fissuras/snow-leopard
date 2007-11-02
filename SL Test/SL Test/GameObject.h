@@ -9,10 +9,10 @@ class WorldState;
 
 class GameObject{
 public:
-bool doActions(WorldState* worldState);
-bool registerCollision(std::list<GameObject*> collisions);
+	bool doActions(WorldState* worldState);
+	bool registerCollision(std::list<GameObject*> collisions);
+	GameObject::GameObject();
 
-private:
 	std::string displayName; 
 	float velocity[2];
 	int faction;
