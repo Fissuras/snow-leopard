@@ -171,45 +171,43 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\SL Test\SL Test\GameObject.cpp"
+				RelativePath=".\GameObject.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\main.cpp"
+				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\Matrix.cpp"
+				RelativePath=".\Matrix.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\Renderer.cpp"
+				RelativePath=".\Renderer.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\WorldState.cpp"
+				RelativePath=".\WorldState.cpp"
 				>
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
-			Filter="h;hpp;hxx;hm;inl;inc;xsd"
-			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\SL Test\SL Test\GameObject.h"
+				RelativePath=".\GameObject.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\Matrix.h"
+				RelativePath=".\Matrix.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\Renderer.h"
+				RelativePath=".\Renderer.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\SL Test\SL Test\WorldState.h"
+				RelativePath=".\WorldState.h"
 				>
 			</File>
 		</Filter>
