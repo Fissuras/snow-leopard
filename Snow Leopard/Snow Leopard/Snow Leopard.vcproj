@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="SDL.lib SDLMain.lib SDL_TTF.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -179,10 +180,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Matrix.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\Renderer.cpp"
 				>
 			</File>
@@ -199,7 +196,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Matrix.h"
+				RelativePath=".\point.h"
 				>
 			</File>
 			<File

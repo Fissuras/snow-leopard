@@ -4,25 +4,29 @@
 #include <list>
 
 #include "GameObject.h"
-#include "Matrix.h"
+#include "point.h"
+#include "Boost/multi_array.hpp"
+#include <boost/ptr_container/ptr_list.hpp>
 
 class GameObject;
 
-typedef std::list<GameObject*> GameObjectList;
+typedef boost::ptr_list<GameObject> GameObjectList;
 
 class WorldState
 {
 public:
 
+int xsize;
+int ysize;
 WorldState::WorldState();
-bool insertObject(GameObject* gameObject, int location[2]);
+bool insertObject(GameObject* gameObject, point *p);
 bool deleteObject(GameObject* gameObject);
-bool moveObject(GameObject* gameObject, int location[2]);
-bool getEnvironment(int location[2], int size, Matrix<GameObjectList>* memory);
-GameObjectList getAtLocation(int[2]);
+bool moveObject(GameObject* gameObject, point *p);
+bool getEnvironment(point *p, int size, GameObjectList** memory);
+GameObjectList* getAtLocation(point *p);
 
 private:
-	Matrix<GameObjectList> *worldMatrix; //2d array of gameobjects. (each x,y holds a list)
+	GameObjectList*** worldMatrix;
 };
 
 #endif

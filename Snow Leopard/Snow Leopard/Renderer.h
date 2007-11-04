@@ -3,6 +3,7 @@
 
 #include "WorldState.h"
 #include "GameObject.h"
+#include "SDL.h"
 
 class WorldState;
 class GameObject;
