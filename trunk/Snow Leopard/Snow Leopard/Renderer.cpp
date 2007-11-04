@@ -4,6 +4,7 @@
 #include <SDL_TTF.h>
 #include "Renderer.h"
 
+
 bool Renderer::Render(WorldState* worldState)
 {
 	return true;
@@ -31,4 +32,3 @@ bool Renderer::init()
 		return false;
 	}
 }
-

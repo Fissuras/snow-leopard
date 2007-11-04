@@ -3,14 +3,15 @@
 #include <list>
 #include <string>
 
-#include "WorldState.h"
 
 class WorldState;
-
 class GameObject{
+
+	typedef std::list<GameObject*> GameObjectList;
+
 public:
 	bool doActions(WorldState* worldState);
-	bool registerCollision(std::list<GameObject*> collisions);
+	bool registerCollision(GameObjectList collisions);
 	GameObject::GameObject();
 
 	std::string displayName; 
