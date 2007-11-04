@@ -2,8 +2,12 @@
 #include "WorldState.h"
 
 
-GameObject::GameObject()
+GameObject::GameObject(std::string name, int fact, point* p)
 {
+	displayName = name;
+	faction = fact;
+	location = *p;
+
 }
 
 bool GameObject::doActions(WorldState* worldState)

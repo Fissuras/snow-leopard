@@ -5,12 +5,12 @@
 
 #include "GameObject.h"
 #include "point.h"
-#include "Boost/multi_array.hpp"
-#include <boost/ptr_container/ptr_list.hpp>
+#include <set>
 
 class GameObject;
 
-typedef boost::ptr_list<GameObject> GameObjectList;
+typedef std::set<GameObject*> GameObjectList;
+typedef std::set <GameObject*>::iterator GameObjectIter;
 
 class WorldState
 {

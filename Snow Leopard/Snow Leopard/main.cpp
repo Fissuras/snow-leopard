@@ -3,25 +3,20 @@
 #include "GameObject.h"
 #include "WorldState.h"
 #include "point.h"
+#include "Renderer.h"
 
 int main( int argc, char* args[] )
 {
-	/*Renderer gameRenderer = Renderer();
+	Renderer gameRenderer = Renderer();
 	gameRenderer.init();
-	SDL_Delay( 2000 );*/
     
-	GameObject *g = new GameObject();
-	g->displayName = "Test";
+	GameObject *g = new GameObject("Arbiter",0);
+	g->displayID = "images/Chmmr.gif"
 
 	WorldState *state = new WorldState();
-	point *p = new point();
-	p->x = 4;
-	p->y = 4;
-	state->insertObject(g,p);
+	state->insertObject(g,new point(4,4));
 
-	GameObjectList* list = new GameObjectList();
-	list->push_front(g);
-	std::cout << (list->pop_front())->displayName;
+	gameRenderer.Render(state);
 
 	system("pause");
 

@@ -180,6 +180,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\point.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\Renderer.cpp"
 				>
 			</File>
