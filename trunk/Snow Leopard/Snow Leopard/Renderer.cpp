@@ -4,8 +4,39 @@
 #include <SDL_TTF.h>
 #include "Renderer.h"
 #include <iostream>
+#include "SDL_image.h"
 
-//Low end version
+
+SDL_Surface* Renderer::load_image( std::string filename ) 
+{
+    SDL_Surface* loadedImage;
+    SDL_Surface* optimizedImage;
+
+	loadedImage =  IMG_Load( filename.c_str());
+    optimizedImage = SDL_DisplayFormat( loadedImage );
+        
+    SDL_FreeSurface( loadedImage );
+
+    return optimizedImage;
+}
+
+bool Renderer::LoadImages(GameObjectQueue* queue)
+{
+	for (int i = 0;i<queue->size();i++)
+	{
+		GameObject* obj = queue->top();
+		queue->pop();
+		SDL_Surface* ptr = load_image(obj->imageSource);
+
+		//might want to make sourceSize have height and width,
+		//to support rectangles instead of just squares
+		obj->sourceSize = ptr->w; 
+		obj->displaySize = ptr->w;
+		
+		imageMap[obj->ID] = ptr;
+	}
+	return true;
+}
 bool Renderer::Render(WorldState* state)
 {
 	for (int x = 0;x<state->xsize;x++)
@@ -17,35 +48,30 @@ bool Renderer::Render(WorldState* state)
 			for (itr = list->begin();itr!=list->end();itr++)
 			{
 				GameObject* obj = *itr;
-				std::cout << obj->displayName;
-				std::cout << " " << obj->location.toString() << "\n";
+				SDL_Rect* dest_rect;
+				dest_rect = new SDL_Rect();
+				dest_rect->x = obj->location.x - obj->displaySize / 2;
+				dest_rect->y = obj->location.y - obj->displaySize / 2;
+				SDL_BlitSurface( imageMap[obj->ID], NULL, screen, dest_rect );
 			}
 		}
 	}
+
+	SDL_Flip(screen);
 	return true;
 }
 
 bool Renderer::init()
 {
-	//try
-	//{
-	//SDL_Init(SDL_INIT_EVERYTHING);
-	//TTF_Init();
- //   atexit(TTF_Quit);
-	//atexit(SDL_Quit);
+	SDL_Init(SDL_INIT_EVERYTHING);
+	TTF_Init();
+    atexit(TTF_Quit);
+	atexit(SDL_Quit);
 
-	//SDL_WM_SetCaption( "Snow Leopard", NULL );
- //   
-	//SDL_Surface *screen = NULL;
- //   screen = SDL_SetVideoMode( 0, 0, 0, SDL_FULLSCREEN | SDL_HWSURFACE | SDL_DOUBLEBUF); //0 means current mode
-	//int screenWidth = SDL_GetVideoInfo()->current_w;
-	//int screenHeight = SDL_GetVideoInfo()->current_h;
-	//return true;
-	//}
-	//catch(...)
-	//{
-	//	return false;
-	//}
-	
+	SDL_WM_SetCaption( "Snow Leopard", NULL );
+
+    screen = SDL_SetVideoMode( 0, 0, 0, SDL_RESIZABLE | SDL_HWSURFACE | SDL_DOUBLEBUF);
+	int screenWidth = SDL_GetVideoInfo()->current_w;
+	int screenHeight = SDL_GetVideoInfo()->current_h;
 	return true;
 }

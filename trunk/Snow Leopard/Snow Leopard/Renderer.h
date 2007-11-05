@@ -4,6 +4,7 @@
 #include "WorldState.h"
 #include "GameObject.h"
 #include "SDL.h"
+#include <map>
 
 class WorldState;
 class GameObject;
@@ -14,6 +15,12 @@ public:
 	bool init();
 	int screenWidth;
 	int screenHeight;
+	bool LoadImages(GameObjectQueue* list);
+
+private:
+	SDL_Surface* load_image( std::string filename ) ;
+	std::map<int,SDL_Surface*> imageMap;
+	SDL_Surface* screen;
 
 };
 
