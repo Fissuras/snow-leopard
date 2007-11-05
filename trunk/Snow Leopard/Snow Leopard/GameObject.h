@@ -7,13 +7,14 @@
 
 
 class WorldState;
-class GameObject{
+ class GameObject{
+
+public:
 
 	typedef std::list<GameObject*> GameObjectList;
 	typedef std::set <GameObject*>::iterator GameObjectIter;
-
-public:
-	bool doActions(WorldState* worldState);
+	bool operator<(GameObject &b);
+	virtual bool doActions(WorldState* worldState);
 	bool registerCollision(GameObjectList collisions);
 	GameObject::GameObject(std::string displayName = "", int faction=0, point* p=new point(0,0));
 
@@ -22,6 +23,7 @@ public:
 	int faction;
 	int displaySize;
 	point location;
+	int priority;
 
 	std::string displayID;
 	int sourceSize;

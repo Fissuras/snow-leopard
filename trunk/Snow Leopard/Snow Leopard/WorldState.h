@@ -2,15 +2,16 @@
 #define WORLDSTATE_H_
 
 #include <list>
-
+#include <queue>
 #include "GameObject.h"
 #include "point.h"
 #include <set>
 
 class GameObject;
 
-typedef std::set<GameObject*> GameObjectList;
-typedef std::set <GameObject*>::iterator GameObjectIter;
+typedef std::list<GameObject*> GameObjectList;
+typedef std::list <GameObject*>::iterator GameObjectIter;
+typedef std::priority_queue<GameObject*> GameObjectQueue;
 
 class WorldState
 {
@@ -24,6 +25,7 @@ bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point *p);
 bool getEnvironment(point *p, int size, GameObjectList** memory);
 GameObjectList* getAtLocation(point *p);
+GameObjectQueue* getAllGameObjects();
 
 private:
 	GameObjectList*** worldMatrix;
