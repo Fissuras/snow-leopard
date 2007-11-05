@@ -7,8 +7,8 @@
 
 WorldState::WorldState()
 {
-	xsize = 5;
-	ysize = 5;
+	xsize = 500;
+	ysize = 500;
 
 	worldMatrix = new GameObjectList**[xsize];
 	for (int i = 0; i < xsize; ++i)

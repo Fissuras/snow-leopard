@@ -24,8 +24,8 @@ public:
 	int displaySize;
 	point location;
 	int priority;
-
-	std::string displayID;
+	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
+	int ID;
 	int sourceSize;
 	int displayOffset; // if there are multiple display frames in one bitmap, choose which one the GameObject has
 
