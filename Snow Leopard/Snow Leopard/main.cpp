@@ -23,8 +23,9 @@ int main( int argc, char* args[] )
 	gameRenderer->LoadImages(state->getAllGameObjects());
 	gameRenderer->Render(state);
 	logic->step();
+	system("PAUSE");
 	gameRenderer->Render(state);
-
+	system("PAUSE");
 
     return 0;    
 }
