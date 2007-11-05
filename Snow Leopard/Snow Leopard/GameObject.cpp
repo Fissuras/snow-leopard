@@ -19,3 +19,8 @@ bool GameObject::registerCollision(GameObjectList collisions)
 {
 	return true;
 }
+
+bool GameObject::operator<(GameObject &b)
+{
+	return priority<b.priority;
+}

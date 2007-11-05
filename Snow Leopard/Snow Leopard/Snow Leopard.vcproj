@@ -172,6 +172,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\GameLogic.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\GameObject.cpp"
 				>
 			</File>
@@ -188,13 +192,29 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Ship.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WorldState.cpp"
 				>
 			</File>
+			<Filter
+				Name="Ships"
+				>
+				<File
+					RelativePath=".\Starfury.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			>
+			<File
+				RelativePath=".\GameLogic.h"
+				>
+			</File>
 			<File
 				RelativePath=".\GameObject.h"
 				>
@@ -208,9 +228,21 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Ship.h"
+				>
+			</File>
+			<File
 				RelativePath=".\WorldState.h"
 				>
 			</File>
+			<Filter
+				Name="Ships"
+				>
+				<File
+					RelativePath=".\Starfury.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"

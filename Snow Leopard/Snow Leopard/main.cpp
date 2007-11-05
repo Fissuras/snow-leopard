@@ -4,19 +4,25 @@
 #include "WorldState.h"
 #include "point.h"
 #include "Renderer.h"
+#include "GameLogic.h"
+#include "Starfury.h"
 
 int main( int argc, char* args[] )
 {
-	Renderer gameRenderer = Renderer();
-	gameRenderer.init();
+	Renderer *gameRenderer = new Renderer();
+	gameRenderer->init();
     
-	GameObject *g = new GameObject("Arbiter",0);
-	g->displayID = "images/Chmmr.gif"
+	GameObject *g = new Starfury("Starfury",1,new point(0,0));
+	g->displayID = "images/Chmmr.gif";
 
 	WorldState *state = new WorldState();
-	state->insertObject(g,new point(4,4));
+	state->insertObject(g,new point(0,0));
 
-	gameRenderer.Render(state);
+	GameLogic *logic = new GameLogic(state);
+
+	gameRenderer->Render(state);
+	logic->step();
+	gameRenderer->Render(state);
 
 	system("pause");
 

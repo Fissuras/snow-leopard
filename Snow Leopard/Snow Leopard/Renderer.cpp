@@ -5,7 +5,7 @@
 #include "Renderer.h"
 #include <iostream>
 
-
+//Low end version
 bool Renderer::Render(WorldState* state)
 {
 	for (int x = 0;x<state->xsize;x++)
@@ -18,6 +18,7 @@ bool Renderer::Render(WorldState* state)
 			{
 				GameObject* obj = *itr;
 				std::cout << obj->displayName;
+				std::cout << " " << obj->location.toString() << "\n";
 			}
 		}
 	}

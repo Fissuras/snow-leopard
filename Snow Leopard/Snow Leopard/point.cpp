@@ -12,6 +12,11 @@ point::point()
 {
 }
 
+point* point::offset(int ox, int oy)
+{
+	return new point(x+ox,y+oy);
+}
+
 std::string point::toString()
 {
 	return boost::lexical_cast<std::string>((x)) + "," + boost::lexical_cast<std::string>(y);
