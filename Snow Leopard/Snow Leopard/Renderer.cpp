@@ -6,6 +6,7 @@
 #include <iostream>
 #include "SDL_image.h"
 
+//probably going to have to go to direct3d or opengl to get the kind of performance we're looking for...
 
 SDL_Surface* Renderer::load_image( std::string filename ) 
 {
