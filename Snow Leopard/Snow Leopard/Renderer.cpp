@@ -22,7 +22,7 @@ SDL_Surface* Renderer::load_image( std::string filename )
 
 bool Renderer::LoadImages(GameObjectQueue* queue)
 {
-	for (int i = 0;i<queue->size();i++)
+	while (!(queue->empty()))
 	{
 		GameObject* obj = queue->top();
 		queue->pop();
@@ -39,25 +39,18 @@ bool Renderer::LoadImages(GameObjectQueue* queue)
 }
 bool Renderer::Render(WorldState* state)
 {
-	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0)); //clear the screen
-	for (int x = 0;x<state->xsize;x++)
+	GameObjectQueue* queue = state->getAllGameObjects();
+	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0)); //clear screen
+	
+	while (!(queue->empty()))
 	{
-		for (int y = 0;y<state->ysize;y++)
-		{
-			GameObjectList* list = state->getAtLocation(new point(x,y));
-			if (list==NULL)
-				continue;
-			GameObjectIter itr;
-			for (itr = list->begin();itr!=list->end();itr++)
-			{
-				GameObject* obj = *itr;
-				SDL_Rect* dest_rect;
-				dest_rect = new SDL_Rect();
-				dest_rect->x = obj->location.x - obj->displaySize / 2;
-				dest_rect->y = obj->location.y - obj->displaySize / 2;
-				SDL_BlitSurface( imageMap[obj->ID], NULL, screen, dest_rect );
-			}
-		}
+	GameObject* obj = queue->top();
+	queue->pop();
+	SDL_Rect* dest_rect;
+	dest_rect = new SDL_Rect();
+	dest_rect->x = obj->location.x - obj->displaySize / 2;
+	dest_rect->y = obj->location.y - obj->displaySize / 2;
+	SDL_BlitSurface( imageMap[obj->ID], NULL, screen, dest_rect );
 	}
 
 	SDL_Flip(screen);

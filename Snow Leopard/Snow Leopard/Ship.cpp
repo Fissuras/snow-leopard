@@ -3,15 +3,11 @@
 
 bool Ship::doActions(WorldState* worldState)
 {
-	try{
+
 	move(worldState);
 	shoot(worldState);
 	return true;
-	}
-	catch(...)
-	{
-	return false;
-	}
+	
 }
 
 bool Ship::move(WorldState* worldState)

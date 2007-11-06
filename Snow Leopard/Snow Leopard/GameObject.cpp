@@ -7,6 +7,9 @@ GameObject::GameObject(std::string name, int fact, point* p)
 	displayName = name;
 	faction = fact;
 	location = *p;
+	ID = 1; //make a static function to get a unique ID
+	velocity[0] = 0.0;
+	velocity[1] = 0.0;
 
 }
 
