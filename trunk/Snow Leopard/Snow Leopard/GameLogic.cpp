@@ -8,11 +8,11 @@ GameLogic::GameLogic(WorldState* worldState)
 
 bool GameLogic::step()
 {
-	GameObjectQueue* objectQueue = state->getAllGameObjects();
-	for(unsigned i=0;i<objectQueue->size();i++)
+	GameObjectList* objects = state->getAllGameObjects();
+	GameObjectIter itr;
+	for(itr = objects->begin();itr !=objects->end();itr++)
 	{
-		GameObject* obj = objectQueue->top();
-		objectQueue->pop(); //WHY?
+		GameObject* obj = *itr;
 		obj->doActions(state);
 	}
 	return true;

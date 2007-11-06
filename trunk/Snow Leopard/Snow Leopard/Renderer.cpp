@@ -20,12 +20,12 @@ SDL_Surface* Renderer::load_image( std::string filename )
     return optimizedImage;
 }
 
-bool Renderer::LoadImages(GameObjectQueue* queue)
+bool Renderer::LoadImages(GameObjectList* objects)
 {
-	while (!(queue->empty()))
+	GameObjectIter itr;
+	for (itr = objects->begin(); itr!=objects->end();itr++)
 	{
-		GameObject* obj = queue->top();
-		queue->pop();
+		GameObject* obj = *itr;
 		SDL_Surface* ptr = load_image(obj->imageSource);
 
 		//might want to make sourceSize have height and width,
@@ -39,18 +39,18 @@ bool Renderer::LoadImages(GameObjectQueue* queue)
 }
 bool Renderer::Render(WorldState* state)
 {
-	GameObjectQueue* queue = state->getAllGameObjects();
+	//GameObjectList* objList = state->getAllGameObjects_Unsorted();
+	GameObjectList* objList = state->getAllGameObjects();
 	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0)); //clear screen
-	
-	while (!(queue->empty()))
+	GameObjectIter itr;
+	for (itr= objList->begin(); itr!=objList->end();itr++)
 	{
-	GameObject* obj = queue->top();
-	queue->pop();
-	SDL_Rect* dest_rect;
-	dest_rect = new SDL_Rect();
-	dest_rect->x = obj->location.x - obj->displaySize / 2;
-	dest_rect->y = obj->location.y - obj->displaySize / 2;
-	SDL_BlitSurface( imageMap[obj->ID], NULL, screen, dest_rect );
+		GameObject* obj = *itr;
+		SDL_Rect* dest_rect;
+		dest_rect = new SDL_Rect();
+		dest_rect->x = obj->location.x - obj->displaySize / 2;
+		dest_rect->y = obj->location.y - obj->displaySize / 2;
+		SDL_BlitSurface( imageMap[obj->ID], NULL, screen, dest_rect );
 	}
 
 	SDL_Flip(screen);

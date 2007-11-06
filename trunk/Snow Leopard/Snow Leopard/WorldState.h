@@ -11,7 +11,6 @@ class GameObject;
 
 typedef std::list<GameObject*> GameObjectList;
 typedef std::list <GameObject*>::iterator GameObjectIter;
-typedef std::priority_queue<GameObject*> GameObjectQueue;
 #define coarseGraining 20
 
 class WorldState
@@ -29,10 +28,12 @@ bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point *p);
 bool getEnvironment(point *p, int size, GameObjectList** memory);
 GameObjectList* getAtLocation(point *p);
-GameObjectQueue* getAllGameObjects();
+GameObjectList* getAllGameObjects();
+GameObjectList* getAllGameObjects_Unsorted();
 
 private:
 	GameObjectList*** worldMatrix;
+	GameObjectList* allObjectList;
 };
 
 #endif

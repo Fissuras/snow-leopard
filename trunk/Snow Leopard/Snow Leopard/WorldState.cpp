@@ -13,6 +13,7 @@ WorldState::WorldState()
 	CellSizeX = CoordinateSizeX / coarseGraining ;
 	CellSizeY = CoordinateSizeY / coarseGraining ;
 
+	allObjectList = new GameObjectList();
 	worldMatrix = new GameObjectList**[CellSizeX];
 	for (int i = 0; i < CellSizeX; ++i)
         worldMatrix[i] = new GameObjectList*[CellSizeY];
@@ -32,6 +33,7 @@ bool WorldState::insertObject(GameObject* gameObject, point *p)
 		GameObjectList* currentList = worldMatrix[p->x / coarseGraining][p->y / coarseGraining];
 		currentList->push_front(gameObject);
 		gameObject->location = *p;
+		allObjectList->push_front(gameObject);
 		return true;
 }
 
@@ -45,7 +47,9 @@ bool WorldState::moveObject(GameObject* gameObject, point *p)
 
 		GameObjectList* currentList = worldMatrix[gameObject->location.x / coarseGraining][gameObject->location.y/ coarseGraining];
 		GameObjectList* newList = worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
-
+		gameObject->location=*p;
+		if (currentList==newList)
+			return true;
 		newList->push_front(gameObject);
 		currentList->remove(gameObject);
 		gameObject->location=*p;
@@ -64,21 +68,7 @@ GameObjectList* WorldState::getAtLocation(point *p)
 	return worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
 }
 
-GameObjectQueue* WorldState::getAllGameObjects()
+GameObjectList* WorldState::getAllGameObjects()
 {
-GameObjectQueue* objects = new GameObjectQueue();
-	for (int x = 0;x<CellSizeX;x++)
-	{
-		for (int y = 0;y<CellSizeY;y++)
-		{
-			GameObjectList* list = worldMatrix[x][y];
-			GameObjectIter itr;
-			for (itr = list->begin();itr!=list->end();itr++)
-			{
-				GameObject* obj = *itr;
-				objects->push(obj);
-			}
-		}
-	}
-	return objects;
+	return allObjectList;
 }
