@@ -29,6 +29,7 @@ int main( int argc, char* args[] )
 	state->insertObject(g,new point(25,100));
 	state->insertObject(f,new point(50,100));
 	state->insertObject(m,new point(100,50));
+	state->deleteObject(g);
 
 	GameLogic *logic = new GameLogic(state);
 

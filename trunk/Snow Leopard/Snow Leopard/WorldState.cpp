@@ -39,6 +39,11 @@ bool WorldState::insertObject(GameObject* gameObject, point *p)
 
 bool WorldState::deleteObject(GameObject* gameObject)
 {
+	GameObjectList* currentList = worldMatrix[gameObject->location.x/coarseGraining][gameObject->location.y/coarseGraining];
+	currentList->remove(gameObject);
+	allObjectList->remove(gameObject);
+	//the renderer still has an association between the object's ID and a bitmap
+	delete gameObject;
 	return true;
 }
 
@@ -56,11 +61,6 @@ bool WorldState::moveObject(GameObject* gameObject, point *p)
 
 		return true;
 
-}
-
-bool WorldState::getEnvironment(point *p, int size, GameObjectList** memory)
-{
-	return true;
 }
 
 GameObjectList* WorldState::getAtLocation(point *p)
