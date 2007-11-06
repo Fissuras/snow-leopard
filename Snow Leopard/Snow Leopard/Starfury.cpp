@@ -3,7 +3,7 @@
 
 bool Starfury::move(WorldState* worldState)
 {
-	worldState->moveObject(this,this->location.offset(100,0));
+	worldState->moveObject(this,location.offset(1,0));
 	return true;
 }
 

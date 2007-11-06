@@ -16,6 +16,7 @@ public:
 	bool operator<(GameObject &b);
 	virtual bool doActions(WorldState* worldState);
 	bool registerCollision(GameObjectList collisions);
+	static int getID();
 	GameObject::GameObject(std::string displayName = "", int faction=0, point* p=new point(0,0));
 
 	std::string displayName; 
@@ -28,6 +29,9 @@ public:
 	int ID;
 	int sourceSize;
 	int displayOffset; // if there are multiple display frames in one bitmap, choose which one the GameObject has
+
+ private:
+	 static int IDCount;
 
 };
 

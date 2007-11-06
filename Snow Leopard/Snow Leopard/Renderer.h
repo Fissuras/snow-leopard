@@ -15,7 +15,7 @@ public:
 	bool init();
 	int screenWidth;
 	int screenHeight;
-	bool LoadImages(GameObjectQueue* list);
+	bool LoadImages(GameObjectList* list);
 
 private:
 	SDL_Surface* load_image( std::string filename ) ;
