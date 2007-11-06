@@ -39,11 +39,14 @@ bool Renderer::LoadImages(GameObjectQueue* queue)
 }
 bool Renderer::Render(WorldState* state)
 {
+	SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format, 0, 0, 0)); //clear the screen
 	for (int x = 0;x<state->xsize;x++)
 	{
 		for (int y = 0;y<state->ysize;y++)
 		{
 			GameObjectList* list = state->getAtLocation(new point(x,y));
+			if (list==NULL)
+				continue;
 			GameObjectIter itr;
 			for (itr = list->begin();itr!=list->end();itr++)
 			{

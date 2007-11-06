@@ -12,20 +12,20 @@ int main( int argc, char* args[] )
 	Renderer *gameRenderer = new Renderer();
 	gameRenderer->init();
     
-	GameObject *g = new Starfury("Starfury",1,new point(100,100));
+	GameObject *g = new Starfury("Starfury",1,new point(1,1));
 	g->imageSource = "images/Chmmr.gif";
 
 	WorldState *state = new WorldState();
-	state->insertObject(g,new point(100,100));
+	state->insertObject(g,new point(1,1));
 
 	GameLogic *logic = new GameLogic(state);
 
 	gameRenderer->LoadImages(state->getAllGameObjects());
 	gameRenderer->Render(state);
 	logic->step();
-	system("PAUSE");
 	gameRenderer->Render(state);
-	system("PAUSE");
+
+	system("pause");
 
     return 0;    
 }

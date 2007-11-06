@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "point.h"
 #include <set>
+#include <map>
+#include <boost/numeric/ublas/matrix_sparse.hpp>
 
 class GameObject;
 
@@ -28,7 +30,7 @@ GameObjectList* getAtLocation(point *p);
 GameObjectQueue* getAllGameObjects();
 
 private:
-	GameObjectList*** worldMatrix;
+	GameObjectList*** *coarseGrid;
 };
 
 #endif
