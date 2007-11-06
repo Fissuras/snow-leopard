@@ -6,21 +6,23 @@
 #include "GameObject.h"
 #include "point.h"
 #include <set>
-#include <map>
-#include <boost/numeric/ublas/matrix_sparse.hpp>
 
 class GameObject;
 
 typedef std::list<GameObject*> GameObjectList;
 typedef std::list <GameObject*>::iterator GameObjectIter;
 typedef std::priority_queue<GameObject*> GameObjectQueue;
+#define coarseGraining 20
 
 class WorldState
 {
 public:
 
-int xsize;
-int ysize;
+int CellSizeX;
+int CellSizeY;
+double CoordinateSizeX;
+double CoordinateSizeY;
+
 WorldState::WorldState();
 bool insertObject(GameObject* gameObject, point *p);
 bool deleteObject(GameObject* gameObject);
@@ -30,7 +32,7 @@ GameObjectList* getAtLocation(point *p);
 GameObjectQueue* getAllGameObjects();
 
 private:
-	GameObjectList*** *coarseGrid;
+	GameObjectList*** worldMatrix;
 };
 
 #endif

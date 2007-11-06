@@ -19,7 +19,7 @@ public:
 	GameObject::GameObject(std::string displayName = "", int faction=0, point* p=new point(0,0));
 
 	std::string displayName; 
-	float velocity[2];
+	double velocity[2];
 	int faction;
 	int displaySize;
 	point location;
