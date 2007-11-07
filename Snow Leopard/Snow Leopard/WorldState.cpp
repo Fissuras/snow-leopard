@@ -3,7 +3,8 @@
 
 #include <iostream>
 
-
+//need to have a method that returns only what locations of objects changed during the last step,
+//so the openGL renderer can translate efficiently
 
 WorldState::WorldState()
 {

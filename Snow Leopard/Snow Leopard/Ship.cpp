@@ -21,5 +21,7 @@ bool Ship::shoot(WorldState* worldState)
 }
 
 Ship::Ship(std::string name, int fact, point *p) : GameObject(name,fact,p)
-{}
+{
+	actionPriority = ShipPriority;
+}
 	

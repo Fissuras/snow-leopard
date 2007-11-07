@@ -26,10 +26,8 @@ WorldState::WorldState();
 bool insertObject(GameObject* gameObject, point *p);
 bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point *p);
-bool getEnvironment(point *p, int size, GameObjectList** memory);
 GameObjectList* getAtLocation(point *p);
 GameObjectList* getAllGameObjects();
-GameObjectList* getAllGameObjects_Unsorted();
 
 private:
 	GameObjectList*** worldMatrix;
