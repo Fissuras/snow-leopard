@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GLRenderer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
@@ -218,6 +222,14 @@
 			</File>
 			<File
 				RelativePath=".\GameObject.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GameObjectPriorities.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GLRenderer.h"
 				>
 			</File>
 			<File

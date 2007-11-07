@@ -4,7 +4,7 @@
 #include <string>
 #include "point.h"
 #include <set>
-
+#include "GameObjectPriorities.h"
 
 class WorldState;
  class GameObject{
@@ -20,17 +20,24 @@ public:
 	GameObject::GameObject(std::string displayName = "", int faction=0, point* p=new point(0,0));
 
 	std::string displayName; 
-	double velocity[2];
+	
+	//polar coordinates
+	double heading;
+	
 	int faction;
 	int displaySize;
 	point location;
-	int priority;
+	int actionPriority;
+	int renderPriority;
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	int ID;
 	int sourceSize;
 	int displayOffset; // if there are multiple display frames in one bitmap, choose which one the GameObject has
 
+ protected:
+	 double speed;
  private:
+	
 	 static int IDCount;
 
 };

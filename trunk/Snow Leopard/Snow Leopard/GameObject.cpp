@@ -8,9 +8,9 @@ GameObject::GameObject(std::string name, int fact, point* p)
 	faction = fact;
 	location = *p;
 	ID = getID();
-	velocity[0] = 0.0;
-	velocity[1] = 0.0;
-
+	speed=0.0;
+	heading=0.0;
+	actionPriority = DefaultPriority;
 }
 
 int GameObject::getID()
@@ -31,5 +31,5 @@ bool GameObject::registerCollision(GameObjectList collisions)
 
 bool GameObject::operator<(GameObject &b)
 {
-	return priority<b.priority;
+	return actionPriority<b.actionPriority;
 }
