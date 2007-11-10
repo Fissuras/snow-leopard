@@ -19,8 +19,11 @@ public:
 	int screenWidth;
 	int screenHeight;
 	bool Renderer::LoadSprites();
+	bool Renderer::setCamera(GameObject* obj);
+	bool Renderer::setCameraZoomLevel(double level);
 
 private:
+	GameObject* camera;
 	double zoomLevel;
 	CL_GraphicContext* gc;
 	WorldState* state;

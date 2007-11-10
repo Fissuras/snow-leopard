@@ -5,6 +5,10 @@
 #include "point.h"
 #include <set>
 #include "GameObjectPriorities.h"
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
 
 class WorldState;
  class GameObject{
@@ -29,6 +33,7 @@ public:
 	point location;
 	int actionPriority;
 	int renderPriority;
+	CL_String resourceName;
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	int ID;
 

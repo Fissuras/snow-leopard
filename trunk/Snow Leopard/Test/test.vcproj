@@ -196,13 +196,17 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Starfury.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\WorldState.cpp"
 				>
 			</File>
+			<Filter
+				Name="ships"
+				>
+				<File
+					RelativePath=".\Starfury.cpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
