@@ -21,11 +21,14 @@ public:
 	bool Renderer::LoadSprites();
 
 private:
+	double zoomLevel;
 	CL_GraphicContext* gc;
 	WorldState* state;
 	const GameObjectList* objects;
 	std::map<int,CL_Sprite*> spriteMap;
 	CL_ResourceManager* resources;
+	double screenStartX;
+	double screenStartY;
 
 };
 

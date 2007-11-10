@@ -37,10 +37,10 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 	CL_ResourceManager* resources = new CL_ResourceManager(cl_text("resources.xml"));
 
 
-	GameObject *g = new Starfury("Starfury",1,new point(25,100));
+	GameObject *g = new Starfury("Starfury",1,new point(320,240));
 	g->imageSource = "Androsynth.png";
 	WorldState *state = new WorldState();
-	state->insertObject(g,new point(25,100));
+	state->insertObject(g,new point(320,240));
 	GameLogic *logic = new GameLogic(state);
 	Renderer* renderer = new Renderer(&gc,state,resources);
 
