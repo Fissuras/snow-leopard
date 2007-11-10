@@ -38,11 +38,20 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 
 
 	GameObject *g = new Starfury("Starfury",1,new point(320,240));
-	g->imageSource = "Androsynth.png";
+
+	GameObject *h = new Starfury("Starfury",1,new point(32,24));
+
+	g->resourceName = "Starfury";
+	h->resourceName = "Starfury";
 	WorldState *state = new WorldState();
 	state->insertObject(g,new point(320,240));
+	state->insertObject(h,new point(32,24));
+
 	GameLogic *logic = new GameLogic(state);
 	Renderer* renderer = new Renderer(&gc,state,resources);
+
+	renderer->setCamera(g);
+	renderer->setCameraZoomLevel(1.0);
 
 	renderer->LoadSprites();
 
@@ -52,6 +61,10 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 	
 	while (true)
 	{
+	renderer->setCamera(g);
+	renderer->Render();
+	window.flip();
+	renderer->setCamera(h);
 	renderer->Render();
 	window.flip();
 	logic->step();
