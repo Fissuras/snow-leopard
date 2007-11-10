@@ -3,7 +3,7 @@
 
 Starfury::Starfury(std::string name,int fact,point* p):Ship(name,fact,p)
 {
-	speed = 1.0;
+	speed = 0.0;
 }
 bool Starfury::move(WorldState* worldState)
 {

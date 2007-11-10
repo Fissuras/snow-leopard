@@ -6,6 +6,9 @@ Renderer::Renderer(CL_GraphicContext* gc_, WorldState* state_, CL_ResourceManage
 	state = state_;
 	resources = res;
 	objects = state->getAllGameObjects();
+	zoomLevel = 1.0; //will zoom in holding the top left the same (not the center)
+	screenStartX = 0.0;
+	screenStartY = 0.0;
 }
 
 bool Renderer::Render()
@@ -16,7 +19,8 @@ bool Renderer::Render()
 	{
 		GameObject* obj = *itr;
 		CL_Sprite* sprite = spriteMap[obj->ID];
-		sprite->draw(*gc,obj->location.x,obj->location.y);
+		sprite->set_scale(zoomLevel,zoomLevel);
+		sprite->draw(*gc,(obj->location.x/zoomLevel)-screenStartX,(obj->location.y/zoomLevel)-screenStartY);
 	}
 	
 	return true;
@@ -30,12 +34,6 @@ bool Renderer::LoadSprites()
 	{
 		GameObject* obj = *itr;
 		CL_Sprite* ptr = new CL_Sprite(cl_text("Starfury"),resources,*gc);
-
-		//might want to make sourceSize have height and width,
-		//to support rectangles instead of just squares
-		obj->sourceSize = ptr->get_width();
-		obj->displaySize = ptr->get_width();
-		
 		spriteMap[obj->ID] = ptr;
 	}
 	return true;

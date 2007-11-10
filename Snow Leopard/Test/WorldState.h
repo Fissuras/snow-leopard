@@ -27,7 +27,7 @@ WorldState::WorldState();
 bool insertObject(GameObject* gameObject, point *p);
 bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point *p);
-GameObjectList* getAtLocation(point *p);
+GameObjectList* getAtCell(point *p);
 const GameObjectList* getAllGameObjects();
 
 private:

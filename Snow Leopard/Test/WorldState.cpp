@@ -8,8 +8,8 @@
 
 WorldState::WorldState()
 {
-	CoordinateSizeX = 500.0;
-	CoordinateSizeY = 500.0;
+	CoordinateSizeX = 640.0;
+	CoordinateSizeY = 480.0;
 
 	CellSizeX = CoordinateSizeX / coarseGraining ;
 	CellSizeY = CoordinateSizeY / coarseGraining ;
@@ -64,7 +64,7 @@ bool WorldState::moveObject(GameObject* gameObject, point *p)
 
 }
 
-GameObjectList* WorldState::getAtLocation(point *p)
+GameObjectList* WorldState::getAtCell(point *p)
 {
 	return worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
 }
