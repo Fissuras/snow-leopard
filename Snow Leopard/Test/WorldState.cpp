@@ -8,12 +8,13 @@
 
 WorldState::WorldState()
 {
-	CoordinateSizeX = 640.0;
-	CoordinateSizeY = 480.0;
+	CoordinateSizeX = 1024.0;
+	CoordinateSizeY = 768.0;
 
 	CellSizeX = CoordinateSizeX / coarseGraining ;
 	CellSizeY = CoordinateSizeY / coarseGraining ;
 
+	deleteList = new GameObjectList();
 	allObjectList = new GameObjectList();
 	worldMatrix = new GameObjectList**[CellSizeX];
 	for (int i = 0; i < CellSizeX; ++i)
@@ -31,27 +32,32 @@ WorldState::WorldState()
 
 bool WorldState::insertObject(GameObject* gameObject, point *p)
 {
-		GameObjectList* currentList = worldMatrix[p->x / coarseGraining][p->y / coarseGraining];
-		currentList->push_front(gameObject);
-		gameObject->location = *p;
-		allObjectList->push_front(gameObject);
-		return true;
+	if (pointOutofBounds(p))
+		return false;
+
+	GameObjectList* currentList = worldMatrix[p->x / coarseGraining][p->y / coarseGraining];
+	currentList->push_front(gameObject);
+	gameObject->location = *p;
+	allObjectList->push_front(gameObject);
+	gameObject->worldState = this;
+	return true;
 }
 
 bool WorldState::deleteObject(GameObject* gameObject)
 {
 	GameObjectList* currentList = worldMatrix[gameObject->location.x/coarseGraining][gameObject->location.y/coarseGraining];
-	currentList->remove(gameObject);
-	allObjectList->remove(gameObject);
-	//the renderer still has an association between the object's ID and a bitmap
-	delete gameObject;
+	deleteList->push_front(gameObject);
 	return true;
 }
 
 bool WorldState::moveObject(GameObject* gameObject, point *p)
 {
-	if (p->x>=CoordinateSizeX || p->x<=0 || p->y>=CoordinateSizeY || p->y<=0)
+	//replace with pixel perfect collision code
+	if (pointOutofBounds(p))
+	{
+		gameObject->registerWallCollision();
 		return false;
+	}
 
 		GameObjectList* currentList = worldMatrix[gameObject->location.x / coarseGraining][gameObject->location.y/ coarseGraining];
 		GameObjectList* newList = worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
@@ -68,10 +74,37 @@ bool WorldState::moveObject(GameObject* gameObject, point *p)
 
 GameObjectList* WorldState::getAtCell(point *p)
 {
+	if (pointOutofBounds(p))
+		return NULL;
 	return worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
 }
 
 const GameObjectList* WorldState::getAllGameObjects()
 {
 	return  allObjectList; //can't change the contents of the list, but _can_ change the properties of the objects
+}
+
+bool WorldState::cleanup()
+{
+	GameObjectIter itr;
+	for (itr=deleteList->begin();itr!=deleteList->end();itr++)
+	{
+		GameObject* obj = *itr;
+		allObjectList->remove(obj);
+		GameObjectList* currentList = worldMatrix[obj->location.x / coarseGraining][obj->location.y/ coarseGraining];
+		currentList->remove(obj);
+		delete obj;
+	}
+
+	deleteList->clear();
+
+	return true;
+}
+
+bool WorldState::pointOutofBounds(point* p)
+{
+	if (p->x / coarseGraining>=CellSizeX || p->x<0 || p->y / coarseGraining>=CellSizeY || p->y<0)
+		return true;
+	return false;
+
 }

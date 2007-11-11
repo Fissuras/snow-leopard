@@ -11,12 +11,13 @@ class WorldState;
 class Ship: public GameObject {
 
 public:
-	bool doActions(WorldState* worldState);
+	bool doActions();
 	bool registerCollision(GameObjectList collisions);
+	bool registerWallCollision();
 	Ship::Ship(std::string name, int fact);
-	virtual bool move(WorldState* worldState);
-	bool move(WorldState* worldState,Direction dir);
-	virtual bool shoot(WorldState* worldState);
+	virtual bool move();
+	bool move(AbsoluteDirection dir);
+	virtual bool shoot();
 
 
 };

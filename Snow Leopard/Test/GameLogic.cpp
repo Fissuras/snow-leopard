@@ -12,6 +12,8 @@ GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Rende
 
 bool GameLogic::step()
 {
+	state->cleanup();
+
 	//should handle input with event callbacks, but I can't get them to work
 	handleInput();
 	
@@ -25,7 +27,7 @@ bool GameLogic::step()
 			continue;
 		}
 		 //not very efficient. Should make the playership first or last and then not check
-		obj->doActions(state);
+ 		obj->doActions();
 	}
 	return true;
 }
@@ -34,27 +36,27 @@ void GameLogic::handleInput()
 {
 	 if (keyboard.get_keycode(CL_KEY_SPACE))
 	 {
-		 playerShip->shoot(state);
+		 playerShip->shoot();
 	 }
 
 	 if (keyboard.get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->move(state,GameObject::UP);
+		 playerShip->move(GameObject::UP);
 	 }
 
 	 if (keyboard.get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->move(state,GameObject::DOWN);
+		 playerShip->move(GameObject::DOWN);
 	 }
 
 	 if (keyboard.get_keycode(CL_KEY_LEFT))
 	 {
-		playerShip->move(state,GameObject::LEFT);
+		playerShip->move(GameObject::LEFT);
 	 }
 
 	 if (keyboard.get_keycode(CL_KEY_RIGHT))
 	 {
-		playerShip->move(state,GameObject::RIGHT);
+		playerShip->move(GameObject::RIGHT);
 	 }
 
 	 if (keyboard.get_keycode(CL_KEY_ESCAPE))

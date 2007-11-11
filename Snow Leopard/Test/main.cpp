@@ -46,15 +46,17 @@ int DisplayApplication::main(int argc,  char **argv)
 
 
 	GameObject *g = new Starfury("Starfury",1);
-	//GameObject *f = new Starfury("Starfury",1);
+	GameObject *f = new Starfury("Starfury",1);
+	f->speed = 0;
+	g->speed = 1;
 
 
 	g->resourceName = "Starfury";
-	//f->resourceName = "Starfury";
+	f->resourceName = "Starfury";
 	g->heading = 180;
 	WorldState *state = new WorldState();
 	state->insertObject(g,new point(320,240));
-	//state->insertObject(f,new point (200,100));
+	state->insertObject(f,new point (200,100));
 
 	
 	Renderer* renderer = new Renderer(window,gc,state,resources);
@@ -63,7 +65,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	renderer->setCamera(g);
 	renderer->setCameraZoomLevel(1.0);
 
-	renderer->LoadSprites();
+	//renderer->LoadSprites(state->getAllGameObjects()); currently sprites load when the corresponding object is inserted into the world
 	
 	while (true)
 	{

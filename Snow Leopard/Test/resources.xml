@@ -1,1 +1,9 @@
-<resources><sprite name="Starfury"><image file="Androsynth.png"></image></sprite></resources>
+<resources>
+  <sprite name="Starfury">
+    <image file="Androsynth.png"></image>
+  </sprite>
+
+  <sprite name="SevnaMark40">
+    <image file="SevnaMark40.png"></image>
+  </sprite>
+</resources>

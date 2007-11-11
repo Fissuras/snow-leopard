@@ -30,8 +30,8 @@ bool Renderer::Render()
 {
 	gc->clear();
 
-	screenStartX = zoomLevel * (((screenWidth - state->CoordinateSizeX / zoomLevel) * camera->location.x) / screenWidth); //puts it in the center
-	screenStartY = zoomLevel * (((screenHeight - state->CoordinateSizeY / zoomLevel) * camera->location.y) / screenHeight);
+	screenStartX = std::abs(zoomLevel * (((screenWidth - state->CoordinateSizeX / zoomLevel) * camera->location.x) / screenWidth)); //puts it in the center
+	screenStartY = std::abs(zoomLevel * (((screenHeight - state->CoordinateSizeY / zoomLevel) * camera->location.y) / screenHeight));
 
 
 	ConstGameObjectIter itr;
@@ -39,6 +39,11 @@ bool Renderer::Render()
 	{
 		GameObject* obj = *itr;
 		CL_Sprite* sprite = spriteMap[obj->ID];
+		if (sprite == NULL)
+		{
+			loadSprite(obj);
+			sprite = spriteMap[obj->ID];
+		}
 		sprite->set_scale(zoomLevel,zoomLevel);
 		sprite->set_angle(obj->heading);
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,
@@ -49,17 +54,31 @@ bool Renderer::Render()
 
 }
 
-bool Renderer::LoadSprites()
+bool Renderer::loadSprites(const GameObjectList* list)
 {
 	ConstGameObjectIter itr;
-	for (itr = objects->begin(); itr!=objects->end();itr++)
+	for (itr = list->begin(); itr!=list->end();itr++)
 	{
 		GameObject* obj = *itr;
+		//if (spriteMap.find(obj->ID) != spriteMap.end()) //already loaded
+		//	continue;
 		CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources);
 		ptr->set_alignment(origin_center);
 		ptr->set_rotation_hotspot(origin_center);
 		ptr->set_base_angle(1.0);
 		spriteMap[obj->ID] = ptr;
 	}
+	return true;
+}
+
+bool Renderer::loadSprite(GameObject* obj)
+{
+	//if (spriteMap.find(obj->ID) != spriteMap.end()) //already loaded
+	//	return true;
+	CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources);
+	ptr->set_alignment(origin_center);
+	ptr->set_rotation_hotspot(origin_center);
+	ptr->set_base_angle(1.0);
+	spriteMap[obj->ID] = ptr;
 	return true;
 }
