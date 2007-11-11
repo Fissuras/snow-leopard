@@ -23,7 +23,8 @@
 **
 **  File Author(s):
 **
-**    Kenneth Gangstoe
+**    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Sprites"
@@ -32,86 +33,101 @@
 #ifndef header_sprite
 #define header_sprite
 
-#include "api_display.h"
-#include "../Core/Text/string_types.h"
-#include "../Core/System/sharedptr.h"
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
+
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#include "surface.h"
+#include "blend_func.h"
 #include "../Core/Math/origin.h"
+
+#include "../Core/Math/size.h"
 #include "../Core/Math/rect.h"
-#include "../Core/Signals/signal_v0.h"
-#include "../Core/IOData/virtual_directory.h"
-#include "../Core/Resources/resource_data_session.h"
-#include "graphic_context.h"
-#include "color.h"
-#include "blend_mode.h"
+#include "../Core/Resources/resource.h"
 
 class CL_ResourceManager;
 class CL_SpriteDescription;
-class CL_Sprite_Impl;
+class CL_Sprite_Generic;
+class CL_GraphicContext;
 
-//: Sprite class.
+//: This class handles displaying sprites on the screen. 
 //- !group=Display/Sprites!
 //- !header=display.h!
+//- <p>There are two overviews describing the sprite system in ClanLib.
+//- The <a href="../../Overview/sprites_overview.html">sprites overview</a>, and the
+//- <a href="../../Overview/sprites_resources.html">sprites resources overview.</a></p>
 class CL_API_DISPLAY CL_Sprite
-{
+{ 
 //! Enums:
 public:
 	enum ShowOnFinish
 	{
 		show_blank, show_last_frame, show_first_frame
 	};
-
+	
 //! Construction:
 public:
 	//: Constructs a sprite.
 	//param resource_id: Resource name of a sprite resource.
 	//param manager: Resource manager used to load resource.
 	//param sprite_description: Sprite description used to construct sprite.
-	//param gc: Graphic context to use.
+	//param pack_texture: If true, will try to pack sprite into as few textures as possible.
+	CL_Sprite(
+		const std::string &resource_id,
+		CL_ResourceManager *manager);
+
+	CL_Sprite(const CL_SpriteDescription &sprite_description, bool pack_texture = true);
+
+	CL_Sprite(const CL_Sprite &sprite);
+
 	CL_Sprite();
-
-	CL_Sprite(const CL_StringRef &filename, CL_GraphicContext gc);
-
-	CL_Sprite(const CL_StringRef &filename, CL_VirtualDirectory dir, CL_GraphicContext gc);
-
-	CL_Sprite(const CL_StringRef &resource_id, CL_ResourceManager *resources, CL_GraphicContext gc);
-
-	CL_Sprite(const CL_SpriteDescription &description, CL_GraphicContext gc);
-
-	CL_Sprite(const CL_Sprite &copy);
 
 	virtual ~CL_Sprite();
 
 //! Attributes:
 public:
-	//: returns true if the sprite is not properly constructed.
-	bool is_null() const;
-
 	//: Returns current angle in degrees.
-	double get_angle() const;
+	float get_angle() const;
+
+	//: Returns the current rotational yaw angle in degrees.
+	float get_angle_yaw() const;
+
+	//: Returns the current rotational pitch angle in degrees.
+	float get_angle_pitch() const;
 
 	//: Returns the base angle in degrees - angle added to any rotation set with set_rotate() or rotate().
-	double get_base_angle() const;
+	float get_base_angle() const;
 
 	//: Returns scale for x and y.
 	//- <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>
-	void get_scale(double &x, double &y) const;
+	void get_scale(float &x, float &y) const;
 
 	//: Returns current alpha.
 	//- <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>
-	double get_alpha() const;
+	float get_alpha() const;
 
 	//: Returns current color.
 	//- <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>
-	void get_color(double &red, double &green, double &blue, double &alpha) const;
-	CL_Color get_color() const {double r,g,b,a; get_color(r,g,b,a); return CL_Color(int(r*255.0),int(g*255.0),int(b*255.0),int(a*255.0));}
+	void get_color(float &red, float &green, float &blue, float &alpha) const;
+	CL_Color get_color() const {float r,g,b,a; get_color(r,g,b,a); return CL_Color(int(r*255.0f),int(g*255.0f),int(b*255.0f),int(a*255.0f));}
 
 	//: Returns blending functions.
-	CL_BlendMode get_blend_mode() const;
+	void get_blend_func(CL_BlendFunc &src, CL_BlendFunc &dest) const;
 
-	//: Returns translation hot-spot.
+	//: Returns translation hotspot.
 	void get_alignment(CL_Origin &origin, int &x, int &y) const;
 
-	//: Returns rotation hot-spot.
+	//: Returns rotation hotspot.
 	void get_rotation_hotspot(CL_Origin &origin, int &x, int &y) const;
 
 	//: Returns current frame in animation. 0 is first frame.
@@ -121,7 +137,7 @@ public:
 	int get_frame_count() const;
 
 	//: Returns the delay of a frame. 0 is first frame.
-	double get_frame_delay(int frame) const;
+	float get_frame_delay(int frame) const;
 
 	//: Returns the translation offset of a frame. 0 is first frame.
 	CL_Point get_frame_offset(int frame) const;
@@ -137,9 +153,21 @@ public:
 	//: 'get_frame_size(get_current_frame()).height'
 	int get_height() const;
 
+	//: Returns the surface of a frame. 0 is first frame.
+	//- <p> Returns an empty surface if frame is invalid. </p>
+	CL_Surface get_frame_surface(int frame) const;
+
+	//: Returns a CL_PixelBuffer with the same dimensions
+	//: as this sprite.
+	//- <p> Returns an empty pixelbuffer if frame is invalid. </p>
+	CL_PixelBuffer get_frame_pixeldata(int frame) const;
+
 	//: Returns the attached id (if exists).
 	int get_id() const;
-		
+	
+	//: Returns true if this is an unattached sprite.
+	bool is_null() const;
+	
 	//: Returns true if animation is played in loop (more than once).
 	bool is_play_loop() const;
 
@@ -158,10 +186,19 @@ public:
 	//- to anything other than show_blank </p>
 	bool is_finished() const;
 
+	//: Returns true if animation has looped in the last update cycle
+	bool is_looping() const;
+
+	//: Resource owning this sprite, if any.
+	CL_Resource resource;
+
 //! Operations:
 public:
 	//: Copy assignment operator.
 	CL_Sprite &operator =(const CL_Sprite &copy);
+
+	//: Return true if the CL_Sprite is valid and useable
+	operator bool () const;
 
 	//: Sets the image data from another sprite.
 	//- Use this to change the look of your sprite.
@@ -170,63 +207,81 @@ public:
 	//: Draw sprite on graphic context.
 	//param x, y: Anchor position of where to render sprite. Actual rendering position depends on the anchor and the alignment mode.
 	//param gc: Graphic context on which to render upon. If null, will use CL_Display's current graphic context.
-	//param src: Source rectangle to draw. Use this is draw only part of the sprite.
 	//param dest: Rectangle to draw sprite in.
 	void draw(
-		CL_GraphicContext gc,
-		double x,
-		double y);
+		float x,
+		float y,
+		CL_GraphicContext *gc = 0);
 
 	void draw(
-		CL_GraphicContext gc,
-		const CL_Rectd &src,
-		const CL_Rectd &dest);
+		const CL_Rect &dest,
+		CL_GraphicContext *gc = 0);
+
+	//: sub pixel accuracy versions
 
 	void draw(
-		CL_GraphicContext gc,
-		const CL_Rectd &dest);
+		const CL_Rectf &dest,
+		CL_GraphicContext *gc = 0);
 
+	void draw(const CL_Surface_DrawParams1 & params1,
+		CL_GraphicContext *gc = 0);
+
+	void draw_subpixel(
+		float x,
+		float y,
+		CL_GraphicContext *gc = 0);
+
+
+	//: Calculate draw information and send it back.  Returns false if sprite isn't currently drawn
+	//- This allows you to tweak the settings and call draw() for specific effects.
+
+	bool setup_draw_params(float x, float y, CL_Surface_DrawParams1 & params1, bool sub_pixel_accuracy);
+	
 	//: Call this function to update the animation.
 	//- Returns the time elapsed parameter, the automatic calculated one if you used 0.
 	//param time_elapsed: milliseconds since last update. Use 0 for automatic time calculation.
-	double update(double time_elapsed = 0);
+	float update(float time_elapsed = 0);
 
 	//: Set absolute rotation angle in degrees.
-	void set_angle(double angle);
+	void set_angle(float angle);
 	
 	//: Set absolute rotation pitch angle in degrees.
-	void set_angle_pitch(double angle);
+	void set_angle_pitch(float angle);
 	
 	//: Set absolute rotation yaw angle in degrees.
-	void set_angle_yaw(double angle);
+	void set_angle_yaw(float angle);
 
 	//: Add angle in degrees to current angle.
-	void rotate(double angle);
+	void rotate(float angle);
 	
 	//: Add angle in degrees to current pitch angle.
-	void rotate_pitch(double angle);
+	void rotate_pitch(float angle);
 	
 	//: Add angle in degrees to current yaw angle.
-	void rotate_yaw(double angle);
+	void rotate_yaw(float angle);
 
 	//: Sets the base angle in degrees - angle added to any rotation set with set_rotate() or rotate().
-	void set_base_angle(double angle);
+	void set_base_angle(float angle);
 
 	//: Set scale for x and y directions individually.
 	//- <p> 1.0f is normal scale, 2.0f is twice the size, etc. </p>
-	void set_scale(double x, double y);
+	void set_scale(float x, float y);
 
 	//: Sets transparency.
 	//- <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>
-	void set_alpha(double alpha);
+	void set_alpha(float alpha);
 
 	//: Sets the color.
 	//- <p> Alpha 0.0f is full transparency, and 1.0f is full visibility (solid). </p>
-	void set_color(double r, double g, double b, double a = 1.0);
-	void set_color(const CL_Color& c) {set_color(c.get_red_d(), c.get_green_d(), c.get_blue_d(), c.get_alpha_d());}
+	void set_color(float r, float g, float b, float a = 1.0f);
+	void set_color(const CL_Color& c) {set_color(float(c.get_red())/255.0f,float(c.get_green())/255.0f,float(c.get_blue())/255.0f,float(c.get_alpha())/255.0f);}
 
 	//: Sets blending functions.
-	void set_blend_mode(const CL_BlendMode &blend_mode);
+	void set_blend_func(CL_BlendFunc src, CL_BlendFunc dest);
+
+	//: Sets blending functions.
+	void set_blend_func_separate(CL_BlendFunc src, CL_BlendFunc dest,
+                                     CL_BlendFunc src_alpha, CL_BlendFunc dest_alpha);
 
 	//: Sets translation hotspot.
 	void set_alignment(CL_Origin origin, int x = 0, int y = 0);
@@ -238,11 +293,8 @@ public:
 	//: It will cap to available range.
 	void set_frame(unsigned int frame);
 
-	//: Sets the delay for all frames.
-	void set_delay(double delay);
-
 	//: Sets the delay of a specific frame. 0 is first frame.
-	void set_frame_delay(int frame, double delay);
+	void set_frame_delay(int frame, float delay);
 
 	//: Sets the translate offset of a specific frame. 0 is first frame.
 	void set_frame_offset(int frame, CL_Point offset);
@@ -270,15 +322,17 @@ public:
 	//: Set what is shown when the animation is finished.
 	void set_show_on_finish(CL_Sprite::ShowOnFinish show_on_finish);
 
+	//: Adds a frame to the animation
+	void add_frame(CL_Surface surface, const CL_Rect& rect = CL_Rect(0,0,0,0), float delay = 0.06f, CL_Point offset = CL_Point(0, 0));
+
 //! Signals:
 public:
 	CL_Signal_v0 &sig_animation_finished();
-
+	
 //! Implementation:
 private:
-	CL_SharedPtr<CL_Sprite_Impl> impl;
-
-	CL_ResourceDataSession resource_data_session;
+	
+	CL_Sprite_Generic *impl;
 };
 
 #endif

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="I/O Data"
@@ -32,16 +33,24 @@
 #ifndef header_zip_file_entry
 #define header_zip_file_entry
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
-#include "../Text/string_types.h"
-#include "../System/sharedptr.h"
+#include <string>
 #include "datatypes.h"
 
-class CL_Zip_FileEntry_Impl;
+class CL_Zip_FileEntry_Generic;
 
 //: File entry in zip file.
 //- !group=Core/IO Data!
@@ -59,7 +68,7 @@ public:
 //! Attributes:
 public:
 	//: Returns the filename of file entry.
-	CL_StringRef get_filename() const;
+	const std::string & get_filename() const;
 	
 	//: Returns the uncompressed size of file entry.
 	cl_int64 get_uncompressed_size();
@@ -73,15 +82,13 @@ public:
 	CL_Zip_FileEntry &operator =(const CL_Zip_FileEntry &copy);
 	
 	//: Sets the filename of file entry.
-	void set_filename(const CL_StringRef &filename);
+	void set_filename(const std::string &filename);
 
 //! Implementation:
 private:
-	CL_SharedPtr<CL_Zip_FileEntry_Impl> impl;
-
+	CL_Zip_FileEntry_Generic *impl;
 	friend class CL_Zip_Archive;
-
-	friend class CL_Zip_IODevice_FileEntry;
+	friend class CL_InputSource_Zip_FileEntry;
 };
 
 #endif

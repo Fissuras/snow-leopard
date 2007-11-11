@@ -24,23 +24,33 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_pixelformat
 #define header_pixelformat
 
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "api_display.h"
 #include "pixel_format_type.h"
 
 //: Pixel data format description.
-//- !group=Display/Display!
+//- !group=Display/Display 2D!
 //- !header=display.h!
 class CL_API_DISPLAY CL_PixelFormat
 {

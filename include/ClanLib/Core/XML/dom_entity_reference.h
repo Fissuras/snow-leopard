@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_entity_reference
 #define header_dom_entity_reference
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 //: DOM Entity Reference class.
@@ -59,7 +69,7 @@ public:
 	//: Constructs a DOM Entity Reference handle.
 	CL_DomEntityReference();
 	
-	CL_DomEntityReference(CL_DomDocument &doc, const CL_DomString &name);
+	CL_DomEntityReference(CL_DomDocument &doc, const std::string &name);
 
 	CL_DomEntityReference(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 

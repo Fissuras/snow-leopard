@@ -37,9 +37,7 @@
 #pragma once
 #endif
 
-#include "point.h"
-
-class CL_Circled;
+class CL_Circlef;
 
 //: Circle (point,radius) structure.
 //- !group=Core/Math!
@@ -62,7 +60,7 @@ public:
 	CL_Circle(const CL_Point &p, int radius)
 	: position(p), radius(radius) { return; }
 
-	explicit CL_Circle(const CL_Circled& other);
+	explicit CL_Circle(const CL_Circlef& other);
 
 // Attributes:
 public:
@@ -73,10 +71,8 @@ public:
 	int radius;
 };
 
-//: Circle (point,radius) structure.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_Circled
+
+class CL_Circlef
 {
 // Construction:
 public:
@@ -85,26 +81,25 @@ public:
 	//param y: Initial y value.
 	//param radius: Circle radius.
 	//param p: Point to use for initial values.
-	CL_Circled()
+	CL_Circlef()
 	{ return; }
 
-	CL_Circled(double x, double y, double radius)
+	CL_Circlef(double x, double y, double radius)
 	: position((float)x,(float)y), radius(radius) { return; }
 
-	CL_Circled(const CL_Pointd &p, double radius)
+	CL_Circlef(const CL_Pointf &p, double radius)
 	: position(p), radius(radius) { return; }
 
 // Attributes:
 public:
 	//: Circle center point
-	CL_Pointd position;
+	CL_Pointf position;
 
 	//: Circle radius
 	double radius;
 };
 
-
-inline CL_Circle::CL_Circle(const CL_Circled &other)
+inline CL_Circle::CL_Circle(const CL_Circlef &other)
 : position(other.position), radius(int(other.radius+0.5))
 {
 	return;

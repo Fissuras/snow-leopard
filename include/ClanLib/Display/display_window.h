@@ -24,39 +24,53 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_display_window
 #define header_display_window
 
-#include "api_display.h"
-#include "../Core/System/sharedptr.h"
-#include "../Core/System/weakptr.h"
-#include "../Core/Signals/signal_v0.h"
-#include "../Core/Signals/signal_v1.h"
-#include "../Core/Signals/signal_v2.h"
-#include "../Core/Signals/callback_v1.h"
-#include "../Core/Text/string_types.h"
-#include "display_target.h"
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
 
-class CL_Display;
-class CL_DisplayMode;
-class CL_DisplayWindowDescription;
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#ifdef _MSC_VER
+#pragma warning( disable : 4786)
+#endif
+
+#include <string>
+#include "../signals.h"
+
+class CL_PixelBuffer;
+class CL_InputEvent;
+class CL_Rect;
+class CL_Size;
 class CL_GraphicContext;
 class CL_InputContext;
-class CL_Rect;
-class CL_Point;
-class CL_DisplayWindowMessage;
-class CL_DisplayWindowProvider;
-class CL_DisplayWindow_Impl;
+class CL_DisplayWindow_Generic;
+class CL_Sprite;
+class CL_DisplayWindowDescription;
+class CL_DisplayMode;
 
-//: Top-level window class.
-//- !group=Display/Display!
+//: Toplevel window class.
+//- !group=Display/Display 2D!
 //- !header=display.h!
+//- <p>CL_DisplayWindow represents a window in your windowing system
+//- (Windows, X11). You need to create at least one display window in order
+//- to draw graphics in ClanLib.</p>
 class CL_API_DISPLAY CL_DisplayWindow
 {
 //! Construction:
@@ -70,24 +84,19 @@ public:
 	//param flipping_buffers: Number of flipping buffers in system.
 	//param flipping_buffers: Default is that there is a front buffer and a back buffer.
 	//param description: Structure that describes how to create the display window.
-	//param provider: Display target implementation object.
-	//param target: Display target used to create the window.
 	CL_DisplayWindow();
 
+	CL_DisplayWindow(const CL_DisplayWindow &copy);
+
 	CL_DisplayWindow(
-		const CL_StringRef &title,
+		const std::string &title,
 		int width,
 		int height,
 		bool start_fullscreen = false,
 		bool allow_resize = false,
-		int flipping_buffers = 2,
-		CL_DisplayTarget target = CL_DisplayTarget());
+		int flipping_buffers = 2);
 
-	CL_DisplayWindow(
-		const CL_DisplayWindowDescription &description,
-		CL_DisplayTarget target = CL_DisplayTarget());
-
-	CL_DisplayWindow(CL_DisplayWindowProvider *provider);
+	CL_DisplayWindow(const CL_DisplayWindowDescription &description);
 
 	~CL_DisplayWindow();
 
@@ -99,70 +108,34 @@ public:
 	//: Returns the current height of the window.
 	int get_height() const;
 
-	//: Returns the position and size of the window frame.
-	CL_Rect get_geometry() const;
-
-	//: Returns the drawable area of the window.
-	CL_Rect get_viewport() const;
-
 	//: Returns true if window is currently running fullscreen.
 	bool is_fullscreen() const;
 
 	//: Returns true if window has focus.
 	bool has_focus() const;
 
-	//: Return the graphic context for the window.
-	CL_GraphicContext get_gc() const;
+	//: Returns the pixel buffer for the specified flipping buffer.
+	CL_PixelBuffer get_buffer(int i) const;
 
-	//: Return the input context for the window.
-	CL_InputContext get_ic() const;
+	//: Returns the amount of flipping buffers being used.
+	int get_buffer_count() const;
 
-	//: Signal emitted when window lost focus.
-	CL_Signal_v0 &sig_lost_focus();
+	//: Returns the current flipping buffer being used as the front buffer.
+	CL_PixelBuffer get_front_buffer();
 
-	//: Signal emitted when window gain focus.
-	CL_Signal_v0 &sig_got_focus();
+	//: Returns the current flipping buffer being used as the back buffer.
+	CL_PixelBuffer get_back_buffer();
 
-	//: Signal emitted when window is resized.
-	CL_Signal_v2<int, int> &sig_resize();
+	//: Returns the graphic context of the current back buffer.
+	CL_GraphicContext *get_gc();
 
-	//: Signal emitted when an area of the window is invalidated.
-	CL_Signal_v1<const CL_Rect &> &sig_paint();
-
-	//: Signal emitted when window is closed.
-	CL_Signal_v0 &sig_window_close();
-
-	//: Callback called when a window is being resized.
-	CL_Callback_v1<CL_Rect &> &func_window_resize();
-
-	//: Callback called when a window receives a message from the windowing system.
-	CL_Callback_v1<CL_DisplayWindowMessage &> &func_window_message_received();
-
-	//: returns true if this display window is invalid
-	bool is_null() const;
-
-	//: returns true if this display window is visible
-	bool is_visible() const;
-
-	//: Returns true if the window is minimized.
-	bool is_minimized() const;
-
-	//: Returns true if the window is maximized.
-	bool is_maximized() const;
-
-	//: returns the display window provider
-	CL_DisplayWindowProvider *get_provider() const;
+	//: Returns the input context of this window.
+	CL_InputContext *get_ic();
 
 //! Operations:
 public:
-	//: Convert from window client coordinates to screen coordinates.
-	CL_Point client_to_screen(const CL_Point &client);
-
-	//: Convert from screen coordinates to client coordinates.
-	CL_Point screen_to_client(const CL_Point &screen);
-
-	//: Capture/Release the mouse.
-	void capture_mouse(bool capture);
+	//: Copy assignment operator.
+	CL_DisplayWindow &operator =(const CL_DisplayWindow &copy);
 
 	//: Change window to running fullscreen mode.
 	void set_fullscreen(int width=0, int height=0, int bpp=0, int refresh_rate=0);
@@ -174,42 +147,25 @@ public:
 	void set_windowed();
 
 	//: Change window title.
-	void set_title(const CL_StringRef &title);
+	void set_title(const std::string &title);
 
 	//: Set window position and size.
 	//param pos: Window position and size.
 	//param x: Window x position on desktop.
 	//param y: Window y position on desktop.
-	void set_position(const CL_Rect &pos, bool client_area);
+	void set_position(const CL_Rect &pos);
 
 	void set_position(int x, int y);
-
-	void set_enabled(bool enable);
-
-	void set_visible(bool visible, bool activate);
 
 	//: Resize window.
 	//param width: New width of window in pixels.
 	//param height: New height of window in pixels.
-	void set_size(int width, int height, bool client_area);
+	void set_size(int width, int height);
 
-	//: Minimizes the window.
-	void minimize();
-
-	//: Restores the window.
-	void restore();
-
-	//: Maximizes the window.
-	void maximize();
-
-	//: Displays the window in its current size and position.
-	void show(bool activate = true);
-
-	//: Hides the window.
-	void hide();
-
-	//: Raises the window on top of other windows.
-	void bring_to_front();
+	//: Changes the amount of pixel buffers used in the flipping system.
+	//param flipping_buffers: New number of flipping buffers.
+	//- <p>2 = double buffer, 3 = triple buffer.</p>
+	void set_buffer_count(int flipping_buffers);
 
 	//: Copy the specified rectangle area from back buffer to front buffer.
 	//param rect: Area that should be copied.
@@ -234,21 +190,37 @@ public:
 	//- use the system default, which per default is 1.</p>
 	void flip(int interval = -1);
 
+	//: Sets the mouse cursor shape.
+	void set_cursor(const CL_Sprite &cursor);
+
 	//: Shows the mouse cursor.
 	void show_cursor();
 
 	//: Hides the mouse cursor.
 	void hide_cursor();
 
+//! Signals:
+public:
+	//: Signal emitted when window lost focus.
+	CL_Signal_v0 &sig_lost_focus();
+
+	//: Signal emitted when window gain focus.
+	CL_Signal_v0 &sig_got_focus();
+
+	//: Signal emitted when window is resized.
+	CL_Signal_v2<int, int> &sig_resize();
+
+	//: Signal emitted when an area of the window is invalidated.
+	CL_Signal_v1<const CL_Rect &> &sig_paint();
+
+	//: Signal emitted when window is closed.
+	CL_Signal_v0 &sig_window_close();
+
 //! Implementation:
-private:
-	CL_DisplayWindow(CL_WeakPtr<CL_DisplayWindow_Impl> impl);
+protected:
+	CL_DisplayWindow(CL_DisplayWindow_Generic *impl);
 
-	CL_SharedPtr<CL_DisplayWindow_Impl> impl;
-
-	friend class CL_Display;
-	friend class CL_Timer_Impl;
+	CL_DisplayWindow_Generic *impl;
 };
 
 #endif
-

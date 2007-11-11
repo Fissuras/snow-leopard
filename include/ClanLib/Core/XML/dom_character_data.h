@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_character_data
 #define header_dom_character_data
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 //: DOM Character Data class.
@@ -70,15 +80,15 @@ public:
 	//param offset: Start offset of substring to extract.
 	//param count: The number of characters to extract.
 	//retval: The specified substring. If the sum of offset and count exceeds the length, then all characters to the end of the data are returned.
-	CL_DomString substring_data(unsigned long offset, unsigned long count);
+	std::string substring_data(unsigned long offset, unsigned long count);
 
 	//: Append the string to the end of the character data of the node.
-	void append_data(const CL_DomString &arg);
+	void append_data(const std::string &arg);
 
 	//: Insert a string at the specified character offset.
 	//param offset: The character offset at which to insert.
 	//param arg: The DOMString to insert.
-	void insert_data(unsigned long offset, const CL_DomString &arg);
+	void insert_data(unsigned long offset, const std::string &arg);
 
 	//: Remove a range of characters from the node.
 	//param offset: The offset from which to remove characters.
@@ -89,7 +99,7 @@ public:
 	//param offset: The offset from which to start replacing.
 	//param count: The number of characters to replace. If the sum of offset and count exceeds length, then all characters to the end of the data are replaced (i.e., the effect is the same as a remove method call with the same range, followed by an append method invocation).
 	//param arg: The DOMString with which the range must be replaced.
-	void replace_data(unsigned long offset, unsigned long count, const CL_DomString &arg);
+	void replace_data(unsigned long offset, unsigned long count, const std::string &arg);
 
 //! Implementation:
 protected:

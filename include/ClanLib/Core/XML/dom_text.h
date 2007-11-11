@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_text
 #define header_dom_text
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_character_data.h"
 
 //: DOM Text class.
@@ -62,7 +72,7 @@ public:
 	//: Constructs a DOM Text handle.
 	CL_DomText();
 
-	CL_DomText(CL_DomDocument &doc, const CL_DomString &data);
+	CL_DomText(CL_DomDocument &doc, const std::string &data);
 
 	CL_DomText(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 	
@@ -79,7 +89,7 @@ public:
 	//- point.</p>
 	//param offset: The offset at which to split.
 	//retval: The new Text node.
-	CL_DomText split_text(unsigned long offset);
+	CL_DomText splitText(unsigned long offset);
 
 //! Implementation:
 protected:

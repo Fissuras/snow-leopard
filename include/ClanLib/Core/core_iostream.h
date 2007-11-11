@@ -24,12 +24,24 @@
 **  File Author(s):
 **
 **    Ingo Ruhnke
+**    Dieter Buys
 */
 
 #ifndef header_core_iostream
 #define header_core_iostream
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #include <iosfwd>
+
 
 class CL_Rect;
 class CL_Rectf;
@@ -37,6 +49,7 @@ class CL_Point;
 class CL_Pointf;
 class CL_Size;
 class CL_Sizef;
+class CL_Error;
 
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Rect& rect);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Rectf& rect);
@@ -44,5 +57,7 @@ CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Point& point);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Pointf& point);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Size& size);
 CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Sizef& size);
+CL_API_CORE std::ostream& operator<<(std::ostream& s, const CL_Error& error);
+
 
 #endif

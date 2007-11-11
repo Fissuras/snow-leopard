@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_entity
 #define header_dom_entity
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 //: DOM Entity class.
@@ -61,15 +71,15 @@ public:
 public:
 	//: The public identifier associated with the entity.
 	//- <p>If the public identifier was not specified, this is null.</p>
-	CL_DomString get_public_id() const;
+	std::string get_public_id() const;
 
 	//: The system identifier associated with the entity.
 	//- <p>If the system identifier was not specified, this is null.</p>
-	CL_DomString get_system_id() const;
+	std::string get_system_id() const;
 
 	//: For unparsed entities, the name of the notation for the entity.
 	//- <p>For parsed entities, this is null.</p>
-	CL_DomString get_notation_name() const;
+	std::string get_notation_name() const;
 
 //! Operations:
 public:

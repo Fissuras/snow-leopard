@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -32,18 +33,25 @@
 #ifndef header_outline_triangulator
 #define header_outline_triangulator
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
 
 class CL_OutlineTriangulator_Generic;
 
 //: Polygon Tesselator.
-//- !group=Core/Math!
-//- !header=core.h!
 //- <p>This class uses constrained delauney triangulation to convert polygon outlines into triangles.</p>
 class CL_API_CORE CL_OutlineTriangulator
 {

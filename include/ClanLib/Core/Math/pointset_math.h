@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Emanuel Griesen
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -32,7 +33,16 @@
 #ifndef header_pointset_math
 #define header_pointset_math
 
-#include "../api_core.h"
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #include <vector>
 #include "point.h"
 #include "circle.h"
@@ -46,37 +56,38 @@ class CL_API_CORE CL_PointSetMath
 //! Operations:
  public:
 	//: Find minimum spanning circle for the set of points
-	//param std::vector<CL_Pointd> &points: the points to calulate on
-	static CL_Circled minimum_enclosing_disc(
-		const std::vector<CL_Pointd> &points);
+	//param std::vector<CL_Pointf> &points: the points to calulate on
+	static CL_Circlef minimum_enclosing_disc(
+		const std::vector<CL_Pointf> &points);
 
 	//: Return the convex hull of the given set of points
-	//param std::vector<CL_Pointd> P: the set of points
-	static std::vector<CL_Pointd> convex_hull_from_polygon(std::vector<CL_Pointd> &points);
+	//param std::vector<CL_Pointf> P: the set of points
+	static std::vector<CL_Pointf> convex_hull_from_polygon(std::vector<CL_Pointf> &points);
 
  private:
+
 	static void calculate_minimum_enclosing_disc(
-		CL_Circled &smalldisc,
-		const std::vector<CL_Pointd> &points,
+		CL_Circlef &smalldisc,
+		const std::vector<CL_Pointf> &points,
 		int start,
 		int end);
 
 	static void minimum_disc_with_1point(
-		CL_Circled &smalldisc,
-		const std::vector<CL_Pointd> &points,
+		CL_Circlef &smalldisc,
+		const std::vector<CL_Pointf> &points,
 		int start,
 		unsigned int i);
 
 	static void minimum_disc_with_2points(
-		CL_Circled &smalldisc,
-		const std::vector<CL_Pointd> &points,
+		CL_Circlef &smalldisc,
+		const std::vector<CL_Pointf> &points,
 		int start,
 		unsigned int i,
 		unsigned int j);
 
 	static void minimum_disc_with_3points(
-		CL_Circled &smalldisc,
-		const std::vector<CL_Pointd> &points,
+		CL_Circlef &smalldisc,
+		const std::vector<CL_Pointf> &points,
 		unsigned int i,
 		unsigned int j,
 		unsigned int k);

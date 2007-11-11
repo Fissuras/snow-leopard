@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,17 +33,24 @@
 #ifndef header_dom_implementation
 #define header_dom_implementation
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include "dom_string.h"
 
 class CL_DomImplementation_Generic;
 class CL_DomDocument;
-class CL_DomDocumentType;
 
 //: DOM Implementation class.
 //- !group=Core/XML!
@@ -69,23 +77,7 @@ public:
 	//param feature: The package name of the feature to test. In Level 1, the legal values are "HTML" and "XML" (case-insensitive).
 	//param version: This is the version number of the package name to test. In Level 1, this is the string "1.0". If the version is not specified, supporting any version of the feature will cause the method to return true.
 	//retval: true if the feature is implemented in the specified version, false otherwise.
-	bool has_feature(const CL_DomString &feature, const CL_DomString &version);
-
-	//: Creates an empty DocumentType node.
-	//- <p>Entity declarations and notations are not made available.
-	//- Entity reference expansions and default attribute additions
-	//- do not occur. It is expected that a future version of the DOM
-	//- will provide a way for populating a DocumentType.</p>
-	CL_DomDocumentType create_document_type(
-		const CL_DomString &qualified_name,
-		const CL_DomString &public_id,
-		const CL_DomString &system_id);
-
-	//: Creates an XML Document object of the specified type with its document element.
-	CL_DomDocument create_document(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &qualified_name,
-		const CL_DomDocumentType &doctype);
+	bool has_feature(const std::string &feature, const std::string &version);
 
 //! Implementation:
 private:

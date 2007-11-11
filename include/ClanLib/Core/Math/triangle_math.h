@@ -23,7 +23,8 @@
 **
 **  File Author(s):
 **
-**    Harry Storbacka
+**    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -32,23 +33,33 @@
 #ifndef header_triangle_math
 #define header_triangle_math
 
-#include "../api_core.h"
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
 
-class CL_Pointd;
+#include "point.h"
 
 //: Math operations on triangles.
 //- !group=Core/Math!
 //- !header=core.h!
 class CL_API_CORE CL_TriangleMath
 {
-//! Operations:
-public:
-	//: Return true if the point is inside the triangle.
-	//param CL_Pointd P: point to test.
-	//param double *vertices: Pointer to triangle vertices {x1,y1,x2,y2,x3,y3}.
-	static bool point_inside_triangle(const CL_Pointd &P, double *vertices);
+ public:
+// Operations:
 
-	static bool point_inside_triangle(double px, double py, double *vertices);
+	//: Return true if the point is inside the triangle.
+	//param CL_Pointf P: point to test
+	//param float *vertices: Pointer to triangle vertices {x1,y1,x2,y2,x3,y3}.
+	//param bool on_edge_is_outside: are points exactly on a edge in or out.
+	static bool point_inside_triangle(const CL_Pointf &P, float *vertices, bool on_edge_is_outside);
+	static bool point_inside_triangle(float px, float py, float *vertices, bool on_edge_is_outside);
+
 };
 
 #endif

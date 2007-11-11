@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,13 +33,22 @@
 #ifndef header_dom_node
 #define header_dom_node
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include "dom_string.h"
+#include <string>
 
 class CL_DomElement;
 class CL_DomAttr;
@@ -117,33 +127,8 @@ public:
 	//- <li>DocumentFragment: "#document-fragment"</li>
 	//- <li>Notation: notation name</li>
 	//- </ul>
-	CL_DomString get_node_name() const;
-
-	//: Returns the namespace URI of this node.
-	CL_DomString get_namespace_uri() const;
-
-	//: Returns the namespace prefix of the node.
-	//- <p>For nodes of any type other than ELEMENT_NODE and ATTRIBUTE_NODE and
-	//- nodes created with a DOM Level 1 method, such as create_element from the
-	//- Document interface, this is always an empty string.</p>
-	CL_DomString get_prefix() const;
-
-	//: Sets the namespace prefix of the node.
-	//- <p>Note that setting this attribute, when permitted, changes the node_name
-	//- attribute, which holds the qualified name, as well as the tag_name and name
-	//- attributes of the Element and Attr interfaces, when applicable.</p>
-	//- <p>Note also that changing the prefix of an attribute that is known to
-	//- have a default value, does not make a new attribute with the default value
-	//- and the original prefix appear, since the namespace_uri and local_name do
-	//- not change.</p>
-	void set_prefix(const CL_DomString &prefix);
-
-	//: Returns local part of the qualified name of this node.
-	//- <p>For nodes of any type other than ELEMENT_NODE and ATTRIBUTE_NODE and
-	//- nodes created with a DOM Level 1 method, such as create_element from the
-	//- Document interface, this is always an empty string.</p>
-	CL_DomString get_local_name() const;
-
+	std::string get_node_name() const;
+	
 	//: Returns the node value.
 	//- <p>The return value vary according to the node type as follows:</p>
 	//- <ul>
@@ -160,10 +145,10 @@ public:
 	//- <li>DocumentFragment: null</li>
 	//- <li>Notation: null</li>
 	//- </ul>
-	CL_DomString get_node_value() const;
+	std::string get_node_value() const;
 
 	//: Sets the node value.
-	void set_node_value(const CL_DomString &value);
+	void set_node_value(const std::string &value);
 
 	//: Returns the node type (one of those in the NodeType enum).
 	unsigned short get_node_type() const;
@@ -200,11 +185,11 @@ public:
 	CL_DomNode get_next_sibling() const;
 
 	//: A NamedNodeMap containing the attributes of this node (if it is an Element) or null otherwise.
-	CL_DomNamedNodeMap get_attributes() const;
+	CL_DomNamedNodeMap get_attributes();
 
 	//: The Document object associated with this node.
 	//- <p>This is also the Document object used to create new nodes. When this node is a Document this is null.</p>
-	CL_DomDocument get_owner_document() const;
+	CL_DomDocument get_owner_document();
 
 	//: Returns true if this is a null node.
 	bool is_null() const;
@@ -245,12 +230,6 @@ public:
 	//: Returns true if this is a notation node.
 	bool is_notation() const;
 
-	//: Tests whether the DOM implementation implements a specific feature and that feature is supported by this node.
-	bool is_supported(const CL_DomString &feature, const CL_DomString &version) const;
-
-	//: Returns true if this node (if its an element) has any attributes.
-	bool has_attributes() const;
-
 	//: Returns true if this node has any children.
 	bool has_child_nodes() const;
 	
@@ -264,19 +243,6 @@ public:
 
 	//: Compare operator.
 	bool operator ==(const CL_DomNode &other) const;
-
-	//: Merges any adjacent Text nodes.
-	//- <p>Puts all Text nodes in the full depth of the sub-tree underneath this node, including
-	//- attribute nodes, into a "normal" form where only structure (e.g., elements, comments,
-	//- processing instructions, CDATA sections, and entity references) separates Text nodes, i.e.,
-	//- there are neither adjacent Text nodes nor empty Text nodes.</p>
-	//- <p>This can be used to ensure that the DOM view of a document is the same as if it were
-	//- saved and re-loaded, and is useful when operations (such as XPointer lookups)
-	//- that depend on a particular document tree structure are to be used.</p>
-	//- <p><b>Note:</b> In cases where the document contains CDATASections, the normalize operation
-	//- alone may not be sufficient, since XPointers do not differentiate between Text nodes and
-	//- CDATASection nodes.</p>
-	void normalize();
 
 	//: Inserts the node new_child before the existing child node ref_child.
 	//- <p>If refChild is a null node, inserts new_child at the end of the list of children.</p>
@@ -310,6 +276,14 @@ public:
 	//param deep: If true, recursively clone the subtree under the specified node; if false, clone only the node itself (and its attributes, if it is an Element).
 	//retval: The duplicate node.
 	CL_DomNode clone_node(bool deep) const;
+	
+	//: Returns whether this node is the same node as the given one.
+    //- <p>This method provides a way to determine whether two Node references returned by the implementation reference the same object.
+	//- When two Node references are references to the same object, even if through a proxy, the references may be used completely interchangeably,
+	//- such that all attributes have the same values and calling the same DOM method on either reference always has exactly the same effect.</p>
+	//param other: The node to test against.
+	//retval: Returns true if the nodes are the same, false otherwise.
+	bool is_same_node(const CL_DomNode &other) const;
 
 	//: Returns the Element interface to this node.
 	//- <p>If the node is not an Element node, then it returns a null node.</p>
@@ -361,30 +335,17 @@ public:
 
 	//: Returns the first child node with the specified node name.
 	//- <p>Returns a null node if no child is found.</p>
-	CL_DomNode named_item(const CL_DomString &name) const;
-
-	//: Retrieves the first child node with the specified namespace URI and local name.
-	CL_DomNode named_item_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &local_name) const;
-
-	//: Searches the node tree upwards for the namespace URI of the given qualified name.
-	CL_DomString find_namespace_uri(const CL_DomString &qualified_name) const;
-
-	//: Searches the node tree upwards for the prefix name for the namespace URI.
-	CL_DomString find_prefix(const CL_DomString &namespace_uri) const;
+	CL_DomNode named_item(const std::string &name) const;
 
 //! Implementation:
 protected:
-	CL_DomNode(CL_DomDocument doc, unsigned short node_type);
+	CL_DomNode(CL_DomDocument &doc, unsigned short node_type);
 
 	CL_DomNode(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
 	CL_SharedPtr<CL_DomNode_Generic> impl;
 
 	friend class CL_DomDocument;
-
-	friend class CL_DomNamedNodeMap;
 };
 
 #endif

@@ -33,11 +33,19 @@
 #ifndef header_endian
 #define header_endian
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
-
-#include "../api_core.h"
 
 //: Endianess management class.
 //- !group=Core/IO Data!
@@ -56,7 +64,7 @@ public:
 //! Operations:
 	//: Swaps larger amounts of data between little and big endian.
 	//param data: Data to be swapped.
-	//param type_size: Size of datatype to be swapped. (Must be an even number)
+	//param type_size: Size of datatype to be swapped.
 	//param total_times: Number of 'type_size' size data chunks to be swapped.
 	static void swap(void *data, int type_size, int total_times=1);
 

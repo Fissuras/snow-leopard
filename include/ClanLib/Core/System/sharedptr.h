@@ -24,598 +24,171 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="System"
 //! header=core.h
 
-#ifndef header_sharedptr
-#define header_sharedptr
+#ifndef clanlib_sharedptr_header
+#define clanlib_sharedptr_header
 
-#include "../api_core.h"
-#include "system.h"
-#include "mutex.h"
-#include "exception.h"
-#include "memory_pool.h"
-
-//- !group=Core/System!
-//- !header=core.h!
-//- !hide!
-class CL_API_CORE CL_SharedPtr_Impl
+template <typename TEvil>
+class CL_SharedPtr_Generic
 {
 public:
-	virtual ~CL_SharedPtr_Impl() { return; }
+	CL_SharedPtr_Generic() : ptr(0), ref_count(1) { return; }
+
+	virtual ~CL_SharedPtr_Generic() { return; }
+
+public:
+	//: Pointer to new-allocated data, or else 0:
+	TEvil *ptr;
+	
+	//: reference count:
+	unsigned int ref_count;
 };
 
-//- !group=Core/System!
-//- !header=core.h!
-//- !hide!
-template <typename Type>
-class CL_SharedPtr_Deleter
+template <typename T, typename TEvil>
+class CL_SharedPtr_Deleter : public CL_SharedPtr_Generic<T>
 {
 public:
-	CL_SharedPtr_Deleter(Type *instance) : instance(instance) { return; }
+	CL_SharedPtr_Deleter(TEvil *e) { this->ptr = e; }
 
-	virtual ~CL_SharedPtr_Deleter() { delete instance; }
-
-	Type *instance;
+	~CL_SharedPtr_Deleter() { delete this->ptr; }
 };
 
+//: Shared pointer class (automatically deletes data when all CL_SharedPtrs to data are gone).
 //- !group=Core/System!
 //- !header=core.h!
-//- !hide!
-template <typename Type>
-class CL_SharedPtr_DeleterPool
+//- <p> Use CL_SharedPtr when you have data that's intended to be shared between
+//- multiple users without each user needing an individual copy. </p>
+//- <p> Note that CL_SharedPtr uses a very simple reference counting system, so is susecptible
+//- to circular loop issues. </p>
+template <typename T, typename U = T>
+class CL_SharedPtr
 {
+//! Construction:
 public:
-	CL_SharedPtr_DeleterPool(Type *instance, CL_MemoryPool *pool)
-	: instance(instance), pool(pool) { return; }
+	//: Constructs a CL_SharedPtr.
+	//param t: A pointer which was the return value of a 'new' call.
+	//- <p> After the CL_SharedPtr has been constructed based on a passed pointer,
+	//- the CL_SharedPtr takes full control over that data. The original pointer shouldn't
+	//- be used to access or delete the data anymore; instead, use the CL_SharedPtr. </p>
+	CL_SharedPtr() : impl(0) { return; }
 
-	virtual ~CL_SharedPtr_DeleterPool() { instance->~Type(); operator delete(instance, pool); }
+	CL_SharedPtr(const CL_SharedPtr<T, U>& other) : impl(other.impl) { increment(); }
 
-	Type *instance;
+	template <typename D>
+	explicit CL_SharedPtr(D* ptr) : impl(new CL_SharedPtr_Deleter<T, D>(ptr)) { return; }
 
-	CL_MemoryPool *pool;
-};
-
-//- !group=Core/System!
-//- !header=core.h!
-//- !hide!
-template <typename Type>
-class CL_SharedPtr_DeleterCallback
-{
+	explicit CL_SharedPtr(CL_SharedPtr_Generic<T> *impl) : impl(impl) { increment(); }
+	
+	~CL_SharedPtr() { decrement(); }
+	
+//! Attributes:
 public:
-	CL_SharedPtr_DeleterCallback(Type *instance, void (*free_callback)(Type *))
-	: instance(instance), free_callback(free_callback) { return; }
+	//: Returns true if this CL_SharedPtr is not dereferencable.
+	bool is_null() const { return impl ? (impl->ptr == 0) : true; }
 
-	virtual ~CL_SharedPtr_DeleterCallback() { free_callback(instance); }
+	//: Returns number of references (including this one) to the data cache.
+	//- <p> Returns 0 if this pointer is null. </p>
+	int get_ref_count() const { if (impl == 0) return 0; return impl->ref_count; }
+	
+	//: Gives access to the pointer itself.
+	//- <p> Be careful not to keep the returned pointer around after doing any
+	//- non-const operations on the CL_LazyCopyPtr; it could be invalid
+	//- after that.</p>
+	U* get() { return (U*) ((impl != 0) ? impl->ptr : 0); }
 
-	Type *instance;
+	U const* get() const { return (const U*) ((impl != 0) ? impl->ptr : 0); }
 
-	void (*free_callback)(Type *);
-};
+	//: Return the pointer.
+	operator U*() { return get(); }
 
-//- !group=Core/System!
-//- !header=core.h!
-//- !hide!
-template <typename Type, typename FreeClass>
-class CL_SharedPtr_DeleterClassCallback
-{
-public:
-	CL_SharedPtr_DeleterClassCallback(Type *instance, FreeClass *free_class, void (FreeClass::*free_callback)(Type *))
-	: instance(instance), free_class(free_class), free_callback(free_callback) { return; }
+	//: Returns the pointer.
+	operator U const*() const { return get(); }
 
-	virtual ~CL_SharedPtr_DeleterClassCallback() { (free_class->*free_callback)(instance); }
+	//: Pointer equality check operator.
+	//- <p> This will return true if the CL_SharedPtrs point to the same data. It doesn't
+	//- check the data itself for equality. </p>
+	bool operator==(const T* other) const { return other == ((impl != 0) ? impl->ptr : 0); }
 
-	Type *instance;
+	bool operator==(const CL_SharedPtr<T, U>& other) const { return other.impl == impl; }
 
-	FreeClass *free_class;
-
-	void (FreeClass::*free_callback)(Type *);
-};
-
-// This was set to 32. This should have been enough for 4 pointers (including VTBL) of 64 bit size
-// However, due to compiler issues, in the following example:
-//	class X { void (*funx)(void); };
-//	class Z { void (X::*funx)(void); };
-// Using gcc 4.1.2 on a 64 bit machine:
-// sizeof(class X) = 8
-// sizeof(class Z) = 16 
-//
-// See: http://www.codeproject.com/cpp/FastDelegate.asp
-// "Implementations of Member Function Pointers"
-// This has a table showning the various sizeof() operators for various function pointers on various compilers
-//
-// So, a "safer" option was chosen .. use sizeof((CL_SharedPtr_DeleterClassCallback<int,CL_MemoryPool>)
-// Where CL_SharedPtr_DeleterClassCallback contains the greatest number of template pointers
-// and CL_MemoryPool is an example class to use for the template.
-// (Modified by rombust 21 May 2007)
-#define CL_DELETER_SIZE (sizeof(CL_SharedPtr_DeleterClassCallback<int,CL_MemoryPool>))
-
-//- !group=Core/System!
-//- !header=core.h!
-//- !hide!
-class CL_API_CORE CL_SharedPtr_Link
-{
-public:
-	CL_SharedPtr_Link()
-	: mutex(0), prev(0), next(0), weak_link(0)
+	//: reelase the content of the CL_SharedPtr
+	//- <p> Decrements the reference count and sets the data pointer to null.
+	//- This is usefull for solving circular references</p>
+	void release (void) 
 	{
-	}
-
-	CL_SharedPtr_Link(const CL_SharedPtr_Link &copy)
-	: mutex(0), prev(0), next(0), weak_link(0)
-	{
-		connect(copy);
-	}
-
-	~CL_SharedPtr_Link()
-	{
-		if (prev != 0 || next != 0)
-			disconnect();
-		/*
-		mutex = (CL_Mutex *) 0xfdfdfdfd;
-		prev = (CL_SharedPtr_Link *) 0xfdfdfdfd;
-		next = (CL_SharedPtr_Link *) 0xfdfdfdfd;
-		memset(deleter, 0xfd, CL_DELETER_SIZE);
-		weak_link = 0xfd;
-		*/
-	}
-
-	CL_SharedPtr_Link &operator =(const CL_SharedPtr_Link &copy)
-	{
-		if (this != &copy)
+		if (impl!= 0)
 		{
-			disconnect();
-			connect(copy);
+			decrement ();
+			impl = 0;
+		}
+	}
+//! Operations:
+public:
+	//: Copy assignment operator.
+	//param t: A pointer which was the return value of a 'new' call.
+	//- <p> Once the assignment statement is finished when assigning a passed pointer,
+	//- the CL_SharedPtr takes full control over that data. The original pointer shouldn't
+	//- be used to access or delete the data anymore; instead, use the CL_SharedPtr. </p>
+	CL_SharedPtr<T, U>& operator=(const CL_SharedPtr<T, U>& other)
+	{
+		if (other.impl != impl)
+		{
+			decrement();
+			impl = other.impl;
+			increment();
 		}
 		return *this;
 	}
-	
-	template <typename Type>
-	void create_deleter(Type *instance)
+
+	template <typename D>
+	CL_SharedPtr<T, U>& operator=(D* t)
 	{
-		#ifdef DEBUG_SHAREDPTR
-			if (sizeof(CL_SharedPtr_Deleter<Type>) > CL_DELETER_SIZE)
-				throw CL_Exception("CL_DELETER_SIZE buffer too small!");
-		#endif
-		CL_SharedPtr_Deleter<Type> *d = (CL_SharedPtr_Deleter<Type> *) deleter;
-		CL_System::call_constructor(d, instance);
+		decrement();
+		impl = new CL_SharedPtr_Deleter<T, D>(t);
+		return *this;
 	}
 	
-	template <typename Type>
-	void create_deleter(Type *ptr, CL_MemoryPool *pool)
-	{
-		#ifdef DEBUG_SHAREDPTR
-			if (sizeof(CL_SharedPtr_DeleterPool<Type>) > CL_DELETER_SIZE)
-				throw CL_Exception("CL_DELETER_SIZE buffer too small!");
-		#endif
-		CL_SharedPtr_DeleterPool<Type> *d = (CL_SharedPtr_DeleterPool<Type> *) deleter;
-		CL_System::call_constructor(d, ptr, pool);
-	}
+	//: Dereferencing operator.
+	U& operator*() { return *((U*) impl->ptr); }
 
-	template <typename Type>
-	void create_deleter(Type *ptr, void (*free_callback)(Type *ptr))
-	{
-		#ifdef DEBUG_SHAREDPTR
-			if (sizeof(CL_SharedPtr_DeleterCallback<Type>) > CL_DELETER_SIZE)
-				throw CL_Exception("CL_DELETER_SIZE buffer too small!");
-		#endif
-		CL_SharedPtr_DeleterCallback<Type> *d = (CL_SharedPtr_DeleterCallback<Type> *) deleter;
-		CL_System::call_constructor(d, ptr, free_callback);
-	}
-
-	template <typename Type, typename FreeClass>
-	void create_deleter(Type *ptr, FreeClass *free_class, void (FreeClass::*free_callback)(Type *ptr))
-	{
-		#ifdef DEBUG_SHAREDPTR
-			if (sizeof(CL_SharedPtr_DeleterClassCallback<Type, FreeClass>) > CL_DELETER_SIZE)
-				throw CL_Exception("CL_DELETER_SIZE buffer too small!");
-		#endif
-		CL_SharedPtr_DeleterClassCallback<Type, FreeClass> *d = (CL_SharedPtr_DeleterClassCallback<Type, FreeClass> *) deleter;
-		CL_System::call_constructor(d, ptr, free_class, free_callback);
-	}
-
-	void call_deleter()
-	{
-		CL_SharedPtr_Impl *d = (CL_SharedPtr_Impl *) deleter;
-		CL_System::call_destructor(d);
-	}
+	U const& operator*() const { return *((const U*) impl->ptr); }
 	
-	void connect(const CL_SharedPtr_Link &copy)
-	{
-		CL_MutexSection mutex_lock(copy.mutex);
-		#ifdef DEBUG_SHAREDPTR
-			if (prev != 0 || next != 0)
-				throw CL_Exception("Memory corruption error in CL_SharedPtr_Link");
-			assert_list(&copy);
-		#endif
-		mutex = copy.mutex;
-		next = copy.next;
-		prev = (CL_SharedPtr_Link *) &copy;
-		copy.next = this;
-		if (next)
-			next->prev = this;
-		memcpy(deleter, copy.deleter, CL_DELETER_SIZE);
-		#ifdef DEBUG_SHAREDPTR
-			assert_list(prev);
-		#endif
-	}
+	//: Indirect member access operator.
+	U* operator->() { return (U*) impl->ptr; }
 
-	//: Disconnect from linked list.
-	//- <p>Returns true if list is empty or only contains weak links.</p>
-	bool disconnect()
-	{
-		CL_MutexSection mutex_lock(mutex);
-		#ifdef DEBUG_SHAREDPTR
-			assert_list(prev);
-		#endif
-		if (prev == 0 && next == 0)
-			return true;
+	U const* operator->() const { return (const U*) impl->ptr; }
 
-		if (prev)
-			prev->next = next;
-		if (next)
-			next->prev = prev;
-		#ifdef DEBUG_SHAREDPTR
-			assert_list(prev);
-		#endif
+	CL_SharedPtr_Generic<T> *get_impl() { return impl; }
 
-		CL_SharedPtr_Link *cur = prev;
-		while (cur)
-		{
-			if (!cur->weak_link)
-			{
-				prev = 0;
-				next = 0;
-				return false;
-			}
-			cur = cur->prev;
-		}
-
-		cur = next;
-		while (cur)
-		{
-			if (!cur->weak_link)
-			{
-				prev = 0;
-				next = 0;
-				return false;
-			}
-			cur = cur->next;
-		}
-
-		// Ok, empty or only contains weak links.
-		// Invalidate all weak links:
-
-		cur = prev;
-		while (cur)
-		{
-			cur->weak_link = 2;
-			cur = cur->prev;
-		}
-
-		cur = next;
-		while (cur)
-		{
-			cur->weak_link = 2;
-			cur = cur->next;
-		}
-
-		prev = 0;
-		next = 0;
-		return true;
-	}
-
-	void set_weak_link() { weak_link = 1; }
-
-	bool is_invalid_weak_link() const { return weak_link != 1; }
-
-	#ifdef DEBUG_SHAREDPTR
-		void assert_list(const CL_SharedPtr_Link *ptr)
-		{
-			if (ptr == 0)
-				return;
-			while (ptr->prev != 0)
-			{
-				if (ptr->prev->next != ptr)
-					throw CL_Exception("Memory corruption error in CL_SharedPtr_Link");
-				ptr = ptr->prev;
-			}
-			while (ptr && ptr->next)
-			{
-				if (ptr->next->prev != ptr)
-					throw CL_Exception("Memory corruption error in CL_SharedPtr_Link");
-				ptr = ptr->next;
-			}
-		}
-	#endif
-
-public:
-	mutable CL_Mutex *mutex;
-
+//! Implementation:
 private:
-	mutable CL_SharedPtr_Link *prev;
-
-	mutable CL_SharedPtr_Link *next;
+	// Shared data:
+	CL_SharedPtr_Generic<T> *impl;
 	
-	char deleter[CL_DELETER_SIZE];
-
-	unsigned char weak_link;
-};
-
-//- !group=Core/System!
-//- !header=core.h!
-class CL_API_CORE CL_UnknownSharedPtr : public CL_SharedPtr_Link
-{
-public:
-	CL_UnknownSharedPtr()
-	: ptr(0)
+	//: Increases the ref count
+	void increment()
 	{
+		if (impl != 0)
+			++impl->ref_count;
 	}
 	
-	CL_UnknownSharedPtr(const CL_SharedPtr_Link &link, void *ptr)
-	: ptr(ptr)
+	//: Decreases the ref count, deletes entry and sets ptr to 0 if ptr_ref_count reaches zero
+	void decrement()
 	{
-		connect(link);
-	}
-
-	CL_UnknownSharedPtr(const CL_UnknownSharedPtr &copy)
-	: ptr(0)
-	{
-		connect(copy);
-		ptr = copy.ptr;
-	}
-	
-	~CL_UnknownSharedPtr()
-	{
-		disconnect();
-	}
-	
-	CL_UnknownSharedPtr &operator =(const CL_UnknownSharedPtr &copy)
-	{
-		if (this == &copy)
-			return *this;
-		disconnect();
-		connect(copy);
-		ptr = copy.ptr;
-		return *this;
-	}
-	
-	//: Disconnect from linked list and unset the pointer
-	//- If the list is empty or only contains weak links, then the pointer destructor is called
-	//return: true if the list is empty or only contains weak links (ie the pointer destructor was called)
-	bool disconnect()
-	{
-		bool result = CL_SharedPtr_Link::disconnect();
-		if ( result && ptr )
+		if (impl != 0)
 		{
-			call_deleter();
+			if (--impl->ref_count == 0)
+			{
+				delete impl;
+				impl = 0;
+			}
 		}
-		ptr = NULL;
-		return result;
 	}
-
-	//: Tests if the pointer is unset
-	//return: true, pointer not set
-	bool is_null() const { return ptr == 0; }
-
-	//: Retrieves the pointer
-	//return: The pointer (May be NULL, if it has not been set)
-	void *get() { return ptr; }
-	
-	//: Retrieves the pointer
-	//return: The pointer (May be NULL, if it has not been set)
-	const void *get() const { return ptr; }
-	
-	operator void *() { return ptr; }
-	
-	operator const void *() const { return ptr; }
-	
-	void *operator ->() { return ptr; }
-	
-	const void *operator ->() const { return ptr; }
-
-	template <typename OtherType>
-	bool operator ==(OtherType *other) const { return ptr == other; }
-
-	template <typename OtherType>
-	bool operator !=(OtherType *other) const { return ptr != other; }
-
-	template <typename OtherType>
-	bool operator <(OtherType *other) const { return ptr < other; }
-
-	template <typename OtherType>
-	bool operator <=(OtherType *other) const { return ptr <= other; }
-
-	template <typename OtherType>
-	bool operator >(OtherType *other) const { return ptr > other; }
-
-	template <typename OtherType>
-	bool operator >=(OtherType *other) const { return ptr >= other; }
-
-public:
-	void *ptr;
-};
-
-//- !group=Core/System!
-//- !header=core.h!
-template <typename Type>
-class CL_SharedPtr : public CL_SharedPtr_Link
-{
-public:
-	CL_SharedPtr()
-	: ptr(0)
-	{
-	}
-	
-	CL_SharedPtr(const CL_SharedPtr<Type> &copy)
-	: ptr(0)
-	{
-		connect(copy);
-		ptr = copy.ptr;
-	}
-	
-	explicit CL_SharedPtr(const CL_UnknownSharedPtr &copy)
-	: ptr(0)
-	{
-		connect(copy);
-		ptr = (Type *) copy.ptr;
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr)
-	: ptr(ptr)
-	{
-		mutex = CL_System::get_sharedptr_mutex();
-		if (ptr)
-			create_deleter(ptr);
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr, CL_Mutex *ref_mutex)
-	: ptr(ptr)
-	{
-		mutex = ref_mutex;
-		if (ptr)
-			create_deleter(ptr);
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr, CL_MemoryPool *memory_pool)
-	: ptr(ptr)
-	{
-		mutex = CL_System::get_sharedptr_mutex();
-		if (ptr)
-			create_deleter(ptr, memory_pool);
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr, CL_MemoryPool *memory_pool, CL_Mutex *ref_mutex)
-	: ptr(ptr)
-	{
-		mutex = ref_mutex;
-		if (ptr)
-			create_deleter(ptr, memory_pool);
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr, void (*free_callback)(InitType *ptr))
-	: ptr(ptr)
-	{
-		mutex = CL_System::get_sharedptr_mutex();
-		if (ptr)
-			create_deleter(ptr, free_callback);
-	}
-
-	template <typename InitType>
-	explicit CL_SharedPtr(InitType *ptr, void (*free_callback)(InitType *ptr), CL_Mutex *ref_mutex)
-	: ptr(ptr)
-	{
-		mutex = ref_mutex;
-		if (ptr)
-			create_deleter(ptr, free_callback);
-	}
-
-	template <typename InitType, typename FreeClass>
-	explicit CL_SharedPtr(InitType *ptr, FreeClass *free_class, void (FreeClass::*free_callback)(InitType *ptr))
-	: ptr(ptr)
-	{
-		mutex = CL_System::get_sharedptr_mutex();
-		if (ptr)
-			create_deleter(ptr, free_class, free_callback);
-	}
-
-	template <typename InitType, typename FreeClass>
-	explicit CL_SharedPtr(InitType *ptr, FreeClass *free_class, void (FreeClass::*free_callback)(InitType *ptr), CL_Mutex *ref_mutex)
-	: ptr(ptr)
-	{
-		mutex = ref_mutex;
-		if (ptr)
-			create_deleter(ptr, free_class, free_callback);
-	}
-
-	CL_SharedPtr(const CL_SharedPtr_Link &link, Type *ptr)
-	: ptr(ptr)
-	{
-		connect(link);
-	}
-
-	~CL_SharedPtr()
-	{
-		disconnect();
-	}
-	
-	CL_SharedPtr &operator =(const CL_SharedPtr &copy)
-	{
-		if (this == &copy)
-			return *this;
-		disconnect();
-		connect(copy);
-		ptr = copy.ptr;
-		return *this;
-	}
-
-	//: Disconnect from linked list and unset the pointer
-	//- If the list is empty or only contains weak links, then the pointer destructor is called
-	//return: true if the list is empty or only contains weak links (ie the pointer destructor was called)
-	bool disconnect()
-	{
-		bool result = CL_SharedPtr_Link::disconnect();
-		if ( result && ptr )
-		{
-			call_deleter();
-		}
-		ptr = NULL;
-		return result;
-	}
-
-	//: Tests if the pointer is unset
-	//return: true, pointer not set
-	bool is_null() const { return ptr == 0; }
-
-	//: Retrieves the pointer
-	//return: The pointer (May be NULL, if it has not been set)
-	Type *get() { return ptr; }
-	
-	//: Retrieves the pointer
-	//return: The pointer (May be NULL, if it has not been set)
-	const Type *get() const { return ptr; }
-	
-	operator Type *() { return ptr; }
-	
-	operator const Type *() const { return ptr; }
-	
-	operator CL_UnknownSharedPtr() { return CL_UnknownSharedPtr(*this, ptr); }
-
-	operator CL_UnknownSharedPtr() const { return CL_UnknownSharedPtr(*this, (Type *) ptr); }
-	
-	Type *operator ->() { return ptr; }
-	
-	const Type *operator ->() const { return ptr; }
-
-	template <typename OtherType>
-	bool operator ==(OtherType *other) const { return ptr == other; }
-
-	template <typename OtherType>
-	bool operator !=(OtherType *other) const { return ptr != other; }
-
-	template <typename OtherType>
-	bool operator <(OtherType *other) const { return ptr < other; }
-
-	template <typename OtherType>
-	bool operator <=(OtherType *other) const { return ptr <= other; }
-
-	template <typename OtherType>
-	bool operator >(OtherType *other) const { return ptr > other; }
-
-	template <typename OtherType>
-	bool operator >=(OtherType *other) const { return ptr >= other; }
-	
-public:
-	Type *ptr;
-
 };
 
 #endif
-

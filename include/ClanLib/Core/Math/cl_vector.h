@@ -24,7 +24,6 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Mark Page
 **    (if your name is missing here, please add it)
 */
 
@@ -34,515 +33,135 @@
 #ifndef header_cl_vector
 #define header_cl_vector
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include <iostream>
 
-//: 1D vector
-//- !group=Display/Display!
-//- !header=display.h!
-template<typename Type>
-class CL_Vec1
+//: Vector class.
+//- !group=Core/Math!
+//- !header=core.h!
+//- <p>This class provides basic functions and operators for working with vectors.</p>
+class CL_API_CORE CL_Vector
 {
 public:
-	union { Type x; Type s; Type r; };
-
-	CL_Vec1() { }
-	CL_Vec1(const Type &p1) : x(p1) { }
-
-//! Attributes:
+//! Variables:
+	//: x coordinate
+	float x;
+	//: y coordinate
+	float y;
+	//: z coordinate
+	float z;
+	//: w coordinate
+	float w;
+      
 public:
-	//: Rounds all components.
-	//- Uses Asymmetric Arithmetic Rounding
-	void round() {x = (Type) floor(x+0.5);}
-
-//! Operators:
-public:
-	const Type &operator[](unsigned int i) const { return ((Type *) this)[i]; }
-	Type &operator[](unsigned int i) { return ((Type *) this)[i]; }
-	operator Type *() { return (Type *) this; }
-	operator Type * const() const { return (Type * const) this; }
-
-	//: += operator.
-	void operator += (const CL_Vec1<Type>& vector) { x+= vector.x; }
-
-	//: += operator.
-	void operator += ( Type value) { x+= value; }
-
-	//: + operator.
-	CL_Vec1<Type> operator + (const CL_Vec1<Type>& vector) const {return CL_Vec1<Type>(vector.x + x);}
-
-	//: + operator.
-	CL_Vec1<Type> operator + (Type value) const {return CL_Vec1<Type>(value + x);}
-
-	//: -= operator.
-	void operator -= (const CL_Vec1<Type>& vector) { x-= vector.x; }
-
-	//: -= operator.
-	void operator -= ( Type value) { x-= value; }
-
-	//: - operator.
-	CL_Vec1<Type> operator - (const CL_Vec1<Type>& vector) const {return CL_Vec1<Type>(x - vector.x);}
-
-	//: - operator.
-	CL_Vec1<Type> operator - (Type value) const {return CL_Vec1<Type>(x - value);}
-
-	//: *= operator.
-	void operator *= (const CL_Vec1<Type>& vector) { x*= vector.x; }
-
-	//: *= operator.
-	void operator *= ( Type value) { x*= value; }
-
-	//: * operator.
-	CL_Vec1<Type> operator * (const CL_Vec1<Type>& vector) const {return CL_Vec1<Type>(vector.x * x);}
-
-	//: * operator.
-	CL_Vec1<Type> operator * (Type value) const {return CL_Vec1<Type>(value * x);}
-
-	//: /= operator.
-	void operator /= (const CL_Vec1<Type>& vector) { x/= vector.x; }
-
-	//: /= operator.
-	void operator /= ( Type value) { x/= value; }
-
-	//: / operator.
-	CL_Vec1<Type> operator / (const CL_Vec1<Type>& vector) const {return CL_Vec1<Type>(x / vector.x);}
-
-	//: / operator.
-	CL_Vec1<Type> operator / (Type value) const {return CL_Vec1<Type>(x / value);}
-
-	//: = operator.
-	CL_Vec1<Type> &operator = (const CL_Vec1<Type>& vector) { x = vector.x; return *this; }
-
-	//: == operator.
-	bool operator == (const CL_Vec1<Type>& vector) const {return ((x == vector.x));}
-
-	//: != operator.
-	bool operator != (const CL_Vec1<Type>& vector) const {return ((x != vector.x));}
-};
-
-//: 2D vector
-//- !group=Display/Display!
-//- !header=display.h!
-template<typename Type>
-class CL_Vec2
-{
-public:
-	union { Type x; Type s; Type r; };
-	union { Type y; Type t; Type g; };
-
-	CL_Vec2() { }
-	CL_Vec2(const Type &p1, const Type &p2 = 0) : x(p1), y(p2) { }
-
-//! Attributes:
-public:
-
-	//: Returns the length (magnitude) of the vector.
-	//- <p>Operates in the native datatype</p>
-	//return: the length of the vector
-#ifdef WIN32
-	Type length() const {return (Type) sqrt(double(x*x+y*y));}
-#else
-	Type length() const {return (Type) sqrt(x*x+y*y);}	// Damm gcc compiler
-#endif
-
-	//: Normalizes the vector
-	//- <p>Operates in the native datatype</p>
-	void normalize();
-
-	//: Dot products this vector with an other vector.
-	//- <p>Operates in the native datatype</p>
-	//param vector: Second vector used for the dot product.
-	//return: The resulting dot product of the two vectors.
-	Type dot(const CL_Vec2<Type>& vector) const {return x*vector.x + y*vector.y;}
 	
-	//: Calculate the angle between this vector and an other vector. (double)
-	//param vector: Second vector used to calculate angle.
-	//return: The angle between the two vectors.
-	double angle(const CL_Vec2<Type>& vector) const;
+//! Construction:
+	//: Constructor that initializes a vector
+	//param x: Initial x coordinate of vector.
+	//param y: Initial y coordinate of vector.
+	//param z: Initial z coordinate of vector.
+	//param w: Initial w coordinate of vector.
+	//param other: vector to copy construct from.
+	CL_Vector(float x = 0.0, float y = 0.0, float z = 0.0, float w = 1.0);
 
-	//: Calculate the angle between this vector and an other vector. (float)
-	//param vector: Second vector used to calculate angle.
-	//return: The angle between the two vectors.
-	float anglef(const CL_Vec2<Type>& vector) const;
-
-	//: Rounds all components.
-	//- Uses Asymmetric Arithmetic Rounding
-	void round();
-
-//! Operators:
-public:
-	const Type &operator[](unsigned int i) const { return ((Type *) this)[i]; }
-	Type &operator[](unsigned int i) { return ((Type *) this)[i]; }
-	operator Type *() { return (Type *) this; }
-	operator Type * const() const { return (Type * const) this; }
-
-	//: += operator.
-	void operator += (const CL_Vec2<Type>& vector) { x+= vector.x; y+= vector.y; }
-
-	//: += operator.
-	void operator += ( Type value) { x+= value; y+= value; }
-
-	//: + operator.
-	CL_Vec2<Type> operator + (const CL_Vec2<Type>& vector) const {return CL_Vec2<Type>(vector.x + x, vector.y + y);}
-
-	//: + operator.
-	CL_Vec2<Type> operator + (Type value) const {return CL_Vec2<Type>(value + x, value + y);}
-
-	//: -= operator.
-	void operator -= (const CL_Vec2<Type>& vector) { x-= vector.x; y-= vector.y; }
-
-	//: -= operator.
-	void operator -= ( Type value) { x-= value; y-= value; }
-
-	//: - operator.
-	CL_Vec2<Type> operator - (const CL_Vec2<Type>& vector) const {return CL_Vec2<Type>(x - vector.x, y - vector.y);}
-
-	//: - operator.
-	CL_Vec2<Type> operator - (Type value) const {return CL_Vec2<Type>(x - value, y - value);}
-
-	//: *= operator.
-	void operator *= (const CL_Vec2<Type>& vector) { x*= vector.x; y*= vector.y; }
-
-	//: *= operator.
-	void operator *= ( Type value) { x*= value; y*= value; }
-
-	//: * operator.
-	CL_Vec2<Type> operator * (const CL_Vec2<Type>& vector) const {return CL_Vec2<Type>(vector.x * x, vector.y * y);}
-
-	//: * operator.
-	CL_Vec2<Type> operator * (Type value) const {return CL_Vec2<Type>(value * x, value * y);}
-
-	//: /= operator.
-	void operator /= (const CL_Vec2<Type>& vector) { x/= vector.x; y/= vector.y; }
-
-	//: /= operator.
-	void operator /= ( Type value) { x/= value; y/= value; }
-
-	//: / operator.
-	CL_Vec2<Type> operator / (const CL_Vec2<Type>& vector) const {return CL_Vec2<Type>(x / vector.x, y / vector.y);}
-
-	//: / operator.
-	CL_Vec2<Type> operator / (Type value) const {return CL_Vec2<Type>(x / value, y / value);}
-
-	//: = operator.
-	CL_Vec2<Type> &operator = (const CL_Vec2<Type>& vector) { x = vector.x; y = vector.y; return *this; }
-
-	//: == operator.
-	bool operator == (const CL_Vec2<Type>& vector) const {return ((x == vector.x) && (y == vector.y));}
-
-	//: != operator.
-	bool operator != (const CL_Vec2<Type>& vector) const {return ((x != vector.x) || (y != vector.y));}
-
-};
-
-//: 3D vector
-//- !group=Display/Display!
-//- !header=display.h!
-template<typename Type>
-class CL_Vec3
-{
-public:
-	union { Type x; Type s; Type r; };
-	union { Type y; Type t; Type g; };
-	union { Type z; Type u; Type b; };
-
-	CL_Vec3() { }
-	CL_Vec3(const Type &p1, const Type &p2 = 0, const Type &p3 = 0) : x(p1), y(p2), z(p3) { }
+	CL_Vector(const CL_Vector &other);
 
 //! Attributes:
-public:
-	//: Returns the length (magnitude) of the vector.
-	//- <p>Operates in the native datatype</p>
-	//return: the length of the vector (in R^3)
-#ifdef WIN32
-	Type length() const {return (Type) sqrt(double(x*x+y*y+z*z));}
-#else
-	Type length() const {return (Type) sqrt(x*x+y*y+z*z);}
-#endif
-	//: Normalizes the vector
-	//- <p>Operates in the native datatype</p>
-	void normalize();
-
-	//: Dot products this vector with an other vector.
-	//- <p>Operates in the native datatype</p>
-	//param vector: Second vector used for the dot product.
-	//return: The resulting dot product of the two vectors.
-	Type dot(const CL_Vec3<Type>& vector) const {return x*vector.x + y*vector.y + z*vector.z;}
-	
-	//: Calculate the angle between this vector and an other vector. (double)
-	//param vector: Second vector used to calculate angle.
-	//return: The angle between the two vectors.
-	double angle(const CL_Vec3<Type>& vector) const;
-
-	//: Calculate the angle between this vector and an other vector. (float)
-	//param vector: Second vector used to calculate angle.
-	//return: The angle between the two vectors.
-	float anglef(const CL_Vec3<Type>& vector) const;
-
-	//: Calculate the cross product between this vector and an other vector.
-	//- <p>Operates in the native datatype</p>
-	//param vector: Second vector used to perform the calculation.
-	//return: The cross product of the two vectors.
-	CL_Vec3<Type> cross(const CL_Vec3<Type>& vector) const;
-	
-	//: Rotate vector around an axis (double). Same as glRotated(angle, a);
-	//param angle: Angle to rotate (in radians).
-	//param axis: Rotation axis.
-	//return: The resulting rotated vector.
-	CL_Vec3<Type> rotate(double angle, const CL_Vec3<Type>& axis) const;
-
-	//: Rotate vector around an axis (float). Same as glRotatef(angle, a);
-	//param angle: Angle to rotate (in radians).
-	//param axis: Rotation axis.
-	//return: The resulting rotated vector.
-	CL_Vec3<Type> rotate(float angle, const CL_Vec3<Type>& axis) const;
-
-	//: Rounds all components.
-	//- Uses Asymmetric Arithmetic Rounding
-	void round();
-
-//! Operators:
-public:
-	const Type &operator[](unsigned int i) const { return ((Type *) this)[i]; }
-	Type &operator[](unsigned int i) { return ((Type *) this)[i]; }
-	operator Type *() { return (Type *) this; }
-	operator Type * const() const { return (Type * const) this; }
-
-	//: += operator.
-	void operator += (const CL_Vec3<Type>& vector) { x+= vector.x; y+= vector.y; z+= vector.z; }
-
-	//: += operator.
-	void operator += ( Type value) { x+= value; y+= value; z+= value; }
-
-	//: + operator.
-	CL_Vec3<Type> operator + (const CL_Vec3<Type>& vector) const {return CL_Vec3<Type>(vector.x + x, vector.y + y, vector.z + z);}
-
-	//: + operator.
-	CL_Vec3<Type> operator + (Type value) const {return CL_Vec3<Type>(value + x, value + y, value + z);}
-
-	//: -= operator.
-	void operator -= (const CL_Vec3<Type>& vector) { x-= vector.x; y-= vector.y; z-= vector.z; }
-
-	//: -= operator.
-	void operator -= ( Type value) { x-= value; y-= value; z-= value; }
-
-	//: - operator.
-	CL_Vec3<Type> operator - (const CL_Vec3<Type>& vector) const {return CL_Vec3<Type>(x - vector.x, y - vector.y, z - vector.z);}
-
-	//: - operator.
-	CL_Vec3<Type> operator - (Type value) const {return CL_Vec3<Type>(x - value, y - value, z - value);}
-
-	//: *= operator.
-	void operator *= (const CL_Vec3<Type>& vector) { x*= vector.x; y*= vector.y; z*= vector.z; }
-
-	//: *= operator.
-	void operator *= ( Type value) { x*= value; y*= value; z*= value; }
-
-	//: * operator.
-	CL_Vec3<Type> operator * (const CL_Vec3<Type>& vector) const {return CL_Vec3<Type>(vector.x * x, vector.y * y, vector.z * z);}
-
-	//: * operator.
-	CL_Vec3<Type> operator * (Type value) const {return CL_Vec3<Type>(value * x, value * y, value * z);}
-
-	//: /= operator.
-	void operator /= (const CL_Vec3<Type>& vector) { x/= vector.x; y/= vector.y; z/= vector.z; }
-
-	//: /= operator.
-	void operator /= ( Type value) { x/= value; y/= value; z/= value; }
-
-	//: / operator.
-	CL_Vec3<Type> operator / (const CL_Vec3<Type>& vector) const {return CL_Vec3<Type>(x / vector.x, y / vector.y, z / vector.z);}
-
-	//: / operator.
-	CL_Vec3<Type> operator / (Type value) const {return CL_Vec3<Type>(x / value, y / value, z / value);}
-
-	//: = operator.
-	CL_Vec3<Type> &operator = (const CL_Vec3<Type>& vector) { x = vector.x; y = vector.y; z = vector.z; return *this; }
-
-	//: == operator.
-	bool operator == (const CL_Vec3<Type>& vector) const {return ((x == vector.x) && (y == vector.y) && (z == vector.z));}
-
-	//: != operator.
-	bool operator != (const CL_Vec3<Type>& vector) const {return ((x != vector.x) || (y != vector.y) || (z != vector.z));}
-
-};
-
-//: 4D vector
-//- !group=Display/Display!
-//- !header=display.h!
-template<typename Type>
-class CL_Vec4
-{
-public:
-	union { Type x; Type s; Type r; };
-	union { Type y; Type t; Type g; };
-	union { Type z; Type u; Type b; };
-	union { Type w; Type v; Type a; };
-
-	CL_Vec4() { }
-	CL_Vec4(const Type &p1, const Type &p2 = 0, const Type &p3 = 0, const Type &p4 = 0) : x(p1), y(p2), z(p3), w(p4) { }
-
-//! Attributes:
-public:
-	//: Returns the length (magnitude) of the vector.
+	//: Returns the (euclid) norm of the vector.
 	//- <p>This function does not use the w coordinate of the vector. It only uses
 	//- the x,y,z coordinates.</p>
-	//- <p>Operates in the native datatype</p>
-	//return: the length of the vector (in R^3)
-#ifdef WIN32
-	Type length() const {return (Type) sqrt(double(x*x+y*y+z*z));}
-#else
-	Type length() const {return (Type) sqrt(x*x+y*y+z*z);}
-#endif
+	//return: the euclid norm of the vector (in R^3)
+	float norm() const;
+
 	//: Normalizes the vector (not taking into account the w ordinate!)
-	//- <p>Operates in the native datatype</p>
 	void normalize();
 
 	//: Dot products this vector with an other vector.
-	//- <p>Operates in the native datatype</p>
 	//param vector: Second vector used for the dot product.
 	//return: The resulting dot product of the two vectors.
-	Type dot(const CL_Vec4<Type>& vector) const {return x*vector.x + y*vector.y + z*vector.z;}
+	float dot(const CL_Vector& vector) const;
 	
-	//: Calculate the angle between this vector and an other vector. (double)
+	//: Calculate the angle between this vector and an other vector.
 	//param vector: Second vector used to calculate angle.
 	//return: The angle between the two vectors.
-	double angle(const CL_Vec4<Type>& vector) const;
-
-	//: Calculate the angle between this vector and an other vector. (float)
-	//param vector: Second vector used to calculate angle.
-	//return: The angle between the two vectors.
-	float anglef(const CL_Vec4<Type>& vector) const;
+	float angle(const CL_Vector& vector) const;
 
 	//: Calculate the cross product between this vector and an other vector.
-	//- <p>Operates in the native datatype</p>
 	//param vector: Second vector used to perform the calculation.
 	//return: The cross product of the two vectors.
-	CL_Vec4<Type> cross(const CL_Vec4<Type>& vector) const;
+	CL_Vector cross(const CL_Vector& vector) const;
 	
-	//: Rotate vector around an axis (double). Same as glRotated(angle, a);
-	//param angle: Angle to rotate (in radians).
+	//: Rotate vector around an axis.
+	//param angle: Angle to rotate.
 	//param axis: Rotation axis.
 	//return: The resulting rotated vector.
-	CL_Vec4<Type> rotate(double angle, const CL_Vec4<Type>& axis) const;
-
-	//: Rotate vector around an axis (float). Same as glRotatef(angle, a);
-	//param angle: Angle to rotate (in radians).
-	//param axis: Rotation axis.
-	//return: The resulting rotated vector.
-	CL_Vec4<Type> rotate(float angle, const CL_Vec4<Type>& axis) const;
+	CL_Vector rotate(float angle, const CL_Vector& axis) const;
 
 	//: Rounds all components.
-	//- Uses Asymmetric Arithmetic Rounding
 	void round();
 
 //! Operators:
-public:
-	const Type &operator[](unsigned int i) const { return ((Type *) this)[i]; }
-	Type &operator[](unsigned int i) { return ((Type *) this)[i]; }
-	operator Type *() { return (Type *) this; }
-	operator Type * const() const { return (Type * const) this; }
+	//: Scalar product (vector * scalar)
+	//return: The scalar product
+	CL_Vector operator * (float scalar) const;  
+
+	//: Scalar product (scalar * vector)
+	//return: The scalar product.
+	friend CL_Vector operator *  (float scalar, const CL_Vector& vector);
 
 	//: += operator.
-	void operator += (const CL_Vec4<Type>& vector) { x+= vector.x; y+= vector.y; z+= vector.z; w+= vector.w; }
-
-	//: += operator.
-	void operator += ( Type value) { x+= value; y+= value; z+= value; w+= value; }
-
-	//: + operator.
-	CL_Vec4<Type> operator + (const CL_Vec4<Type>& vector) const {return CL_Vec4<Type>(vector.x + x, vector.y + y, vector.z + z, vector.w + w);}
-
-	//: + operator.
-	CL_Vec4<Type> operator + (Type value) const {return CL_Vec4<Type>(value + x, value + y, value + z, value + w);}
+	void operator += (const CL_Vector& v);
 
 	//: -= operator.
-	void operator -= (const CL_Vec4<Type>& vector) { x-= vector.x; y-= vector.y; z-= vector.z; w-= vector.w; }
+	void operator -= (const CL_Vector& v);  
 
-	//: -= operator.
-	void operator -= ( Type value) { x-= value; y-= value; z-= value; w-= value; }
+	//: *= operator (scalar multiplication).
+	void operator *= (float s);  
 
+	//: + operator.
+	CL_Vector operator + (const CL_Vector& v) const;
+	
 	//: - operator.
-	CL_Vec4<Type> operator - (const CL_Vec4<Type>& vector) const {return CL_Vec4<Type>(x - vector.x, y - vector.y, z - vector.z, w - vector.w);}
+	CL_Vector operator - (const CL_Vector& v) const;
+	
+	//: unary - operator.
+	CL_Vector operator - () const;
 
-	//: - operator.
-	CL_Vec4<Type> operator - (Type value) const {return CL_Vec4<Type>(x - value, y - value, z - value, w - value);}
+	//: assignment operator.
+	CL_Vector& operator = (const CL_Vector& v);
 
-	//: *= operator.
-	void operator *= (const CL_Vec4<Type>& vector) { x*= vector.x; y*= vector.y; z*= vector.z; w*= vector.w; }
-
-	//: *= operator.
-	void operator *= ( Type value) { x*= value; y*= value; z*= value; w*= value; }
-
-	//: * operator.
-	CL_Vec4<Type> operator * (const CL_Vec4<Type>& vector) const {return CL_Vec4<Type>(vector.x * x, vector.y * y, vector.z * z, vector.w * w);}
-
-	//: * operator.
-	CL_Vec4<Type> operator * (Type value) const {return CL_Vec4<Type>(value * x, value * y, value * z, value * w);}
-
-	//: /= operator.
-	void operator /= (const CL_Vec4<Type>& vector) { x/= vector.x; y/= vector.y; z/= vector.z; w/= vector.w; }
-
-	//: /= operator.
-	void operator /= ( Type value) { x/= value; y/= value; z/= value; w/= value; }
-
-	//: / operator.
-	CL_Vec4<Type> operator / (const CL_Vec4<Type>& vector) const {return CL_Vec4<Type>(x / vector.x, y / vector.y, z / vector.z, w / vector.w);}
-
-	//: / operator.
-	CL_Vec4<Type> operator / (Type value) const {return CL_Vec4<Type>(x / value, y / value, z / value, w / value);}
-
-	//: = operator.
-	CL_Vec4<Type> &operator = (const CL_Vec4<Type>& vector) { x = vector.x; y = vector.y; z = vector.z; w = vector.w; return *this; }
-
-	//: == operator.
-	bool operator == (const CL_Vec4<Type>& vector) const {return ((x == vector.x) && (y == vector.y) && (z == vector.z) && (w == vector.w));}
-
-	//: != operator.
-	bool operator != (const CL_Vec4<Type>& vector) const {return ((x != vector.x) || (y != vector.y) || (z != vector.z) || (w != vector.w));}
-
+	//: Returns true if current vector equals v.
+	//param v: other vector.
+	//return: true if v equals the current vector, false otherwise.
+	bool operator == (const CL_Vector& v) const;
+    	
+	//: Returns false if current vector equals v.
+	//param v: other vector.
+	//return: false if v equals the current vector, true otherwise.
+	bool operator != (const CL_Vector& v) const;
+	
+	//: Returns reference to n-th ordinate (0. == x, 1. == y, ...).
+	//param n: number of ordinate (starting with 0).
+	//return: reference to the n-th ordinate.
+	float& operator [] (int n);
+	
+	//: cout's the x,y,z ordinates (meant for debugging).
+	friend std::ostream& operator << (std::ostream&, const CL_Vector& v);
 };
 
-typedef CL_Vec1<unsigned char> CL_Vec1ub;
-typedef CL_Vec1<char> CL_Vec1b;
-typedef CL_Vec1<unsigned short> CL_Vec1us;
-typedef CL_Vec1<short> CL_Vec1s;
-typedef CL_Vec1<unsigned int> CL_Vec1ui;
-typedef CL_Vec1<int> CL_Vec1i;
-typedef CL_Vec1<float> CL_Vec1f;
-typedef CL_Vec1<double> CL_Vec1d;
-
-typedef CL_Vec2<unsigned char> CL_Vec2ub;
-typedef CL_Vec2<char> CL_Vec2b;
-typedef CL_Vec2<unsigned short> CL_Vec2us;
-typedef CL_Vec2<short> CL_Vec2s;
-typedef CL_Vec2<unsigned int> CL_Vec2ui;
-typedef CL_Vec2<int> CL_Vec2i;
-typedef CL_Vec2<float> CL_Vec2f;
-typedef CL_Vec2<double> CL_Vec2d;
-
-typedef CL_Vec3<unsigned char> CL_Vec3ub;
-typedef CL_Vec3<char> CL_Vec3b;
-typedef CL_Vec3<unsigned short> CL_Vec3us;
-typedef CL_Vec3<short> CL_Vec3s;
-typedef CL_Vec3<unsigned int> CL_Vec3ui;
-typedef CL_Vec3<int> CL_Vec3i;
-typedef CL_Vec3<float> CL_Vec3f;
-typedef CL_Vec3<double> CL_Vec3d;
-
-typedef CL_Vec4<unsigned char> CL_Vec4ub;
-typedef CL_Vec4<char> CL_Vec4b;
-typedef CL_Vec4<unsigned short> CL_Vec4us;
-typedef CL_Vec4<short> CL_Vec4s;
-typedef CL_Vec4<unsigned int> CL_Vec4ui;
-typedef CL_Vec4<int> CL_Vec4i;
-typedef CL_Vec4<float> CL_Vec4f;
-typedef CL_Vec4<double> CL_Vec4d;
-
-typedef CL_Vec4<double> CL_Vector;
+std::ostream& operator << (std::ostream& os, const CL_Vector& v);
 
 #endif
-

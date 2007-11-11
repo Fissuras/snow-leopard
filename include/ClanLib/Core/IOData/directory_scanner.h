@@ -33,15 +33,24 @@
 #ifndef header_directory_scanner
 #define header_directory_scanner
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include "../Text/string_types.h"
+#include <string>
 
-class CL_DirectoryScanner_Impl;
+class CL_DirectoryScanner_Generic;
 
 //: Directory scanning class.
 //- !group=Core/IO Data!
@@ -55,7 +64,7 @@ class CL_DirectoryScanner_Impl;
 //- {
 //- 		while (scanner.next())
 //- 		{
-//- 				cl_console_write_line(scanner.get_name());
+//- 				std::cout << scanner.get_name() << std::endl;
 //- 		}
 //- }
 //- </pre>
@@ -74,12 +83,12 @@ public:
 //! Attributes:
 public:
 	//: Gets the directory being scanned.
-	//return: Directory being scanned. (including the trailing slash)
-	CL_String get_directory_path();
+	//return: Directory being scanned.
+	std::string get_directory_path();
 
 	//: Gets the name of the current file.
 	//return: The name of the current found file.
-	CL_String get_name();
+	std::string get_name();
 
 	//: Gets the size of the current file.
 	//return: The size of the current found file.
@@ -87,7 +96,7 @@ public:
 
 	//: Gets the pathname of the current file.
 	//return: The name of the current found file, including the directory path.
-	CL_String get_pathname();
+	std::string get_pathname();
 
 	//: Returns true if the current file is a directory.
 	//return: True if filename is a directory.
@@ -108,19 +117,14 @@ public:
 //! Operations:
 public:       
 	//: Selects the directory to scan through.
-	//- <p>Selects the directory to scan through</p>
-	//param pathname: Path to the directory to scan (without trailing slash)
-	//return: true if the directory can be accessed.
-	bool scan(const CL_String& pathname);
-
-	//: Selects the directory to scan through.
-	//- <p>Selects the directory to scan through and use a matching pattern on the files.</p>
-	//- WIN32: The pattern is normal DOS pattern matching ("*.*", ?)
-	//- Unix: The pattern is normal pattern matching (*, ?)
-	//param pathname: Path to the directory to scan (without trailing slash)
+	//- <p>Selects the directory to scan through and use a matching pattern on the files.
+	//The pattern is normal DOS pattern matching (*.*).</p>
+	//param pathname: Path to the directory to scan.
 	//param pattern: Pattern to match files against.
 	//return: true if the directory can be accessed.
-	bool scan(const CL_String& pathname, const CL_String& pattern);
+	bool scan(const std::string& pathname);
+
+	bool scan(const std::string& pathname, const std::string& pattern);
 
 	//: Find next file in directory scan. 
 	//return: false if no more files was found.
@@ -128,7 +132,8 @@ public:
 
 //! Implementation:
 private:
-	CL_SharedPtr<CL_DirectoryScanner_Impl> impl;
+	// Yada yada, usual data hiding.
+	CL_SharedPtr<CL_DirectoryScanner_Generic> impl;
 };
 
 #endif

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_cdata_section
 #define header_dom_cdata_section
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_text.h"
 
 //: DOM CDATA Section.
@@ -62,7 +72,7 @@ public:
 	//: Constructs a DOM CDATA Section handle.
 	CL_DomCDATASection();
 
-	CL_DomCDATASection(CL_DomDocument &doc, const CL_DomString &data);
+	CL_DomCDATASection(CL_DomDocument &doc, const std::string &data);
 
 	CL_DomCDATASection(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 	

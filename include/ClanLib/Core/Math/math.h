@@ -24,10 +24,8 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
-
-//! clanCore="Math"
-//! header=core.h
 
 #ifndef header_math
 #define header_math
@@ -36,12 +34,14 @@
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include <cmath>
 #include <math.h>
 
-#ifndef CL_PI
-#define CL_PI 3.141592653589793238462643383279
+#ifndef PI
+#ifndef M_PI
+#define M_PI 3.1415926535897932384626433832795	// maybe more accuracy than needed ;-)
+#endif
+#define PI M_PI
 #endif
 
 #endif

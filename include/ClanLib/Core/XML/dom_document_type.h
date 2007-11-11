@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_document_type
 #define header_dom_document_type
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 class CL_DomNamedNodeMap;
@@ -58,11 +68,6 @@ public:
 	//: Constructs a DOM Document Type handle.
 	CL_DomDocumentType();
 
-	CL_DomDocumentType(
-		const CL_DomString &qualified_name,
-		const CL_DomString &public_id,
-		const CL_DomString &system_id);
-
 	CL_DomDocumentType(CL_DomDocument &doc);
 	
 	CL_DomDocumentType(const CL_SharedPtr<CL_DomNode_Generic> &impl);
@@ -72,26 +77,13 @@ public:
 //! Attributes:
 public:
 	//: The name of DTD; i.e., the name immediately following the DOCTYPE keyword.
-	CL_DomString get_name() const;
+	std::string get_name() const;
 
 	//: A NamedNodeMap containing the general entities, both external and internal, declared in the DTD.
 	CL_DomNamedNodeMap get_entities() const;
 
 	//: A NamedNodeMap containing the notations declared in the DTD.
 	CL_DomNamedNodeMap get_notations() const;
-
-	//: The public identifier of the external subset.
-	CL_DomString get_public_id() const;
-
-	//: The system identifier of the external subset.
-	CL_DomString get_system_id() const;
-
-	//: The internal subset as a string.
-	//- <p><b>Note:</b> The actual content returned depends on how much
-	//- information is available to the implementation. This may vary
-	//- depending on various parameters, including the XML processor
-	//- used to build the document.</p>
-	CL_DomString get_internal_subset() const;
 
 //! Operations:
 public:

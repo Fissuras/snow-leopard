@@ -14,8 +14,9 @@
 
 class DisplayApplication : public CL_ClanApplication
 {
+
 public:
-	int main(int argc, CL_String::CharacterType** argv);
+	int main(int argc, char** argv);
 };
 
 // Create global application object:
@@ -23,7 +24,7 @@ public:
 // locate your application object.
 DisplayApplication app;
 
-int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
+int DisplayApplication::main(int argc,  char **argv)
 {
 	// Setup clanlib modules:
 
@@ -31,36 +32,39 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 	CL_SetupDisplay setup_display;
 	CL_SetupGL setup_gl;
 	
-	CL_DisplayWindow* window = new CL_DisplayWindow(cl_text("Snow Leopard"), 640, 480);
-	CL_GraphicContext gc = window->get_gc();
+	CL_DisplayWindow* window = new CL_DisplayWindow("Snow Leopard", 640, 480);
+	CL_GraphicContext* gc = window->get_gc();
+	CL_InputContext* ic = window->get_ic();
+	
+	CL_ConsoleWindow console("Console");
+	console.redirect_stdio();
 
-	CL_ResourceManager* resources = new CL_ResourceManager(cl_text("resources.xml"));
+	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
 
 	GameObject *g = new Starfury("Starfury",1,new point(320,240));
+	GameObject *f = new Starfury("Starfury",1,new point(200,100));
 
 
 	g->resourceName = "Starfury";
+	f->resourceName = "Starfury";
 	WorldState *state = new WorldState();
 	state->insertObject(g,new point(320,240));
+	state->insertObject(f,new point (200,100));
 
-	GameLogic *logic = new GameLogic(state);
-	Renderer* renderer = new Renderer(window,&gc,state,resources);
+	GameLogic *logic = new GameLogic(state,g,ic);
+	Renderer* renderer = new Renderer(window,gc,state,resources);
 
 	renderer->setCamera(g);
 	renderer->setCameraZoomLevel(1.0);
 
 	renderer->LoadSprites();
-
-	CL_Font font_tahoma(gc, cl_text("Tahoma"), 16);
-	gc.set_font(font_tahoma);
 	
-	double counter = 1.0;
-
 	while (true)
 	{
 	renderer->Render();
 	window->flip();
+	CL_System::keep_alive();
 	logic->step();
 	}
 	

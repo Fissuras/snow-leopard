@@ -23,7 +23,8 @@
 **
 **  File Author(s):
 **
-**    Ingo Ruhnke
+**    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="System"
@@ -32,12 +33,21 @@
 #ifndef header_core_system_command_line
 #define header_core_system_command_line
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
-#include "../Text/string_types.h"
+#include <string>
 #include <vector>
 
 class CL_CommandLine_Generic;
@@ -98,7 +108,7 @@ public:
 	int get_key();
 
 	//: Return the argument to the current option
-	CL_String8 get_argument();
+	std::string get_argument();
 
 //! Operations:
 public:
@@ -108,15 +118,15 @@ public:
 	//: Add a usage line to the help output, usage is for example
 	//: "[OPTIONS]... FILE", the program name will get appended
 	//: automatically
-	void add_usage(const CL_String8& usage);
+	void add_usage(const std::string& usage);
 
 	//: Adds extra documentation to the help output, should only be
 	//: used at the beginning or at the end, to
-	void add_doc(const CL_String8& doc);
+	void add_doc(const std::string& doc);
 	
 	//: Starts a new group of options, the grouptopic gets printed
 	//: above the group of options in the print_help() output
-	void add_group(const CL_String8& grouptopic);
+	void add_group(const std::string& grouptopic);
   
 	//: Adds a option to the parser
 	//param key: a letter for a short-option or a numeric value
@@ -133,9 +143,9 @@ public:
 	//param visible: than would only clutter the help output
 	void add_option(
 		int key,
-		const CL_String8& long_option, 
-		const CL_String8& argument,
-		const CL_String8& help,
+		const std::string& long_option, 
+		const std::string& argument,
+		const std::string& help,
 		bool visible = true);
 	
 	//: Parse the options arcording to the options added with

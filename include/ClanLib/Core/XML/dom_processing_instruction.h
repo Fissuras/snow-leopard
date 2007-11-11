@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_processing_instruction
 #define header_dom_processing_instruction
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 //: DOM Processing Instruction class.
@@ -51,7 +61,7 @@ public:
 	//: Constructs a DOM Processing Instruction handle.
 	CL_DomProcessingInstruction();
 	
-	CL_DomProcessingInstruction(CL_DomDocument &doc, const CL_DomString &target, const CL_DomString &data);
+	CL_DomProcessingInstruction(CL_DomDocument &doc, const std::string &target, const std::string &data);
 
 	CL_DomProcessingInstruction(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 
@@ -62,14 +72,14 @@ public:
 	//: The target of this processing instruction.
 	//- <p>XML defines this as being the first token following the markup that begins
 	//- the processing instruction.</p>
-	CL_DomString get_target() const;
+	std::string get_target() const;
 
 	//: The content of this processing instruction.
 	//- <p>This is from the first non white space character after the target to the
 	//- character immediately preceding the ?&gt;.</p>
-	CL_DomString get_data() const;
+	std::string get_data() const;
 	
-	void set_data(const CL_DomString &data);
+	void set_data(const std::string &data);
 
 //! Operations:
 public:

@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,13 +33,21 @@
 #ifndef header_dom_named_node_map
 #define header_dom_named_node_map
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include "dom_string.h"
 
 class CL_DomNode;
 class CL_DomNamedNodeMap_Generic;
@@ -59,7 +68,7 @@ public:
 	//: Constructs a DOM NamedNodeMap handle.
 	CL_DomNamedNodeMap();
 	
-	CL_DomNamedNodeMap(const CL_DomNamedNodeMap &copy);
+	CL_DomNamedNodeMap(CL_DomNode &node);
 
 	~CL_DomNamedNodeMap();
 	
@@ -71,12 +80,7 @@ public:
 //! Operations:
 public:
 	//: Retrieves a node specified by name.
-	CL_DomNode get_named_item(const CL_DomString &name) const;
-
-	//: Retrieves a node specified by namespace URI and local name.
-	CL_DomNode get_named_item_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &local_name) const;
+	CL_DomNode get_named_item(const std::string &name) const;
 
 	//: Adds a node using its node name attribute.
 	//- <p>As the node name attribute is used to derive the name which the node must be stored
@@ -87,38 +91,19 @@ public:
 	//retval: If the new Node replaces an existing node with the same name the previously existing Node is returned, otherwise null is returned.
 	CL_DomNode set_named_item(const CL_DomNode &node);
 
-	//: Adds a node using its namespace URI and local name.
-	//- <p>If a node with that namespace URI and that local name is already present in this
-	//- map, it is replaced by the new one.</p>
-	CL_DomNode set_named_item_ns(const CL_DomNode &node);
-
 	//: Removes a node specified by name.
 	//- <p>If the removed node is an Attr with a default value it is immediately replaced.</p>
 	//param name: The name of a node to remove.
 	//retval: The node removed from the map or null if no node with such a name exists.
-	CL_DomNode remove_named_item(const CL_DomString &name);
-
-	//: Removes a node specified by namespace URI and local name.
-	//- <p>If the removed node is an Attr with a default value it is immediately replaced.</p>
-	//param name: The name of a node to remove.
-	//retval: The node removed from the map or null if no node with such a name exists.
-	CL_DomNode remove_named_item_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &local_name);
+	CL_DomNode remove_named_item(const std::string &name);
 
 	//: Returns the indexth item in the map.
 	//- <p>If index is greater than or equal to the number of nodes in the map, this returns null.</p>
 	CL_DomNode item(unsigned long index) const;
 	
 //! Implementation:
-protected:
-	CL_DomNamedNodeMap(const CL_SharedPtr<CL_DomNamedNodeMap_Generic> &impl);
-
+private:
 	CL_SharedPtr<CL_DomNamedNodeMap_Generic> impl;
-
-	friend class CL_DomDocument;
-
-	friend class CL_DomNode;
 };
 
 #endif

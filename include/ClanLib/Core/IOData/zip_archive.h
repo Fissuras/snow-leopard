@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="I/O Data"
@@ -33,32 +33,40 @@
 #ifndef header_zip_archive
 #define header_zip_archive
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
 #include "zip_file_entry.h"
-#include <vector>
+#include "inputsource_provider.h"
 
-class CL_IODevice;
-class CL_Zip_Archive_Impl;
+class CL_InputSource;
+class CL_OutputSource;
+class CL_Zip_Archive_Generic;
 
 //: Zip archive.
 //- !group=Core/IO Data!
 //- !header=core.h!
-class CL_API_CORE CL_Zip_Archive
+class CL_API_CORE CL_Zip_Archive : public CL_InputSourceProvider
 {
 //! Construction:
 public:
 	//: Constructs or loads a ZIP archive.
 	//param filename: .zip archive to load.
 	CL_Zip_Archive();
-
-	CL_Zip_Archive(CL_IODevice &input);
-
-	CL_Zip_Archive(const CL_StringRef &filename);
+	
+	CL_Zip_Archive(const std::string &filename);
 	
 	CL_Zip_Archive(const CL_Zip_Archive &copy);
 	
@@ -67,23 +75,29 @@ public:
 //! Attributes:
 public:
 	//: List of file entries in archive.
-	std::vector<CL_Zip_FileEntry> get_file_list();
+	std::vector<CL_Zip_FileEntry> &get_file_list();
 
 //! Operations:
 public:
 	//: Opens a file in the archive.
-	CL_IODevice open_file(const CL_StringRef &filename);
+	CL_InputSource *open_source(const std::string &filename);
 	
+	//: Clones this input source provider.
+	CL_InputSourceProvider *clone();
+
 	//: Get full path to source:
-	CL_String get_pathname(const CL_StringRef &filename);
+	std::string get_pathname(const std::string &filename);
+
+	//: Returns a new inputsource provider object that uses a new path relative to current one.
+	CL_InputSourceProvider *create_relative(const std::string &path);
 
 	//: Creates a new file entry
-	CL_IODevice create_file(const CL_StringRef &filename, bool compress = true);
+	CL_OutputSource *create_file(const std::string &filename, bool compress = true);
 
 	//: Adds a file to zip archive.
 	//- <p>File is not added to zip file until it save() is called.</p>
 	//param filename: Filename of file.
-	void add_file(const CL_StringRef &filename, bool compress = true);
+	void add_file(const std::string &filename, bool compress = true);
 
 	//: Saves zip archive.
 	//param filename: Filename of zip archive. Must not be used to save to the same as loaded from.
@@ -97,17 +111,12 @@ public:
 	//- loaded from, a filename must not be specified. Doing so will
 	//- cause the save operation to fail.</p>
 	void save();
-
-	void save(const CL_StringRef &filename);
-
-	void save(CL_IODevice iodev);
-
-	//: Loads the zip archive from a input device (done automatically at construction).
-	void load(CL_IODevice &input);
+	
+	void save(const std::string &filename);
 
 //! Implementation:
 private:
-	CL_SharedPtr<CL_Zip_Archive_Impl> impl;
+	CL_SharedPtr<CL_Zip_Archive_Generic> impl;
 };
 
 #endif

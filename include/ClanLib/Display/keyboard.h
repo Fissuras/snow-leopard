@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Input"
@@ -32,6 +32,16 @@
 
 #ifndef header_keyboard
 #define header_keyboard
+
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
 
 #if _MSC_VER > 1000
 #pragma once
@@ -41,9 +51,47 @@
 #pragma warning( disable : 4786)
 #endif
 
-#include "api_display.h"
-#include "../Core/Text/string_types.h"
-#include "../Core/Signals/signal_v2.h"
+#include <string>
+#include "../signals.h"
+
+class CL_InputEvent;
+class CL_InputDevice;
+
+//: Keyboard class.
+//- !group=Display/Input!
+//- !header=display.h!
+class CL_API_DISPLAY CL_Keyboard
+{
+//! Construction:
+public:
+
+//! Attributes:
+public:
+	//: Returns the number of keyboards available.
+	static int get_device_count();
+
+	//: Returns a keyboard device.
+	static CL_InputDevice &get_device(int keyboard = 0);
+
+	//: Returns true if the key with the specified key code is pressed.
+	static bool get_keycode(int keycode, int keyboard = 0);
+
+	//: Key name for specified identifier (A, B, Space, Backspace).
+	static std::string get_key_name(int id);
+
+//! Operations:
+public:
+
+//! Signals:
+public:
+	//: Signal emitted when key is pressed on the specified keyboard.
+	static CL_Signal_v1<const CL_InputEvent &> &sig_key_down(int keyboard = 0);
+
+	//: Signal emitted when key is released on the specified keyboard.
+	static CL_Signal_v1<const CL_InputEvent &> &sig_key_up(int keyboard = 0);
+
+//! Implementation:
+private:
+};
 
 #endif
-

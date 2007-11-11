@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Ingo Ruhnke
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -33,13 +33,21 @@
 #ifndef header_dom_node_list
 #define header_dom_node_list
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include "dom_string.h"
 #include <vector>
 
 class CL_DomNode;
@@ -58,13 +66,7 @@ public:
 	//: Constructs a DOM NodeList handle.
 	CL_DomNodeList();
 	
-	CL_DomNodeList(CL_DomNode &node, const CL_DomString &tag_name);
-
-	CL_DomNodeList(
-		CL_DomNode &node,
-		const CL_DomString &namespace_uri,
-		const CL_DomString &name,
-		bool local_name = false);
+	CL_DomNodeList(CL_DomNode &node, const std::string &tag_name);
 
 	~CL_DomNodeList();
 	

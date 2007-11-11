@@ -42,47 +42,11 @@
 #include "Application/clanapp.h"
 
 #if defined (_MSC_VER)
-	#if !defined (UNICODE)
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-dll.lib")
-			#else
-				#pragma comment(lib, "clanApplication-dll-debug.lib")
-			#endif
-		#elif defined (CL_STATIC_MTDLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-static-mtdll.lib")
-			#else
-				#pragma comment(lib, "clanApplication-static-mtdll-debug.lib")
-			#endif
-		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-static-mt.lib")
-			#else
-				#pragma comment(lib, "clanApplication-static-mt-debug.lib")
-			#endif
-		#endif
-	#else
-		#if defined (CL_DLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-dll-uc.lib")
-			#else
-				#pragma comment(lib, "clanApplication-dll-uc-debug.lib")
-			#endif
-		#elif defined (CL_STATIC_MTDLL)
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-static-mtdll-uc.lib")
-			#else
-				#pragma comment(lib, "clanApplication-static-mtdll-uc-debug.lib")
-			#endif
-		#else
-			#if !defined (_DEBUG)
-				#pragma comment(lib, "clanApplication-static-mt-uc.lib")
-			#else
-				#pragma comment(lib, "clanApplication-static-mt-uc-debug.lib")
-			#endif
-		#endif
-	#endif
+#if !defined (_DEBUG)
+#pragma comment(lib, "clanApp-static-mt.lib")
+#else
+#pragma comment(lib, "clanApp-static-mt-debug.lib")
+#endif
 #endif
 
 #endif

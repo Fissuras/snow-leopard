@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanApp="System"
@@ -36,18 +37,14 @@
 #pragma once
 #endif
 
-#include "api_app.h"
-#include "../Core/Text/string_types.h"
-
 //: The starting place for all applications.
 //- !group=App/System!
 //- !header=application.h!
 //- <p> The application class must be inherited by all ClanLib applications.
 //- In your application create a class inheriting CL_ClanApplication, 
 //- make a global instance of it, and fill in the main() function. </p>
-class CL_API_APP CL_ClanApplication
+class CL_ClanApplication
 {
-//! Construction:
 public:
 	//: Clan Application constructor
 	CL_ClanApplication();
@@ -55,8 +52,6 @@ public:
 	//: Clan Application destructor
 	virtual ~CL_ClanApplication();
 
-//! Operations:
-public:
 	//: Main application function
 	//- <p> Every program made using ClanLib must implement this function. 
 	//- This is the main application function, which will be called 
@@ -64,7 +59,7 @@ public:
 	//param argc: The number of arguments to the program (c-style)
 	//param argv: A pointer to strings, containing the program arguments. The name of the program executable is always passed as first argument.
 	//return: Program return value
-	virtual int main(int argc, CL_String::CharacterType** argv)=0;
+	virtual int main(int argc, char** argv)=0;
 
 	//: Static pointer to an initialized instance of this class.
 	//: This is set by the constructor.

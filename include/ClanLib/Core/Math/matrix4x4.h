@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -32,15 +33,21 @@
 #ifndef header_matrix4x4
 #define header_matrix4x4
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
-
 //: 4x4 Matrix.
-//- !group=Core/Math!
-//- !header=core.h!
 class CL_API_CORE CL_Matrix4x4
 {
 //! Construction:
@@ -55,29 +62,6 @@ public:
 	CL_Matrix4x4(double *matrix);
 
 	CL_Matrix4x4(float *matrix);
-
-	static CL_Matrix4x4 frustum(double left, double right, double bottom, double top, double z_near, double z_far);
-
-	static CL_Matrix4x4 perspective(
-		double field_of_view_y_degrees,
-		double aspect,
-		double z_near,
-		double z_far);
-
-	static CL_Matrix4x4 ortho(double left, double right, double bottom, double top, double z_near, double z_far);
-
-	static CL_Matrix4x4 ortho_2d(double left, double right, double bottom, double top);
-
-	static CL_Matrix4x4 rotate(double angle_degrees, double x, double y, double z, bool normalize = true);
-
-	static CL_Matrix4x4 scale(double x, double y, double z);
-
-	static CL_Matrix4x4 translate(double x, double y, double z);
-
-	static CL_Matrix4x4 look_at(
-		double eye_x, double eye_y, double eye_z,
-		double center_x, double center_y, double center_z,
-		double up_x, double up_y, double up_z);
 
 //! Attributes:
 public:
@@ -116,13 +100,13 @@ public:
 	CL_Matrix4x4 &operator =(const CL_Matrix4x4 &copy);
 
 	//: Equality operator.
-	bool operator==(const CL_Matrix4x4 &other);
+	bool operator==(const CL_Matrix4x4 &other) const;
 
 	//: Not-equal operator.
-	bool operator!=(const CL_Matrix4x4 &other);
+	bool operator!=(const CL_Matrix4x4 &other) const;
 
 	//: Multiply two matrices.
-	CL_Matrix4x4 multiply(const CL_Matrix4x4 &matrix);
+	CL_Matrix4x4 multiply(const CL_Matrix4x4 &matrix) const;
 
 //! Implementation:
 private:

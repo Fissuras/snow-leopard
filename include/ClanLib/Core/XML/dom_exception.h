@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,24 +33,33 @@
 #ifndef header_dom_exception
 #define header_dom_exception
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
-#include "../System/exception.h"
+#include "../System/error.h"
 
 //: DOM Exception class.
 //- !group=Core/XML!
 //- !header=core.h!
-class CL_API_CORE CL_DomException : public CL_Exception
+class CL_API_CORE CL_DomException : public CL_Error
 {
 //! Construction:
 public:
 	CL_DomException(unsigned short code);
 
 	CL_DomException(
-		const CL_StringRef &message,
+		const std::string &message,
 		unsigned short code);
 
 //! Attributes:
@@ -65,12 +75,7 @@ public:
 		NO_MODIFICATION_ALLOWED_ERR  = 7,
 		NOT_FOUND_ERR                = 8,
 		NOT_SUPPORTED_ERR            = 9,
-		INUSE_ATTRIBUTE_ERR          = 10,
-		INVALID_STATE_ERR            = 11,
-		SYNTAX_ERR                   = 12,
-		INVALID_MODIFICATION_ERR     = 13,
-		NAMESPACE_ERR                = 14,
-		INVALID_ACCESS_ERR           = 15
+		INUSE_ATTRIBUTE_ERR          = 10
 	};
 
 	unsigned short code;

@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Kenneth Gangstø
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -37,15 +37,12 @@
 #pragma once
 #endif
 
-#include "../api_core.h"
-
 class CL_Sizef;
-class CL_Sized;
 
 //: 2D (width,height) size structure.
 //- !group=Core/Math!
 //- !header=core.h!
-class CL_API_CORE CL_Size
+class CL_Size
 {
 //! Construction:
 public:
@@ -62,8 +59,6 @@ public:
 	{ width = s.width; height = s.height; }
 
 	explicit CL_Size(const CL_Sizef& s);
-
-	explicit CL_Size(const CL_Sized& s);
 
 //! Attributes:
 public:
@@ -101,8 +96,6 @@ public:
 };
 
 //: 2D (width,height) floating point size structure.
-//- !group=Core/Math!
-//- !header=core.h!
 class CL_Sizef
 {
 //! Construction:
@@ -114,8 +107,8 @@ public:
 	CL_Sizef() { return; }
 
 	CL_Sizef(const CL_Size& s) 
-		: width((float) s.width),
-		  height((float) s.height)
+		: width((float)s.width),
+		  height((float)s.height)
 	{}
 
 	CL_Sizef(float width, float height)
@@ -155,75 +148,11 @@ public:
 	{ return (width == s.width) && (height == s.height); }
 
 	//: Size != Size operator (deep compare).
-	bool operator!=(const CL_Sizef &s) const
-	{ return (width != s.width) || (height != s.height); }
-};
-
-//: 2D (width,height) double floating point size structure.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_Sized
-{
-//! Construction:
-public:
-	//: Constructs a size structure.
-	//param width: Initial width of size structure.
-	//param height: Initial height of size structure.
-	//param size: Size structure to construct this one from.
-	CL_Sized() { return; }
-
-	CL_Sized(const CL_Size& s) 
-		: width((double) s.width),
-		  height((double) s.height)
-	{}
-
-	CL_Sized(double width, double height)
-	: width(width), height(height) { }
-
-	CL_Sized(const CL_Sized &s)
-	{ width = s.width; height = s.height; }
-
-//! Attributes:
-public:
-	//: Size width.
-	double width;
-
-	//: Size height.
-	double height;
-
-//! Operations:
-public:
-	//: Size += Size operator.
-	CL_Sized &operator+=(const CL_Sized &s)
-	{ width += s.width; height += s.height; return *this; }
-
-	//: Size -= Size operator.
-	CL_Sized &operator-=(const CL_Sized &s)
-	{ width -= s.width; height -= s.height; return *this; }
-	
-	//: Size + Size operator.
-	CL_Sized operator+(const CL_Sized &s) const
-	{ return CL_Sized(width + s.width, height + s.height); }
-
-	//: Size - Size operator.
-	CL_Sized operator-(const CL_Sized &s) const
-	{ return CL_Sized(width - s.width, height - s.height); }
-
-	//: Size == Size operator (deep compare).
-	bool operator==(const CL_Sized &s) const
-	{ return (width == s.width) && (height == s.height); }
-
-	//: Size != Size operator (deep compare).
-	bool operator!=(const CL_Sized &s) const
+	bool operator!=(const CL_Size &s) const
 	{ return (width != s.width) || (height != s.height); }
 };
 
 inline CL_Size::CL_Size(const CL_Sizef& s)
-	: width(static_cast<int>(s.width)),
-	  height(static_cast<int>(s.height))
-{}
-
-inline CL_Size::CL_Size(const CL_Sized& s)
 	: width(static_cast<int>(s.width)),
 	  height(static_cast<int>(s.height))
 {}
