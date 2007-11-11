@@ -31,24 +31,21 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 	CL_SetupDisplay setup_display;
 	CL_SetupGL setup_gl;
 	
-	CL_DisplayWindow window(cl_text("Snow Leopard"), 640, 480);
-	CL_GraphicContext gc = window.get_gc();
+	CL_DisplayWindow* window = new CL_DisplayWindow(cl_text("Snow Leopard"), 640, 480);
+	CL_GraphicContext gc = window->get_gc();
 
 	CL_ResourceManager* resources = new CL_ResourceManager(cl_text("resources.xml"));
 
 
 	GameObject *g = new Starfury("Starfury",1,new point(320,240));
 
-	GameObject *h = new Starfury("Starfury",1,new point(32,24));
 
 	g->resourceName = "Starfury";
-	h->resourceName = "Starfury";
 	WorldState *state = new WorldState();
 	state->insertObject(g,new point(320,240));
-	state->insertObject(h,new point(32,24));
 
 	GameLogic *logic = new GameLogic(state);
-	Renderer* renderer = new Renderer(&gc,state,resources);
+	Renderer* renderer = new Renderer(window,&gc,state,resources);
 
 	renderer->setCamera(g);
 	renderer->setCameraZoomLevel(1.0);
@@ -57,16 +54,13 @@ int DisplayApplication::main(int argc, CL_String::CharacterType** argv)
 
 	CL_Font font_tahoma(gc, cl_text("Tahoma"), 16);
 	gc.set_font(font_tahoma);
-	gc.draw_text(10, 10, cl_text("Test"), CL_Colord::lemonchiffon);
 	
+	double counter = 1.0;
+
 	while (true)
 	{
-	renderer->setCamera(g);
 	renderer->Render();
-	window.flip();
-	renderer->setCamera(h);
-	renderer->Render();
-	window.flip();
+	window->flip();
 	logic->step();
 	}
 	
