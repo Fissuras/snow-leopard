@@ -8,13 +8,14 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 #include <map>
+#include "boost/lexical_cast.hpp"
 
 class WorldState;
 class GameObject;
 
 class Renderer{
 public:
-	Renderer::Renderer(CL_GraphicContext* gc, WorldState* state,CL_ResourceManager* res);
+	Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc, WorldState* state,CL_ResourceManager* res);
 	bool Renderer::Render();
 	int screenWidth;
 	int screenHeight;
