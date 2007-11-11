@@ -2,11 +2,10 @@
 #include "WorldState.h"
 
 int GameObject::IDCount = 0;
-GameObject::GameObject(std::string name, int fact, point* p)
+GameObject::GameObject(std::string name, int fact)
 {
 	displayName = name;
 	faction = fact;
-	location = *p;
 	ID = getID();
 	speed=0.0;
 	heading=0.0;

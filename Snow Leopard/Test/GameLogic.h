@@ -7,6 +7,7 @@
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
+#include "Ship.h"
 
 class WorldState;
 class GameObject;
@@ -19,13 +20,14 @@ class GameLogic {
 
 private:
 	WorldState* state;
-	GameObject* playerShip;
+	Ship* playerShip;
 	CL_InputDevice keyboard;
 	CL_InputDevice mouse;
+	void handleInput();
 	
 
 public:
-		GameLogic::GameLogic(WorldState* worldState,GameObject* ship,CL_InputContext* ic);
+		GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic);
 		bool GameLogic::step();
 
 };

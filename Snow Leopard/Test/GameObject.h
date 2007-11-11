@@ -15,13 +15,16 @@ class WorldState;
 
 public:
 
+	enum Direction { LEFT, RIGHT, UP, DOWN };
+
+
 	typedef std::list<GameObject*> GameObjectList;
 	typedef std::set <GameObject*>::iterator GameObjectIter;
 	bool operator<(GameObject &b);
 	virtual bool doActions(WorldState* worldState);
 	bool registerCollision(GameObjectList collisions);
 	static int getID();
-	GameObject::GameObject(std::string displayName = "", int faction=0, point* p=new point(0,0));
+	GameObject::GameObject(std::string displayName = "", int faction=0);
 
 	std::string displayName; 
 	

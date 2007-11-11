@@ -13,7 +13,7 @@ class Ship;
 class Starfury: public Ship {
 
 public:
-	Starfury::Starfury(std::string name, int fact, point* p);
+	Starfury::Starfury(std::string name, int fact);
 
 protected:
 	bool move(WorldState* worldState);

@@ -1,9 +1,9 @@
 #include "Starfury.h"
 
 
-Starfury::Starfury(std::string name,int fact,point* p):Ship(name,fact,p)
+Starfury::Starfury(std::string name,int fact):Ship(name,fact)
 {
-	speed = 0.0;
+	speed = 2;
 }
 bool Starfury::move(WorldState* worldState)
 {
