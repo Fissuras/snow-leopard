@@ -24,9 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_pixel_format_type
@@ -35,11 +36,9 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif
-
-#include "api_display.h"
-
+ 
 //: Pixel format types.
-//- !group=Display/Display!
+//- !group=Display/Display 2D!
 //- !header=display.h!
 enum CL_PixelFormatType
 {

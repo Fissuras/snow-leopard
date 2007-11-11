@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -36,22 +37,24 @@
 #pragma once
 #endif
 
-#include "../api_core.h"
-#include "../Text/string_types.h"
-#include <vector>
-#include <utility>
+//#include <map>
+#include <string>
+
+//class CL_XMLToken_Generic;
 
 //: XML token in a XML file.
 //- !group=Core/XML!
 //- !header=core.h!
-class CL_API_CORE CL_XMLToken
+class CL_XMLToken
 {
 //! Construction:
 public:
-	CL_XMLToken() : type(NULL_TOKEN), variant(SINGLE)
-	{
-	}
-
+//	CL_XMLToken();
+//	
+//	CL_XMLToken(const CL_XMLToken &copy);
+	
+	virtual ~CL_XMLToken() {};
+	
 //! Attributes:
 public:
 	enum TokenType
@@ -75,29 +78,53 @@ public:
 		SINGLE = 3
 	};
 
-	// Attribute name/value pair.
-	typedef std::pair<CL_StringRef, CL_StringRef> Attribute;
-
-	//: The token type.
-	TokenType type;
+	//: Returns the token type.
+	virtual TokenType get_type() const = 0;
 	
-	//: The token variant.
-	TokenVariant variant;
+	//: Returns the token variant.
+	virtual TokenVariant get_variant() const = 0;
 	
-	//: The name of the token.
-	CL_StringRef name;
+	//: Returns the name of the token.
+	virtual std::string get_name() const = 0;
 	
 	//: Returns the value of the token.
-	CL_StringRef value;
+	virtual std::string get_value() const = 0;
+	
+/*
+	//: Returns all the attributes attached to the token.
+	const std::vector< std::pair<std::string, std::string> > &get_attributes() const;
+*/
+	virtual int get_attributes_number() const = 0;
 
-	//: All the attributes attached to the token.
-	std::vector<Attribute> attributes;
+	//: Returns the attribute name and value for attribute with specified index.
+	virtual std::pair<std::string, std::string> get_attribute(int attribute_num) const = 0;
+
+	//: Returns the value of a named attribute.
+//	virtual std::string get_attribute(const std::string &name) const = 0;
 
 //! Operations:
-public:
+//public:
+	//: Copy assignment operator.
+//	CL_XMLToken &operator =(const CL_XMLToken &copy);
+
+//	//: Sets the type of the token.
+//	void set_type(TokenType type);
+//
+//	//: Sets if token ends with a slash.
+//	void set_variant(TokenVariant variant);
+//
+//	//: Sets the name of the token.
+//	void set_name(const std::string &name);
+//
+//	//: Sets the value of the token.
+//	void set_value(const std::string &value);
+//	
+//	//: Attaches attribute to token.
+//	void set_attribute(const std::string &name, const std::string &value);
 
 //! Implementation:
-private:
+//private:
+//	CL_XMLToken_Generic *impl;
 };
 
 #endif

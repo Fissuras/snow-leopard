@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,15 +33,24 @@
 #ifndef header_dom_document
 #define header_dom_document
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
-#include <vector>
 
-class CL_IODevice;
+class CL_InputSource;
+class CL_OutputSource;
 class CL_DomDocumentType;
 class CL_DomImplementation;
 class CL_DomCDATASection;
@@ -72,12 +82,7 @@ public:
 	//: Constructs a DOM Document.
 	CL_DomDocument();
 
-	CL_DomDocument(CL_IODevice &input, bool eat_whitespace = true);
-
-	CL_DomDocument(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &qualified_name,
-		const CL_DomDocumentType &doctype);
+	CL_DomDocument(CL_InputSource *input, bool delete_input = false, bool eat_whitespace = true);
 
 	CL_DomDocument(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 	
@@ -105,87 +110,52 @@ public:
 	//- <p>Note that the instance returned implements the Element interface, so attributes can be
 	//- specified directly on the returned object.</p>
 	//param tag_name: The name of the element type to instantiate. For XML, this is case-sensitive.
-	CL_DomElement create_element(const CL_DomString &tag_name);
-
-	//: Creates an element of the given qualified name and namespace URI.
-	CL_DomElement create_element_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &qualified_name);
+	CL_DomElement create_element(const std::string &tag_name);
 
 	//: Creates an empty DocumentFragment object.
 	CL_DomDocumentFragment create_document_fragment();
 
 	//: Creates a Text node given the specified string.
 	//param data: The data for the node.
-	CL_DomText create_text_node(const CL_DomString &data);
+	CL_DomText create_text_node(const std::string &data);
 
 	//: Creates a Comment node given the specified string.
 	//param data: The data for the node.
-	CL_DomComment create_comment(const CL_DomString &data);
+	CL_DomComment create_comment(const std::string &data);
 
 	//: Creates a CDATASection node whose value is the specified string.
 	//param data: The data for the CDATASection contents.
-	CL_DomCDATASection create_cdata_section(const CL_DomString &data);
+	CL_DomCDATASection create_cdata_section(const std::string &data);
 	
 	//: Creates a ProcessingInstruction node given the specified name and data strings.
 	//param target: The target part of the processing instruction.
 	//param data: The data for the node.
 	CL_DomProcessingInstruction create_processing_instruction(
-		const CL_DomString &target,
-		const CL_DomString &data);
+		const std::string &target,
+		const std::string &data);
 
 	//: Creates an Attr of the given name.
 	//- <p>Note that the Attr instance can then be set on an Element using the setAttribute method.</p>
 	//param name: The name of the attribute.
-	CL_DomAttr create_attribute(const CL_DomString &name);
-
-	//: Creates an attribute of the given qualified name and namespace URI.
-	//- <p>Note that the Attr instance can then be set on an Element using the setAttribute method.</p>
-	CL_DomAttr create_attribute_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &qualified_name);
+	CL_DomAttr create_attribute(const std::string &name);
 
 	//: Creates an EntityReference object.
 	//param name: The name of the entity to reference.
-	CL_DomEntityReference create_entity_reference(const CL_DomString &name);
+	CL_DomEntityReference create_entity_reference(const std::string &name);
 
-	//: Returns a NodeList of all the Elements with a given tag name.
-	//- <p>The list is in the order in which they would be encountered
-	//- in a preorder traversal of the Document tree.</p>
+	//: Returns a NodeList of all the Elements with a given tag name in the order in which they would be encountered in a preorder traversal of the Document tree.
 	//param tagname: The name of the tag to match on. The special value "*" matches all tags.
-	CL_DomNodeList get_elements_by_tag_name(const CL_DomString &tag_name);
-
-	//: Returns a NodeList of all the Elements with a given local name and namespace URI.
-	//- <p>The list is in the order in which they would be encountered
-	//- in a preorder traversal of the Document tree.</p>
-	CL_DomNodeList get_elements_by_tag_name_ns(
-		const CL_DomString &namespace_uri,
-		const CL_DomString &qualified_name);
-
-	//: Returns the Element whose ID is given by element_id.
-	CL_DomElement get_element_by_id(const CL_DomString &element_id);
-
-	//: Imports a node from another document to this document.
-	//- <p>The returned node has no parent. The source node is not
-	//- altered or removed from the original document; this method
-	//- creates a new copy of the source node.</p>
-	//- <p>For all nodes, importing a node creates a node object
-	//- owned by the importing document, with attribute values
-	//- identical to the source node's node_name and node_type, plus
-	//- the attributes related to namespaces (prefix, local_name,
-	//- and namespace_uri). As in the clone_node operation on a Node,
-	//- the source node is not altered.</p>
-	CL_DomNode import_node(
-		const CL_DomNode &node,
-		bool deep);
+	CL_DomNodeList get_elements_by_tag_name(const std::string &tag_name);
 
 	//: Loads the DOM document as XML from an input source.
 	//param input: Input source to read from.
+	//param delete_input: If true, will delete input source after usage.
 	//param eat_whitespace: Passed on to CL_XMLTokenizer::set_eat_whitespace.
 	//param insert_point: Place in the DOM to insert the loaded XML code.
 	//retval: List of all top level nodes created.
 	std::vector<CL_DomNode> load(
-		CL_IODevice &input,
+		CL_InputSource *input,
+		bool delete_input = false,
 		bool eat_whitespace = true,
 		CL_DomNode insert_point = CL_DomNode());
 
@@ -193,7 +163,7 @@ public:
 	//param output: Output source to write to.
 	//param delete_output: If true, will delete output source after usage.
 	//param insert_whitespace: Passed on to CL_XMLWriter::set_insert_whitespace.
-	void save(CL_IODevice &output, bool insert_whitespace = true);
+	void save(CL_OutputSource *output, bool delete_output = false, bool insert_whitespace = true);
 
 	//: Removes all nodes from the DOM document.
 	void clear_all();

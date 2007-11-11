@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"

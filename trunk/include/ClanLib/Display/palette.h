@@ -24,9 +24,10 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_palette
@@ -40,14 +41,13 @@
 #pragma warning( disable : 4786)
 #endif
 
-#include "api_display.h"
 #include "color.h"
 #include <string.h>
 
 //: 256 color ARGB palette class.
-//- !group=Display/Display!
+//- !group=Display/Display 2D!
 //- !header=display.h!
-class CL_API_DISPLAY CL_Palette
+class CL_Palette
 {
 //! Construction:
 public:
@@ -70,7 +70,7 @@ public:
 	//: Returns the palette in ARGB8888 format.
 	operator const unsigned int*() const { return (const unsigned int *) colors; }
 
-	operator unsigned int*() const { return (unsigned int *) colors; }
+	operator unsigned int*() { return (unsigned int *) colors; }
 };
 
 #endif

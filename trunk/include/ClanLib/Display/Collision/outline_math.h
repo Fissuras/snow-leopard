@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Emanuel Greisen
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"
@@ -38,11 +39,11 @@
 
 #include <vector>
 
-class CL_Pointd;
+class CL_Pointf;
 class CL_OutlineCircle;
 
 //: Math operations on outlines
-//- !group=Display/Collision!
+//- !group=Core/Collision !
 //- !header=display.h!
 //- <p>This class provides general methods for calulating things on outlines.</p>
 class CL_OutlineMath
@@ -50,43 +51,44 @@ class CL_OutlineMath
 //! Operations:
  public:
 	//: Find minimum spanning circle for the set of points
-	//param std::vector<CL_Pointd> &points: the points to calulate on
+	//param std::vector<CL_Pointf> &points: the points to calulate on
 	static CL_OutlineCircle minimum_enclosing_disc(
-		const std::vector<CL_Pointd> &points);
+		const std::vector<CL_Pointf> &points);
 	static void minimum_enclosing_disc(
 		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points);
+		const std::vector<CL_Pointf> &points);
 
  private:
 	static void minimum_disc_with_1point(
 		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points,
+		const std::vector<CL_Pointf> &points,
 		unsigned int i);
 	static void minimum_disc_with_2points(
 		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points ,
+		const std::vector<CL_Pointf> &points ,
 		unsigned int i,
 		unsigned int j);
 	static void minimum_disc_with_3points(
 		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points ,
+		const std::vector<CL_Pointf> &points ,
 		unsigned int i,
 		unsigned int j,
 		unsigned int k);
 
-public:
-	static void minimum_enclosing_sub_circle(
-		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points,
-		double maxradius);
-private:
-	static void minimum_enclosing_sub_circle_with_1point(
-		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points);
-	static void minimum_enclosing_sub_circle_with_2points(
-		CL_OutlineCircle &smalldisc,
-		const std::vector<CL_Pointd> &points,
-		unsigned int j);
+	public:
+		static void minimum_enclosing_sub_circle(
+			CL_OutlineCircle &smalldisc,
+			const std::vector<CL_Pointf> &points,
+			float maxradius);
+	private:
+		static void minimum_enclosing_sub_circle_with_1point(
+			CL_OutlineCircle &smalldisc,
+			const std::vector<CL_Pointf> &points);
+		static void minimum_enclosing_sub_circle_with_2points(
+			CL_OutlineCircle &smalldisc,
+			const std::vector<CL_Pointf> &points,
+			unsigned int j);
+
 };
 
 #endif

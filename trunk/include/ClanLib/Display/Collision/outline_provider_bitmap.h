@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"
@@ -48,6 +49,7 @@
 #endif
 
 #include <vector>
+#include <string>
 
 #include "outline_provider.h"
 #include "outline_accuracy.h"
@@ -56,7 +58,7 @@ class CL_OutlineProviderBitmap_Generic;
 class CL_PixelBuffer;
 
 //: Bitmap outline provider.
-//- !group=Display/Collision!
+//- !group=Display/Collision !
 //- !header=display.h!
 //- <p>A CL_OutlineProviderBitmap is used to find outlines based on the alpha channel of images.</p>
 class CL_API_DISPLAY CL_OutlineProviderBitmap : public CL_OutlineProvider

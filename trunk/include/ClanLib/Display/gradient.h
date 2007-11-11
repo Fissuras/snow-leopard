@@ -23,11 +23,11 @@
 **
 **  File Author(s):
 **
-**    Kenneth Gangstoe
-**    Harry Storbacka
+**    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_gradient
@@ -37,13 +37,12 @@
 #pragma once
 #endif
 
-#include "api_display.h"
 #include "color.h"
 
 //: Colorgradient description class.
-//- !group=Display/Display!
+//- !group=Display/Display 2D!
 //- !header=display.h!
-class CL_API_DISPLAY CL_Gradient
+class CL_Gradient
 {
 //! Construction:
 public:
@@ -52,49 +51,17 @@ public:
 	//param top_right: Top right color component.
 	//param bottom_left: Bottom left color component.
 	//param bottom_right: Bottom right color component.
-	CL_Gradient()
-	{
-	}
+	CL_Gradient() { return; }
 
-	CL_Gradient(const CL_Colord &top_left, const CL_Colord &top_right,
-		const CL_Colord &bottom_left, const CL_Colord &bottom_right)
-	: top_left(top_left), top_right(top_right), bottom_left(bottom_left),
-	  bottom_right(bottom_right)
-	{
-	}
-
-	CL_Gradient(const CL_Colord &first_color, const CL_Colord &second_color)
-	: top_left(first_color), top_right(first_color), bottom_left(second_color),
-	  bottom_right(second_color)
-	{
-	}
+	CL_Gradient(const CL_Color &top_left, const CL_Color &top_right, const CL_Color &bottom_left, const CL_Color &bottom_right)
+		: top_left(top_left), top_right(top_right), bottom_left(bottom_left), bottom_right(bottom_right) { return; }
 
 //! Attributes:
 public:
-	//: Color of top left corner of gradient.
-	CL_Colord top_left;
-
-	//: Color of top right corner of gradient.
-	CL_Colord top_right;
-
-	//: Color of bottom left corner of gradient.
-	CL_Colord bottom_left;
-
-	//: Color of bottom right corner of gradient.
-	CL_Colord bottom_right;
-
-	//: Compares gradient to another one.
-	bool operator==(const CL_Gradient &other) const
-	{
-		return top_left == other.top_left && top_right==other.top_right && 
-		       bottom_left == other.bottom_left && bottom_right == bottom_right;
-	}
-
-	//: Compares gradient to another one.
-	bool operator!=(const CL_Gradient &other) const
-	{
-		return !(*this == other);
-	}
+	CL_Color top_left;
+	CL_Color top_right;
+	CL_Color bottom_left;
+	CL_Color bottom_right;
 };
 
 #endif

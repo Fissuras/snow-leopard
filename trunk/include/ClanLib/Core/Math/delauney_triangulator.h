@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -32,17 +33,23 @@
 #ifndef header_delauney_triangulator
 #define header_delauney_triangulator
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
-#include <vector>
 
 //: Vertex in the delauney triangulation.
-//- !group=Core/Math!
-//- !header=core.h!
 class CL_API_CORE CL_DelauneyTriangulator_Vertex
 {
 //! Attributes:
@@ -58,8 +65,6 @@ public:
 };
 
 //: Triangle generated from a delauney triangulation.
-//- !group=Core/Math!
-//- !header=core.h!
 class CL_DelauneyTriangulator_Triangle
 {
 //! Attributes:
@@ -77,8 +82,6 @@ public:
 class CL_DelauneyTriangulator_Generic;
 
 //: Delauney triangulator.
-//- !group=Core/Math!
-//- !header=core.h!
 //- <p>This class uses the <a href="http://astronomy.swin.edu.au/~pbourke/terrain/triangulate/">
 //- delauney triangulation algorithm</a> to produce
 //- triangles between a list of points.</p>

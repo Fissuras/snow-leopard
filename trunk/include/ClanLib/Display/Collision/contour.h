@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"
@@ -41,7 +42,7 @@
 #include "outline_circle.h"
 
 //: Collision detection contour.
-//- !group=Display/Collision!
+//- !group=Display/Collision !
 //- !header=display.h!
 //- <p>A outline consists of contours, which hold the actual outline geometry</p>
 class CL_Contour
@@ -55,7 +56,7 @@ class CL_Contour
 //! Attributes:
  public:
 	// Points forming the countour.
-	std::vector<CL_Pointd> points;
+	std::vector<CL_Pointf> points;
 
 	// boolean specifying if this contour is inside-out (the inside of a hollow polygon)
 	// if that is the case, then the collision-test will skip the inside_contour-test (because you can

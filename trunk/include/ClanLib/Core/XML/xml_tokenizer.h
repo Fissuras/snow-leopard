@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,15 +33,24 @@
 #ifndef header_xml_tokenizer
 #define header_xml_tokenizer
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
 
-class CL_IODevice;
-class CL_XMLToken;
+class CL_InputSource;
+class CL_XMLTokenLoad;
 class CL_XMLTokenizer_Generic;
 
 //: The XML Tokenizer breaks a XML file into XML tokens.
@@ -54,7 +64,7 @@ public:
 	
 	CL_XMLTokenizer(const CL_XMLTokenizer &copy);
 
-	CL_XMLTokenizer(CL_IODevice &input);
+	CL_XMLTokenizer(CL_InputSource *input, bool delete_input = false);
 	
 	virtual ~CL_XMLTokenizer();
 	
@@ -69,9 +79,7 @@ public:
 //! Operations:
 public:
 	//: Returns the next token available in input stream.
-	CL_XMLToken next();
-
-	void next(CL_XMLToken *out_token);
+	CL_XMLTokenLoad next();
 
 //! Implementation:
 private:

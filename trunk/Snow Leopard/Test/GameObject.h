@@ -33,7 +33,7 @@ public:
 	point location;
 	int actionPriority;
 	int renderPriority;
-	CL_String resourceName;
+	std::string resourceName;
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	int ID;
 

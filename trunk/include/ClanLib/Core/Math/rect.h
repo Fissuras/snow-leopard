@@ -24,30 +24,34 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Kenneth Gangstø
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
 //! header=core.h
 
-#ifndef header_rect_lhusrhilug985t4thligp
-#define header_rect_lhusrhilug985t4thligp
+#ifndef header_rect
+#define header_rect
+
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
 
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "size.h"
 #include "point.h"
 #include "origin.h"
 
-template<typename T> T cl_min(T a, T b) { if(a < b) return a; return b; }
-template<typename T> T cl_max(T a, T b) { if(a > b) return a; return b; }
-
 class CL_Rectf;
-class CL_Rectd;
 
 //: 2D (left,top,right,bottom) rectangle structure.
 //- !group=Core/Math!
@@ -66,13 +70,7 @@ public:
 	//param rect: Initial rectangle position and size.
 	CL_Rect() { left = right = top = bottom = 0; }
 
-	CL_Rect(const CL_Size &s) { left = 0; top = 0; right = s.width; bottom = s.height; }
-
-	explicit CL_Rect(const CL_Sized &s) { left = 0; top = 0; right = int(s.width+0.5); bottom = int(s.height+0.5); }
-
 	explicit CL_Rect(const CL_Rectf& rect);
-
-	explicit CL_Rect(const CL_Rectd& rect);
 
 	CL_Rect(int new_left, int new_top, int new_right, int new_bottom)
 	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
@@ -82,6 +80,38 @@ public:
 
 	CL_Rect(const CL_Rect &rect)
 	{ left = rect.left; top = rect.top; right = rect.right; bottom = rect.bottom; }
+
+	//: Rect += Rect operator.
+	CL_Rect &operator+=(const CL_Rect &r)
+	{ left += r.left; top += r.top; right += r.right; bottom += r.bottom; return *this; }
+
+	//: Rect -= Rect operator.
+	CL_Rect &operator-=(const CL_Rect &r)
+	{ left -= r.left; top -= r.top; right -= r.right; bottom -= r.bottom; return *this; }
+	
+	//: Rect += Point operator.
+	CL_Rect &operator+=(const CL_Point &p)
+	{ left += p.x; top += p.y; right += p.x; bottom += p.y; return *this; }
+
+	//: Rect -= Point operator.
+	CL_Rect &operator-=(const CL_Point &p)
+	{ left -= p.x; top -= p.y; right -= p.x; bottom -= p.y; return *this; }
+
+	//: Rect + Rect operator.
+	CL_Rect operator+(const CL_Rect &r) const
+	{ return CL_Rect(left + r.left, top + r.top, right + r.right, bottom + r.bottom); }
+
+	//: Rect - Rect operator.
+	CL_Rect operator-(const CL_Rect &r) const
+	{ return CL_Rect(left - r.left, top - r.top, right - r.right, bottom - r.bottom); }
+
+	//: Rect + Point operator.
+	CL_Rect operator+(const CL_Point &p) const
+	{ return CL_Rect(left + p.x, top + p.y, right + p.x, bottom + p.y); }
+
+	//: Rect - Point operator.
+	CL_Rect operator-(const CL_Point &p) const
+	{ return CL_Rect(left - p.x, top - p.y, right - p.x, bottom - p.y); }
 
 	//: Rect == Rect operator.
 	bool operator==(const CL_Rect &r) const
@@ -130,39 +160,9 @@ public:
 	//param angle: Angle to rotate in degrees.
 	CL_Rect get_rot_bounds(const CL_Point &hotspot, float angle) const;
 	CL_Rect get_rot_bounds(CL_Origin origin, int x, int y, float angle) const;
-
-	//: Returns the center point of the rectangle.
-	CL_Point get_center() const
-	{
-		return CL_Point( int(double(left + right)/2.0+0.5), int(double(top + bottom)/2.0+0.5) );
-	}
-
+	
 //! Operations:
 public:
-	//: Shrink the rectangle
-	CL_Rect shrink(const CL_Rect &r)
-	{
-		left += r.left; top += r.top; right -= r.right; bottom -= r.bottom; return *this;
-	};
-
-	//: Expand the rectangle
-	CL_Rect expand(const CL_Rect &r)
-	{
-		left -= r.left; top -= r.top; right += r.right; bottom += r.bottom; return *this;
-	};
-
-	//: Translate the rect
-	CL_Rect translate(const CL_Point &p)
-	{
-		left += p.x; top += p.y; right += p.x; bottom += p.y; return *this;
-	};
-
-	//: Translate the rect
-	CL_Rect translate(int x, int y)
-	{
-		left += x; top += y; right += x; bottom += y; return *this;
-	};
-
 	//: Sets the size of the rectangle, maintaining top/left position.
 	void set_size(const CL_Size &size)
 	{
@@ -171,24 +171,13 @@ public:
 	}
 
 	//: Calculates and returns the union of two rectangles.
-	CL_Rect calc_overlap(const CL_Rect &rect) const
+	CL_Rect calc_union(const CL_Rect &rect)
 	{
 		CL_Rect result;
-		result.left   = cl_max(left, rect.left);
-		result.right  = cl_min(right, rect.right);
-		result.top    = cl_max(top, rect.top);
-		result.bottom = cl_min(bottom, rect.bottom);
-		return result;
-	}
-
-	//: Calculates and returns the bounding rectangle of the rectangles.
-	CL_Rect calc_bounding_rect(const CL_Rect &rect) const
-	{
-		CL_Rect result;
-		result.left   = cl_min(left, rect.left);
-		result.right  = cl_max(right, rect.right);
-		result.top    = cl_min(top, rect.top);
-		result.bottom = cl_max(bottom, rect.bottom);
+		if (left   > rect.left)   result.left   = left;   else result.left   = rect.left;
+		if (right  < rect.right)  result.right  = right;  else result.right  = rect.right;
+		if (top    > rect.top)    result.top    = top;    else result.top    = rect.top;
+		if (bottom < rect.bottom) result.bottom = bottom; else result.bottom = rect.bottom;
 		return result;
 	}
 
@@ -224,22 +213,9 @@ public:
 		right += offset.x;
 		bottom += offset.y;
 	}
-
-	//: Clip according to the specified clip rectangle.
-	void clip(const CL_Rect &cr)
-	{
-		top = cl_max(top, cr.top);
-		left = cl_max(left, cr.left);
-		right = cl_min(right, cr.right);
-		bottom = cl_min(bottom, cr.bottom);
-		top = cl_min(top, bottom);
-		left = cl_min(left, right);
-	}
 };
 
 //: 2D (left,top,right,bottom) floating point rectangle structure.
-//- !group=Core/Math!
-//- !header=core.h!
 class CL_Rectf
 {
 //! Construction:
@@ -255,15 +231,11 @@ public:
 	CL_Rectf() { left = right = top = bottom = 0.0f; }
 
 	CL_Rectf(const CL_Rect& rect)
-		: left((float) rect.left), 
-		  top((float) rect.top), 
-		  right((float) rect.right), 
-		  bottom((float) rect.bottom)
+		: left((float)rect.left), 
+		  top((float)rect.top), 
+		  right((float)rect.right), 
+		  bottom((float)rect.bottom)
 	{}
-
-	explicit CL_Rectf(const CL_Rectd& R);
-
-	explicit CL_Rectf(const CL_Sizef &s) { left = 0; top = 0; right = s.width; bottom = s.height; }
 
 	CL_Rectf(float new_left, float new_top, float new_right, float new_bottom)
 	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
@@ -274,12 +246,44 @@ public:
 	CL_Rectf(const CL_Rectf &rect)
 	{ left = rect.left; top = rect.top; right = rect.right; bottom = rect.bottom; }
 
+	//: Rect += Rect operator.
+	CL_Rectf &operator+=(const CL_Rectf &r)
+	{ left += r.left; top += r.top; right += r.right; bottom += r.bottom; return *this; }
+
+	//: Rect -= Rect operator.
+	CL_Rectf &operator-=(const CL_Rectf &r)
+	{ left -= r.left; top -= r.top; right -= r.right; bottom -= r.bottom; return *this; }
+	
+	//: Rect += Point operator.
+	CL_Rectf &operator+=(const CL_Pointf &p)
+	{ left += p.x; top += p.y; right += p.x; bottom += p.y; return *this; }
+
+	//: Rect -= Point operator.
+	CL_Rectf &operator-=(const CL_Pointf &p)
+	{ left -= p.x; top -= p.y; right -= p.x; bottom -= p.y; return *this; }
+
+	//: Rect + Rect operator.
+	CL_Rectf operator+(const CL_Rectf &r) const
+	{ return CL_Rectf(left + r.left, top + r.top, right + r.right, bottom + r.bottom); }
+
+	//: Rect - Rect operator.
+	CL_Rectf operator-(const CL_Rectf &r) const
+	{ return CL_Rectf(left - r.left, top - r.top, right - r.right, bottom - r.bottom); }
+
+	//: Rect + Point operator.
+	CL_Rectf operator+(const CL_Pointf &p) const
+	{ return CL_Rectf(left + p.x, top + p.y, right + p.x, bottom + p.y); }
+
+	//: Rect - Point operator.
+	CL_Rectf operator-(const CL_Pointf &p) const
+	{ return CL_Rectf(left - p.x, top - p.y, right - p.x, bottom - p.y); }
+
 	//: Rect == Rect operator.
 	bool operator==(const CL_Rectf &r) const
 	{ return (left == r.left && top == r.top && right == r.right && bottom == r.bottom); }
 
 	//: Rect != Rect operator.
-	bool operator!=(const CL_Rectf &r) const
+	bool operator!=(const CL_Rect &r) const
 	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
 
 //! Attributes:
@@ -321,65 +325,24 @@ public:
 	//param angle: Angle to rotate in degrees.
 	CL_Rectf get_rot_bounds(const CL_Pointf &hotspot, float angle) const;
 	CL_Rectf get_rot_bounds(CL_Origin origin, float x, float y, float angle) const;
-
-	//: Returns the center point of the rectangle.
-	CL_Pointd get_center() const
-	{
-		return CL_Pointd( (left + right)/2.0, (top + bottom)/2.0 );
-	}
-
+	
 //! Operations:
 public:
-	//: Shrink the rectangle
-	CL_Rectf shrink(const CL_Rectf &r)
-	{
-		left += r.left; top += r.top; right -= r.right; bottom -= r.bottom; return *this;
-	};
-
-	//: Expand the rectangle
-	CL_Rectf expand(const CL_Rectf &r)
-	{
-		left -= r.left; top -= r.top; right += r.right; bottom += r.bottom; return *this;
-	};
-
-	//: Translate the rect.
-	CL_Rectf translate(const CL_Pointf &p)
-	{
-		left += p.x; top += p.y; right += p.x; bottom += p.y; return *this;
-	};
-
-	//: Translate the rect.
-	CL_Rectf translate(float x, float y)
-	{
-		left += x; top += y; right += x; bottom += y; return *this;
-	};
-
 	//: Sets the size of the rectangle, maintaining top/left position.
-	void set_size(const CL_Sizef &size)
+	void set_size(const CL_Size &size)
 	{
 		right = left + size.width;
 		bottom = top + size.height;
 	}
 
 	//: Calculates and returns the union of two rectangles.
-	CL_Rectf calc_overlap(const CL_Rectf &rect) const
+	CL_Rectf calc_union(const CL_Rectf &rect)
 	{
 		CL_Rectf result;
-		result.left   = cl_max(left, rect.left);
-		result.right  = cl_min(right, rect.right);
-		result.top    = cl_max(top, rect.top);
-		result.bottom = cl_min(bottom, rect.bottom);
-		return result;
-	}
-
-	//: Calculates and returns the bounding rectangle of the rectangles.
-	CL_Rectf calc_bounding_rect(const CL_Rectf &rect) const
-	{
-		CL_Rectf result;
-		result.left   = cl_min(left, rect.left);
-		result.right  = cl_max(right, rect.right);
-		result.top    = cl_min(top, rect.top);
-		result.bottom = cl_max(bottom, rect.bottom);
+		if (left   > rect.left)   result.left   = left;   else result.left   = rect.left;
+		if (right  < rect.right)  result.right  = right;  else result.right  = rect.right;
+		if (top    > rect.top)    result.top    = top;    else result.top    = rect.top;
+		if (bottom < rect.bottom) result.bottom = bottom; else result.bottom = rect.bottom;
 		return result;
 	}
 
@@ -406,180 +369,7 @@ public:
 	//param x, y: Offsets applied negatively to each corner of the rectangle
 	void apply_alignment(CL_Origin origin, float x, float y)
 	{
-		CL_Pointd offset = calc_origin(origin, get_size());
-		offset.x -= x;
-		offset.y -= y;
-		
-		left += (float)offset.x;
-		top += (float)offset.y;
-		right += (float)offset.x;
-		bottom += (float)offset.y;
-	}
-};
-
-//: 2D (left,top,right,bottom) double floating point rectangle structure.
-//- !group=Core/Math!
-//- !header=core.h!
-class CL_Rectd
-{
-//! Construction:
-public:
-	//: Constructs an rectangle.
-	//param left: Initial left position of rectangle.
-	//param top: Initial top position of rectangle.
-	//param right: Initial right position of rectangle.
-	//param bottom: Initial bottom position of rectangle.
-	//param point: Initial top-left position of rectangle.
-	//param size: Initial size of rectangle.
-	//param rect: Initial rectangle position and size.
-	CL_Rectd() { left = right = top = bottom = 0.0; }
-
-	CL_Rectd(const CL_Rect& rect)
-		: left((double) rect.left), 
-		  top((double) rect.top), 
-		  right((double) rect.right), 
-		  bottom((double) rect.bottom)
-	{}
-
-	CL_Rectd(const CL_Sized &s) { left = top = 0; right = s.width; bottom = s.height; }
-
-	CL_Rectd(double new_left, double new_top, double new_right, double new_bottom)
-	{ left = new_left; top = new_top; right = new_right; bottom = new_bottom; }
-
-	CL_Rectd(const CL_Pointd &p, const CL_Sized &size)
-	{ left = p.x; top = p.y; right = left + size.width; bottom = top + size.height; }
-
-	CL_Rectd(const CL_Rectd &rect)
-	{ left = rect.left; top = rect.top; right = rect.right; bottom = rect.bottom; }
-
-	//: Rect != Rect operator.
-	bool operator!=(const CL_Rectd &r) const
-	{ return (left != r.left || top != r.top || right != r.right || bottom != r.bottom); }
-
-//! Attributes:
-public:
-	//: X1-coordinate.
-	double left;
-	
-	//: Y1-coordinate.
-	double top;
-	
-	//: X2-coordinate.
-	double right;
-	
-	//: Y2-coordinate.
-	double bottom;
-	
-	//: Returns the width of the rectangle.
-	double get_width() const { return right - left; }
-	
-	//: Returns the height of the rectangle.
-	double get_height() const { return bottom - top; }
-
-	//: Returns the size of the rectangle.
-	CL_Sized get_size() const { return CL_Sized(right - left, bottom - top); }
-	
-	//: Returns true if point is inside the rectangle.
-	bool is_inside(const CL_Pointd &p) const { return (p.x >= left && p.y >= top && p.x <= right && p.y <= bottom); }
-	
-	//: Returns true if rectangle passed is overlapping or inside this rectangle.
-	bool is_overlapped(const CL_Rectd &r) const 
-	{
-		return (r.left < right && r.right > left && r.top < bottom && r.bottom > top);
-	}
-
-	//: Returns the center point of the rectangle.
-	CL_Pointd get_center() const
-	{
-		return CL_Pointd( (left + right)/2.0, (top + bottom)/2.0 );
-	}
-
-	//: Returns another CL_Rectd containing a rotated version of this one.
-	//param hotspot: Point to rotate around.
-	//param origin: Determines the hotspot point within the rectangle
-	//param x, y: Offsets applied negatively to the hotspot point
-	//param angle: Angle to rotate in degrees.
-	CL_Rectd get_rot_bounds(const CL_Pointd &hotspot, float angle) const;
-	CL_Rectd get_rot_bounds(CL_Origin origin, double x, double y, float angle) const;
-	
-//! Operations:
-public:
-	//: Shrink the rectangle
-	CL_Rectd shrink(const CL_Rectd &r)
-	{
-		left += r.left; top += r.top; right -= r.right; bottom -= r.bottom; return *this;
-	};
-
-	//: Expand the rectangle
-	CL_Rectd expand(const CL_Rectd &r)
-	{
-		left -= r.left; top -= r.top; right += r.right; bottom += r.bottom; return *this;
-	};
-
-	//: Translate the rect.
-	CL_Rectd translate(const CL_Pointd &p)
-	{
-		left += p.x; top += p.y; right += p.x; bottom += p.y; return *this;
-	};
-
-	//: Translate the rect.
-	CL_Rectd translate(double x, double y)
-	{
-		left += x; top += y; right += x; bottom += y; return *this;
-	};
-
-	//: Sets the size of the rectangle, maintaining top/left position.
-	void set_size(const CL_Sized &size)
-	{
-		right = left + size.width;
-		bottom = top + size.height;
-	}
-
-	//: Returns the overlapping area of the two rectangles.
-	CL_Rectd calc_overlap(const CL_Rectd &rect)
-	{
-		CL_Rectd result;
-		result.left   = cl_max(left, rect.left);
-		result.right  = cl_min(right, rect.right);
-		result.top    = cl_max(top, rect.top);
-		result.bottom = cl_min(bottom, rect.bottom);
-		return result;
-	}
-
-	CL_Rectd calc_bounding_rect(const CL_Rectd &rect) const
-	{
-		CL_Rectd result;
-		result.left   = cl_min(left, rect.left);
-		result.right  = cl_max(right, rect.right);
-		result.top    = cl_min(top, rect.top);
-		result.bottom = cl_max(bottom, rect.bottom);
-		return result;
-	}
-
-	//: Normalize rectangle. Ensures that left<right and top<bottom.
-	void normalize()
-	{
-		if (left > right)
-		{
-			double temp = right;
-			right = left;
-			left = temp;
-		}
-
-		if (top > bottom)
-		{
-			double temp = bottom;
-			bottom = top;
-			top = temp;
-		}
-	}
-	
-	//: Applies an origin and offset pair to this rectangle
-	//param origin: The new origin to adjust to from default upper-left position
-	//param x, y: Offsets applied negatively to each corner of the rectangle
-	void apply_alignment(CL_Origin origin, double x, double y)
-	{
-		CL_Pointd offset = calc_origin(origin, get_size());
+		CL_Pointf offset = calc_origin(origin, get_size());
 		offset.x -= x;
 		offset.y -= y;
 		
@@ -590,19 +380,11 @@ public:
 	}
 };
 
-inline CL_Rect CL_RectPS(int x, int y, int width, int height)
-{
-	return CL_Rect(x, y, x+width, y+height);
-}
-
-inline CL_Rectf CL_RectfPS(float x, float y, float width, float height)
-{
-	return CL_Rectf(x, y, x+width, y+height);
-}
-
-inline CL_Rectd CL_RectdPS(double x, double y, double width, double height)
-{
-	return CL_Rectd(x, y, x+width, y+height);
-}
+inline CL_Rect::CL_Rect(const CL_Rectf& rect)
+	: left(static_cast<int>(rect.left)), 
+	  top(static_cast<int>(rect.top)), 
+	  right(static_cast<int>(rect.right)), 
+	  bottom(static_cast<int>(rect.bottom))
+{}
 
 #endif

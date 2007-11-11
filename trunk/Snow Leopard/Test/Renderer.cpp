@@ -40,8 +40,8 @@ bool Renderer::Render()
 		GameObject* obj = *itr;
 		CL_Sprite* sprite = spriteMap[obj->ID];
 		sprite->set_scale(zoomLevel,zoomLevel);
-		sprite->draw(*gc,zoomLevel * obj->location.x -screenStartX,
-			(zoomLevel * obj->location.y - screenStartY));
+		sprite->draw(zoomLevel * obj->location.x -screenStartX,
+			(zoomLevel * obj->location.y - screenStartY),gc);
 	}
 	
 	return true;
@@ -54,7 +54,7 @@ bool Renderer::LoadSprites()
 	for (itr = objects->begin(); itr!=objects->end();itr++)
 	{
 		GameObject* obj = *itr;
-		CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources,*gc);
+		CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources);
 		ptr->set_alignment(origin_center);
 		ptr->set_rotation_hotspot(origin_center);
 		ptr->set_base_angle(1.0);

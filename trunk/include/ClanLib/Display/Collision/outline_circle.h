@@ -42,7 +42,7 @@
 #include <cmath>
 
 //: Collision detection outline segmentation circle.
-//- !group=Display/Collision!
+//- !group=Display/Collision !
 //- !header=display.h!
 //- <p>Outline circles split the line segments into groups for faster collision detection.
 //- If two circles encapsulating the lines don't collide, none of the lines inside them can 
@@ -53,7 +53,7 @@ class CL_OutlineCircle
  public:
 	//: Construct a outline circle
 	CL_OutlineCircle() :
-		position(-1.0,-1.0),
+		position(-1.0f,-1.0f),
 		radius(0),
 		start(0),
 		end(0)
@@ -70,8 +70,8 @@ class CL_OutlineCircle
 		if( &other == this )
 			return false;
 
-		CL_Pointd pos = position - other.position;
-		double dist = sqrt( pos.x*pos.x+pos.y*pos.y );	
+		CL_Pointf pos = position - other.position;
+		float dist = (float) sqrt( pos.x*pos.x+pos.y*pos.y );	
 		
 		if( dist > (radius + other.radius) )
 			return false;
@@ -81,8 +81,8 @@ class CL_OutlineCircle
 
 //! Attributes:
  public:
-	CL_Pointd position;
-	double radius;
+	CL_Pointf position;
+	float radius;
 	unsigned int start;
 	unsigned int end;
 };

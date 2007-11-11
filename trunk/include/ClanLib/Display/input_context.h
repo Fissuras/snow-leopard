@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Input"
@@ -33,18 +33,31 @@
 #ifndef header_input_context
 #define header_input_context
 
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "api_display.h"
-#include "../Core/System/sharedptr.h"
+#include "../signals.h"
 
 class CL_InputDevice;
-class CL_InputContext_Impl;
+class CL_InputEvent;
+class CL_InputContext_Generic;
 
+//: Input events interface.
 //- !group=Display/Input!
 //- !header=display.h!
+//- <p>An input context is a collection of inputdevices available in
+//- a displaywindow.</p>
 class CL_API_DISPLAY CL_InputContext
 {
 //! Construction:
@@ -67,9 +80,6 @@ public:
 	//: Returns the number of joysticks available.
 	int get_joystick_count() const;
 
-	//: Returns the number of tablets available.
-	int get_tablet_count() const;
-
 	//: Returns the input device for the specified keyboard.
 	CL_InputDevice &get_keyboard(int keyboard = 0);
 
@@ -79,11 +89,8 @@ public:
 	//: Returns the input device for the specified joystick.
 	CL_InputDevice &get_joystick(int joystick = 0);
 
-	//: Returns the input device for the specified tablet.
-	CL_InputDevice &get_tablet(int tablet = 0);
-
 	//: Returns the input device with the given devicename
-	CL_InputDevice &get_device(const CL_StringRef &device_name);
+	CL_InputDevice &get_device(const std::string& devicename);
 
 //! Operations:
 public:
@@ -94,28 +101,17 @@ public:
 	void clear();
 
 	//: Adds a new keyboard to the input context.
-	void add_keyboard(const CL_InputDevice keyboard);
+	void add_keyboard(const CL_InputDevice &keyboard);
 
 	//: Adds a new mouse to the input context.
-	void add_mouse(const CL_InputDevice mouse);
+	void add_mouse(const CL_InputDevice &mouse);
 
 	//: Adds a new joystick to the input context.
-	void add_joystick(const CL_InputDevice joystick);
-
-	//: Adds a new tablet to the input context.
-	void add_tablet(const CL_InputDevice tablet);
-
-	//: Process and dispatch messages to signals.
-	void process_messages();
-
-	//: Update device
-	//param peek_only: Treat as a request to see if an event would occur
-	//return: true when the device event has occurred
-	bool poll(bool peek_only);
+	void add_joystick(const CL_InputDevice &joystick);
 
 //! Implementation:
 private:
-	CL_SharedPtr<CL_InputContext_Impl> impl;
+	CL_InputContext_Generic *impl;
 };
 
 #endif

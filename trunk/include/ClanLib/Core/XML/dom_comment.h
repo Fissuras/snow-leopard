@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_comment
 #define header_dom_comment
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_character_data.h"
 
 //: DOM Comment class.
@@ -52,7 +62,7 @@ public:
 	//: Constructs a DOM Comment handle.
 	CL_DomComment();
 
-	CL_DomComment(CL_DomDocument &doc, const CL_DomString &data);
+	CL_DomComment(CL_DomDocument &doc, const std::string &data);
 
 	CL_DomComment(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 	

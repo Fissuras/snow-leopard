@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"
@@ -40,7 +41,7 @@
 #include "contour.h"
 
 //: Collision detection contour.
-//- !group=Display/Collision!
+//- !group=Display/Collision !
 //- !header=display.h!
 //- <p>Abstract Base class for outline providers. Don't use this!</p>
 class CL_OutlineProvider

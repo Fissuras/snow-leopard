@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,11 +33,20 @@
 #ifndef header_dom_attr
 #define header_dom_attr
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "dom_node.h"
 
 //: DOM Attribute class.
@@ -74,7 +84,7 @@ public:
 	//: Constructs a DOM Attr handle.
 	CL_DomAttr();
 	
-	CL_DomAttr(CL_DomDocument doc, const CL_DomString &name, const CL_DomString &namespace_uri = CL_DomString());
+	CL_DomAttr(CL_DomDocument doc, const std::string &name);
 
 	CL_DomAttr(const CL_SharedPtr<CL_DomNode_Generic> &impl);
 	
@@ -83,7 +93,7 @@ public:
 //! Attributes:
 public:
 	//: Returns the name of this attribute.
-	CL_DomString get_name() const;
+	std::string get_name() const;
 
 	//: If this attribute was explicitly given a value in the original document, this is true; otherwise, it is false.
 	//- <ul>
@@ -97,14 +107,10 @@ public:
 	bool get_specified() const;
 	
 	//: Returns the value of the attribute.
-	CL_DomString get_value() const;
+	std::string get_value() const;
 
 	//: Sets the value of the attribute.
-	void set_value(const CL_DomString &value);
-
-	//: Returns the attribute's owner element.
-	//- <p>The Element node this attribute is attached to or null if this attribute is not in use.</p>
-	CL_DomElement get_owner_element() const;
+	void set_value(const std::string &value);
 
 //! Operations:
 public:

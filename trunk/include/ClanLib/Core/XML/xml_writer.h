@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="XML"
@@ -32,15 +33,24 @@
 #ifndef header_xml_writer
 #define header_xml_writer
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "../System/sharedptr.h"
 
-class CL_IODevice;
-class CL_XMLToken;
+class CL_OutputSource;
+class CL_XMLTokenSave;
 class CL_XMLWriter_Generic;
 
 //: The XML Writer writes a XML file based on XML tokens.
@@ -54,7 +64,7 @@ public:
 	
 	CL_XMLWriter(const CL_XMLWriter &copy);
 	
-	CL_XMLWriter(CL_IODevice &output);
+	CL_XMLWriter(CL_OutputSource *output, bool delete_output = false);
 	
 	virtual ~CL_XMLWriter();
 
@@ -69,7 +79,7 @@ public:
 //! Operations:
 public:
 	//: Write token to file.
-	void write(const CL_XMLToken &token);
+	void write(const CL_XMLTokenSave &token);
 	
 //! Implementation:
 private:

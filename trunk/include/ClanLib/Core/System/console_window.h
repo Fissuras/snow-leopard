@@ -24,6 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="System"
@@ -32,11 +33,21 @@
 #ifndef header_console_window
 #define header_console_window
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
+#include <string>
 
 class CL_ConsoleWindow_Generic;
 
@@ -53,7 +64,7 @@ public:
 	//param width: Columns in console window.
 	//param height: Rows in console window.
 	CL_ConsoleWindow(
-		const CL_StringRef &title,
+		const std::string &title,
 		int width = 80,
 		int height = 25);
 
@@ -66,7 +77,7 @@ public:
 	void redirect_stdio();
 
 	//: Redirects stdout and stderr to filename.
-	void redirect_stdio(const CL_StringRef &filename);
+	void redirect_stdio(const std::string &filename);
 
 	//: Waits until user hits a key.
 	void wait_for_key();

@@ -25,6 +25,7 @@
 **
 **    Harry Storbacka
 **    Magnus Norddahl
+**    (if your name is missing here, please add it)
 */
 
 //! clanDisplay="Collision"
@@ -48,14 +49,12 @@
 #endif
 
 #include "outline_provider.h"
-#include "../../Core/Text/string_types.h"
-#include "../../Core/IOData/virtual_directory.h"
 
 class CL_OutlineProviderFile_Generic;
 class CL_InputSourceProvider;
 
 //: File outline provider is used to load precompiled outlines.
-//- !group=Display/Collision!
+//- !group=Display/Collision !
 //- !header=display.h!
 //- <p>A CL_OutlineProviderFile is used to load precompiled outlines.</p>
 class CL_API_DISPLAY CL_OutlineProviderFile : public CL_OutlineProvider
@@ -63,9 +62,9 @@ class CL_API_DISPLAY CL_OutlineProviderFile : public CL_OutlineProvider
 //! Construction:
  public:
 	//: Construct a outline provider
-	//param CL_StringRef filename : Name of file to load.
+	//param std::string filename : Name of file to load.
 	//param CL_InputSourceProvider *provider : (optional) Use this input source provider as source of data.
-	CL_OutlineProviderFile(const CL_StringRef &filename, CL_VirtualDirectory directory = CL_VirtualDirectory());
+	CL_OutlineProviderFile(const std::string &filename, CL_InputSourceProvider *provider=0);
 	~CL_OutlineProviderFile();
 
 //! Attributes:

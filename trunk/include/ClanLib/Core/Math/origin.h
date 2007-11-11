@@ -24,7 +24,7 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Kenneth Gangstoe
+**    (if your name is missing here, please add it)
 */
 
 //! clanCore="Math"
@@ -33,11 +33,20 @@
 #ifndef header_origin
 #define header_origin
 
+#ifdef CL_API_DLL
+#ifdef CL_CORE_EXPORT
+#define CL_API_CORE __declspec(dllexport)
+#else
+#define CL_API_CORE __declspec(dllimport)
+#endif
+#else
+#define CL_API_CORE
+#endif
+
 #if _MSC_VER > 1000
 #pragma once
 #endif
 
-#include "../api_core.h"
 #include "size.h"
 #include "point.h"
 
@@ -60,8 +69,7 @@ enum CL_Origin
 //: Returns the anchor point for the origin within the dimensions of the size structure.
 //- !group=Display/Display 2D!
 //- !header=display.h!
-CL_API_CORE CL_Point calc_origin(CL_Origin origin, const CL_Size &size);
-CL_API_CORE CL_Pointd calc_origin(CL_Origin origin, const CL_Sizef &size);
-CL_API_CORE CL_Pointd calc_origin(CL_Origin origin, const CL_Sized &size);
+CL_Point CL_API_CORE calc_origin(CL_Origin origin, const CL_Size &size);
+CL_Pointf CL_API_CORE calc_origin(CL_Origin origin, const CL_Sizef &size);
 
 #endif

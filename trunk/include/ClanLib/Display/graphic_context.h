@@ -24,85 +24,51 @@
 **  File Author(s):
 **
 **    Magnus Norddahl
-**    Harry Storbacka
+**    (if your name is missing here, please add it)
 */
 
-//! clanDisplay="Display"
+//! clanDisplay="Display 2D"
 //! header=display.h
 
 #ifndef header_graphic_context
 #define header_graphic_context
 
-#include "api_display.h"
+#ifdef CL_API_DLL
+#ifdef CL_DISPLAY_EXPORT
+#define CL_API_DISPLAY __declspec(dllexport)
+#else
+#define CL_API_DISPLAY __declspec(dllimport)
+#endif
+#else
+#define CL_API_DISPLAY
+#endif
+
+#if _MSC_VER > 1000
+#pragma once
+#endif
+
+#ifdef _MSC_VER
+#pragma warning( disable : 4786)
+#endif
+
+#include "../signals.h"
+#include <stack>
 #include "color.h"
-#include "../Core/System/sharedptr.h"
+#include "gradient.h"
+#include "stencil_func.h"
+#include "pixel_buffer.h"
+#include "../Core/Math/point.h"
 #include "../Core/Math/rect.h"
-#include "primitives_array.h"
+#include "../Core/Math/quad.h"
+#include "../Core/Math/matrix4x4.h"
 
-class CL_BufferControl;
-class CL_PolygonRasterizer;
-class CL_Pen;
-class CL_BlendMode;
-class CL_Texture;
-class CL_FrameBuffer;
-class CL_TextureUnit;
-class CL_Size;
-class CL_PixelBuffer;
-class CL_LightModel;
-class CL_Material;
-class CL_LightSource;
-class CL_PrimitivesArray;
-class CL_Matrix4x4;
-class CL_Font;
-class CL_FontMetrics;
-class CL_FontPixelBuffer;
-class CL_GraphicContextProvider;
-class CL_GraphicContext_Impl;
-class CL_ProgramObject;
-class CL_ElementArrayBuffer;
+class CL_GraphicContext_Generic;
+class CL_Surface;
 
-//: Primitive types.
-//- !group=Display/Display!
+//: Graphic rendering target.
+//- !group=Display/Display 2D!
 //- !header=display.h!
-enum CL_PrimitivesType
-{
-	cl_points,
-	cl_line_strip,
-	cl_line_loop,
-	cl_lines,
-	cl_triangle_strip,
-	cl_triangle_fan,
-	cl_triangles,
-	cl_quad_strip,
-	cl_quads,
-	cl_polygon
-};
-
-//: Mapping modes.
-//- !group=Display/Display!
-//- !header=display.h!
-enum CL_MapMode
-{
-	cl_map_2d_upper_left,
-	cl_map_2d_lower_left,
-	cl_user_projection
-};
-
-//: Vertex color material destinations.
-//- !group=Display/Display!
-//- !header=display.h!
-enum CL_ColorMaterial
-{
-	cl_color_material_emission,
-	cl_color_material_ambient,
-	cl_color_material_diffuse,
-	cl_color_material_specular,
-	cl_color_material_ambient_and_diffuse
-};
-
-//: Interface to drawing graphics.
-//- !group=Display/Display!
-//- !header=display.h!
+//- <p>A graphic context is something that ClanLib can render onto.</p>
 class CL_API_DISPLAY CL_GraphicContext
 {
 //! Construction:
@@ -110,45 +76,12 @@ public:
 	//: Constructs a graphic context.
 	CL_GraphicContext();
 
-	CL_GraphicContext(CL_GraphicContextProvider *provider);
-	
-	~CL_GraphicContext();
+	CL_GraphicContext(const CL_GraphicContext &copy);
+
+	virtual ~CL_GraphicContext();
 
 //! Attributes:
 public:
-	//: Returns the texture unit description for the specified unit.
-	CL_TextureUnit get_texture_unit(int unit);
-
-	//: Returns the amount of texture units available.
-	int get_texture_unit_count();
-
-	//: Returns the currently selected texture for the specified unit.
-	CL_Texture get_texture(int unit);
-	
-	//: Returns the light source description for the given light source.
-	CL_LightSource get_light(int light);
-	
-	//: Returns the amount of light sources available.
-	int get_light_count();
-
-	//: Returns the blending mode description.
-	CL_BlendMode get_blend_mode();
-
-	//: Returns the buffer control description.
-	CL_BufferControl get_buffer_control();
-
-	//: Returns the polygon rasterizer setup.
-	CL_PolygonRasterizer get_polygon_rasterizer();
-
-	//: Returns the currently selected pen.
-	CL_Pen get_pen();
-
-	//: Returns the currently selected font.
-	CL_Font get_font();
-
-	//: Retrieves font metrics description for the selected font.
-	CL_FontMetrics get_font_metrics();
-
 	//: Returns the current width of the context.
 	int get_width() const;
 
@@ -156,186 +89,151 @@ public:
 	int get_height() const;
 
 	//: Returns the current clipping rectangle used on the graphic context.
-	CL_Rect get_cliprect() const;
+	const CL_Rect &get_cliprect() const;
 
 	//: Returns the current effective modelview matrix.
 	const CL_Matrix4x4 &get_modelview() const;
 
-	//: Returns the maximum size of a texture this graphic context supports.
-	//- <p>It returns CL_Size(0,0) if there is no known limitation to the max
-	//- texture size.</p>
-	CL_Size get_max_texture_size() const;
+	//: Returns a pixel value at specified coordinates.
+	CL_Color get_pixel(int x, int y) const;
 
-	//: Returns the provider for this graphic context.
-	CL_GraphicContextProvider *get_provider();
+	//: Return the content of buffer 'i' copyied into a CL_PixelBuffer
+	CL_PixelBuffer get_pixeldata(const CL_Rect& rect = CL_Rect(0,0,0,0), int i = 0) const;
 
-	const CL_GraphicContextProvider * const get_provider() const;
+	//: Returns the maximum size of a surface this graphic context supports.
+	//- <p>It returns CL_Size(0,0) if there is no limitation to the max
+	//- surface size. Of course it is still limited by available memory,
+	//- which is not considered by this function.</p>
+	CL_Size get_max_surface_size() const;
 
 //! Operations:
 public:
-	//: Creates a new additional graphic context.
-	//- <p>This function creates a new graphic context which shares objects
-	//- with the current graphic context.  Since a GC cannot be safely accessed
-	//- from multiple threads simultaneously, this function allows the
-	//- application to create a graphic context for the worker threads.</p>
-	CL_GraphicContext create_worker_gc();
+	//: Copy assignment operator.
+	CL_GraphicContext &operator =(const CL_GraphicContext &copy);
 
-	//: Return the content of the draw buffer into a pixel buffer.
-	CL_PixelBuffer get_pixeldata(const CL_Rect& rect = CL_Rect(0,0,0,0)) const;
+	//: Flushes current rendering batch. <i>Deprecated</i>
+	//- <p>With the OpenGL target, this causes the graphic context to end its current
+	//- active glBegin()/glEnd() pair, making it possible to call other OpenGL calls.</p>
+	//- <p><i>This function is deprecated</i></p>.
+	void flush();
 
-	//: Sets the current frame buffer.
-	void set_frame_buffer(const CL_FrameBuffer &frame_buffer);
+	//: Draw a pixel at (x, y) using the specified color.
+	void draw_pixel(int x, int y, const CL_Color &color);
 
-	//: Resets the current frame buffer to be the initial frame buffer.
-	void reset_frame_buffer();
+	//: Draw a line from (x1, y1) to (x2, y2) using the specified color.
+	void draw_line(float x1, float y1, float x2, float y2, const CL_Color &color);
 
-	//: Setup texture unit.
-	void set_texture_unit(int unit_index, const CL_TextureUnit &unit);
+	//: Draw a continuous chain of lines in the specified color.
+	void draw_lines(int count, double *vertices, const CL_Color &color);
 
-	//: Returns texture unit to default state.
-	void reset_texture_unit(int unit_index);
+	//: Draw a rectangle using the specified color.
+	void draw_rect(const CL_Rectf &rect, const CL_Color &color);
 
-	//: Select texture into unit.
-	void set_texture(int unit_index, const CL_Texture &texture);
+	//: Draw a gradient rectangle using the specified gradient.
+	void fill_rect(const CL_Rectf &rect, const CL_Gradient &gradient);
 
-	//: Remove texture from unit.
-	void reset_texture(int unit_index);
+	//: Draw a filled rectangle using the specified color.
+	void fill_rect(const CL_Rectf &rect, const CL_Color &color);
+	
+	//: Draw a quad using the specified color.
+	void draw_quad(const CL_Quad &quad, const CL_Color &color);
 
-	//: Push current texture matrix onto the texture matrix of the specified unit.
-	void push_texture_matrix(int unit_index);
+	//: Draw a gradient quad using the specified gradient.
+	void fill_quad(const CL_Quad &quad, const CL_Gradient &gradient);
 
-	//: Set the texture matrix of the specified unit.
-	void set_texture_matrix(int unit_index, const CL_Matrix4x4 &matrix);
+	//: Draw a filled quad using the specified color.
+	void fill_quad(const CL_Quad &quad, const CL_Color &color);
 
-	//: Pop current texture matrix from the texture matrix of the specified unit.
-	void pop_texture_matrix(int unit_index);
+	//: Draw a triangle using the specified color.
+	//param double x : x coordinates of triangle vertices
+	//param double y : y coordinates of triangle vertices
+	//param CL_Color &Color : color to use
+	void draw_triangle(
+		double x1, double y1,
+		double x2, double y2,
+		double x3, double y3,
+		const CL_Color &color);
 
-	//: Set active program object.
-	void set_program_object(const CL_ProgramObject &program);
+	//: Draw a gradient filled triangle.
+	//param double x : x coordinates of triangle vertices
+	//param double y : y coordinates of triangle vertices
+	//param CL_Gradient &gradient : color gradient to use
+	void fill_triangle(
+		double x1, double y1,
+		double x2, double y2,
+		double x3, double y3,
+		const CL_Gradient &gradient);
 
-	//: Remove active program object.
-	void reset_program_object();
+	//: Draw triangles with color array (optionally textured).
+	//- <p>uchar color array, range: 0-255
+	//- integer (pixel) texture coordinates</p>
+	//param unsigned int count : number of triangles to draw
+	//param bool fill : draw filled/outline
+	//param double *vertices : pointer to array of triangle vertices (x y z x y z x...)
+	//param unsigned char *color : pointer to array of triangle vertice colors (r b g a r g b a r...)
+	//param int *uv : (optional) pointer to array of triangle vertice texture coordinates (u v u v u...)
+	//param CL_Surface *texture : (optional) texture to use
+	void draw_triangles(
+		unsigned int count,
+		bool fill,
+		double *vertices,
+		unsigned char *color,
+		int *uv=0,
+		CL_Surface *texture=0);
 
-	//: Sets the active lighting model.
-	void set_light_model(const CL_LightModel &light_model);
+	//: Draw triangles with single color (optionally textured).
+	//- <p>single color
+	//- integer (pixel) texture coordinates</p>
+	//param unsigned int count : number of triangles to draw
+	//param bool fill : draw filled/outline
+	//param double *vertices : pointer to array of triangle vertices (x y z x y z x...)
+	//param CL_Color &color : triangle color
+	//param int *uv : (optional) pointer to array of triangle vertice texture coordinates (u v u v u...)
+	//param CL_Surface *texture : (optional) texture to use
+	void draw_triangles(
+		unsigned int count,
+		bool fill,
+		double *vertices,
+		const CL_Color &color,
+		int *uv=0,
+		CL_Surface *texture=0);
 
-	//: Disables lighting.
-	void reset_light_model();
+	//: Draw triangle array with color array (optionally textured).
+	//- <p> double color array, range: 0-1
+	//- double (0-1) texture coordinates</p>
+	//param unsigned int count : number of triangles to draw
+	//param bool fill : draw filled/outline
+	//param double *vertices : pointer to array of triangle vertices (x y z x y z x...)
+	//param double *color : pointer to array of triangle vertice colors (r b g a r g b a r...)
+	//param int *uv : (optional) pointer to array of triangle vertice texture coordinates (u v u v u...)
+	//param CL_Surface *texture : (optional) texture to use
+	void draw_trianglesd(
+		unsigned int count,
+		bool fill,
+		double *vertices,
+		const CL_Color &color,
+		double *uv=0,
+		CL_Surface *texture=0);
 
-	//: Sets both front and back materials.
-	void set_material(const CL_Material &material);
-
-	//: Sets only the front material.
-	void set_front_material(const CL_Material &material);
-
-	//: Sets only the back material.
-	void set_back_material(const CL_Material &material);
-
-	//: Resets the front material to the default material.
-	void reset_front_material();
-
-	//: Resets the back material to the default material.
-	void reset_back_material();
-
-	//: Resets both front and back materials to the default.
-	void reset_material();
-
-	//: Sets the material property which vertex colors describe.
-	void set_color_material(CL_ColorMaterial color);
-
-	//: Sets the front material's property which vertex colors describe.
-	void set_color_material_front(CL_ColorMaterial color);
-
-	//: Sets the back material's property which vertex colors describe.
-	void set_color_material_back(CL_ColorMaterial color);
-
-	//: Disables material coloring from vertex colors.
-	void reset_color_material();
-
-	//: Set light source.
-	void set_light(int light_index, const CL_LightSource &light);
-
-	//: Remove light source.
-	void reset_light(int light_index);
-
-	//: Set blending modes.
-	void set_blend_mode(const CL_BlendMode &blend_mode);
-
-	//: Reset blending to the default.
-	void reset_blend_mode();
-
-	//: Set buffer control states.
-	void set_buffer_control(const CL_BufferControl &buffer_control);
-
-	//: Set default buffer control states.
-	void reset_buffer_control();
-
-	//: Select pen.
-	void set_pen(const CL_Pen &pen);
-
-	//: Reset pen settings to defaults.
-	void reset_pen();
-
-	//: Set polygon rasterizer settings.
-	void set_polygon_rasterizer(const CL_PolygonRasterizer &raster);
-
-	//: Reset polygon rasterizer settings to defaults.
-	void reset_polygon_rasterizer();
-
-	//: Select font.
-	void set_font(const CL_Font &font);
-
-	//: Set a font glyph to use a specified font pixel buffer
-	void set_font_glyph(CL_Font &font, CL_FontPixelBuffer pixelbuffer);
-
-	//: Draw primitives on gc.
-	void draw_primitives(CL_PrimitivesType type, int num_vertices, const CL_PrimitivesArray &array);
-
-	//: Set the primitives array on the gc.
-	void set_primitives_array(const CL_PrimitivesArray &array);
-
-	//: Draws primitives from the current assigned primitives array.
-	void draw_primitives_array(CL_PrimitivesType type, int num_vertices);
-
-	void draw_primitives_array(CL_PrimitivesType type, int offset, int num_vertices);
-
-	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned int *indices);
-
-	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned short *indices);
-
-	void draw_primitives_elements(CL_PrimitivesType type, int count, unsigned char *indices);
-
-	void draw_primitives_elements(CL_PrimitivesType type, int count, CL_ElementArrayBuffer &element_array, CL_VertexAttributeDataType indices_type, void *offset = 0);
-
-	//: Reset the primitives arrays.
-	void reset_primitives_array();
-
-	//: Draw pixel buffer on gc.
-	void draw_pixels(double x, double y, const CL_PixelBuffer &pixel_buffer, const CL_Colord &color = CL_Colord::white);
-
-	void draw_pixels(double x, double y, double zoom_x, double zoom_y, const CL_PixelBuffer &pixel_buffer, const CL_Colord &color = CL_Colord::white);
-
-	//: Print text on gc.
-	void draw_text(int x, int y, const CL_StringRef &text, const CL_Colord &color = CL_Colord::white);
-
-	//: Retrieves the pixel buffer using the current selected font
-	CL_FontPixelBuffer get_font_glyph(int glyph, bool anti_alias = true, const CL_Colord &color = CL_Colord::white);
-
-	//: Calculate size of text string.
-	//- Note: The height also includes whitespace (to give the maximum font height), so "." and "X" returns the same height.
-	//- The width is the pixel width
-	CL_Size get_text_size(const CL_StringRef &text);
+	//: Draw triangles with single color (optionally textured).
+	//- <p>single color
+	//- double (0-1) texture coordinates</p>
+	//param unsigned int count : number of triangles to draw
+	//param bool fill : draw filled/outline
+	//param double *vertices : pointer to array of triangle vertices (x y z x y z x...)
+	//param CL_Color &color : triangle color
+	//param double *uv : (optional) pointer to array of triangle vertice texture coordinates (u v u v u...)
+	//param CL_Surface *texture : (optional) texture to use
+	void draw_trianglesd(
+		unsigned int count,
+		bool fill,
+		double *vertices,
+		double *color,
+		double *uv=0,
+		CL_Surface *texture=0);
 
 	//: Clears the whole context using the specified color.
-	void clear(const CL_Colord &color = CL_Colord::black);
-
-	//: Clear the stencil buffer
-	//param value: value to clear to.
-	void clear_stencil(int value = 0);
-
-	//: Clear the depth buffer
-	//param value: value to clear to. Range: 0.0 - 1.0.
-	void clear_depth(double value = 0);
+	void clear(const CL_Color &color = CL_Color(0,0,0));
 
 	//: Set the current clipping rectangle.
 	void set_cliprect(const CL_Rect &rect);
@@ -350,18 +248,6 @@ public:
 
 	//: Pop current clipping rectangle from the stack.
 	void pop_cliprect();
-
-	//: Removes the set clipping rectangle and empties the cliprect stack. 
-	void reset_cliprect();
-
-	//: Set the projection mapping mode.
-	void set_map_mode(CL_MapMode mode);
-
-	//: Set the viewport to be used in user projection map mode.
-	void set_viewport(const CL_Rectf &viewport);
-
-	//: Set the projection matrix to be used in user projection map mode.
-	void set_projection(const CL_Matrix4x4 &matrix);
 
 	//: Sets the model view matrix to a new matrix.
 	void set_modelview(const CL_Matrix4x4 &matrix);
@@ -393,10 +279,10 @@ public:
 	void push_translate(double x, double y, double z = 0.0);
 
 	//: Sets a rotation matrix, ignoring any earlier model view settings.
-	void set_rotate(double angle, double x = 0.0, double y = 0.0, double z = 1.0, bool normalize = true);
+	void set_rotate(double angle, double x = 0.0, double y = 0.0, double z = 1.0);
 
 	//: Adds a rotation matrix to existing model view.
-	void add_rotate(double angle, double x = 0.0, double y = 0.0, double z = 1.0, bool normalize = true);
+	void add_rotate(double angle, double x = 0.0, double y = 0.0, double z = 1.0);
 
 	//: Pushes a rotation matrix onto model view stack.
 	void push_rotate(double angle, double x = 0.0, double y = 0.0, double z = 1.0);
@@ -413,11 +299,37 @@ public:
 	//: Pops last pushed model view matrix off the stack and makes it the active one.
 	void pop_modelview();
 
-//! Implementation:
-private:
-	CL_SharedPtr<CL_GraphicContext_Impl> impl;
+	//: Clear the stencil buffer
+	//param int value : value to clear to. Default: 0
+	void clear_stencil(int value=0);
 
-	friend class CL_PrimitivesArray;
+	//: Set stencil test function when writing to stencil, and operations to do when a test passes or fails
+	//param CL_StencilOp pass : Modification to stencil buffer when a test passes.
+	//param CL_StencilOp fail : Modification to stencil buffer when a test fails.
+	//param CL_StencilFunc func : Type of test to do when writing to stencil.
+	//param int ref : value compared to stencil contents. Default: 1
+	void set_stencil_operation(CL_StencilOp pass, CL_StencilOp fail, CL_StencilFunc func, int ref=1);
+
+	//: Enables writing to the stencil buffer 
+	//param bool enabled : Enables/disables stencil testing.
+	//param bool visible : Enables/disables color buffer writing if stencil writing is enabled. Default: true.
+	//param float alpha_limit : Only pixels with alpha >= alpha limit are drawn to the stencil buffer. Default: 0.1f
+	void enable_stencil_write(bool enabled, bool visible=true, float alpha_limit=0.1f);
+
+	//: Enables stencil buffer testing
+	//- <p> Individual pixels are tested against the values in the stencil buffer, and
+	//- drawn depending on the comparison result. This can be used for masking and
+	//- boolean operations on bitmaps </p>
+	//param bool enabled : Enables/disables stencil testing.
+	//param int func : Type of comparison. Default: lequal (pass if ref <= stencil)
+	//param int ref : Reference value that the stencil is compared with. Default: 1
+	void enable_stencil_test(bool enabled, CL_StencilFunc func=stencil_lequal, int ref=1);
+
+//! Implementation:
+public:
+	CL_GraphicContext(CL_GraphicContext_Generic *impl);
+	
+	CL_GraphicContext_Generic *impl;
 };
 
 #endif
