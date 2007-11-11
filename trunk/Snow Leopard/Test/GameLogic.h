@@ -8,6 +8,7 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 #include "Ship.h"
+#include "Renderer.h"
 
 class WorldState;
 class GameObject;
@@ -24,10 +25,11 @@ private:
 	CL_InputDevice keyboard;
 	CL_InputDevice mouse;
 	void handleInput();
+	Renderer* renderer;
 	
 
 public:
-		GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic);
+		GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* renderer);
 		bool GameLogic::step();
 
 };

@@ -1,12 +1,13 @@
 #include "GameLogic.h"
 
 
-GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic)
+GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* rend)
 {
 	state=worldState;
 	keyboard = ic->get_keyboard();
 	mouse = ic->get_mouse();
 	playerShip = ship;
+	renderer = rend;
 }
 
 bool GameLogic::step()
@@ -58,6 +59,17 @@ void GameLogic::handleInput()
 
 	 if (keyboard.get_keycode(CL_KEY_ESCAPE))
 	 {
-		 exit(0);
+		exit(0);
 	 }
+
+	 if (keyboard.get_keycode(CL_KEY_SUBTRACT))
+	 {
+		 renderer->setCameraZoomLevel(1);
+	 }
+
+	  if (keyboard.get_keycode(CL_KEY_ADD))
+	 {
+		 renderer->setCameraZoomLevel(2);
+	 }
+
 }
