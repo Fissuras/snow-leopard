@@ -50,6 +50,8 @@ bool WorldState::deleteObject(GameObject* gameObject)
 
 bool WorldState::moveObject(GameObject* gameObject, point *p)
 {
+	if (p->x>=CoordinateSizeX || p->x<=0 || p->y>=CoordinateSizeY || p->y<=0)
+		return false;
 
 		GameObjectList* currentList = worldMatrix[gameObject->location.x / coarseGraining][gameObject->location.y/ coarseGraining];
 		GameObjectList* newList = worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];

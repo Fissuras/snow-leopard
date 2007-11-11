@@ -13,10 +13,9 @@ class Ship: public GameObject {
 public:
 	bool doActions(WorldState* worldState);
 	bool registerCollision(GameObjectList collisions);
-	Ship::Ship(std::string name, int fact, point* p);
-
-protected:
+	Ship::Ship(std::string name, int fact);
 	virtual bool move(WorldState* worldState);
+	bool move(WorldState* worldState,Direction dir);
 	virtual bool shoot(WorldState* worldState);
 
 

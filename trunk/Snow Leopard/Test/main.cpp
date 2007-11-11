@@ -35,6 +35,9 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_DisplayWindow* window = new CL_DisplayWindow("Snow Leopard", 640, 480);
 	CL_GraphicContext* gc = window->get_gc();
 	CL_InputContext* ic = window->get_ic();
+
+	CL_InputDevice keyboard = ic->get_keyboard();
+	CL_InputDevice mouse = ic->get_mouse();
 	
 	CL_ConsoleWindow console("Console");
 	console.redirect_stdio();
@@ -42,17 +45,18 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
 
-	GameObject *g = new Starfury("Starfury",1,new point(320,240));
-	GameObject *f = new Starfury("Starfury",1,new point(200,100));
+	GameObject *g = new Starfury("Starfury",1);
+	//GameObject *f = new Starfury("Starfury",1);
 
 
 	g->resourceName = "Starfury";
-	f->resourceName = "Starfury";
+	//f->resourceName = "Starfury";
+	g->heading = 180;
 	WorldState *state = new WorldState();
 	state->insertObject(g,new point(320,240));
-	state->insertObject(f,new point (200,100));
+	//state->insertObject(f,new point (200,100));
 
-	GameLogic *logic = new GameLogic(state,g,ic);
+	GameLogic *logic = new GameLogic(state,(Ship*)g,ic);
 	Renderer* renderer = new Renderer(window,gc,state,resources);
 
 	renderer->setCamera(g);
