@@ -30,7 +30,8 @@ public:
 	
 	//polar coordinates
 	double heading;
-	
+	double accelerationHeading;
+	double accelerationSpeed; // = accelForce / Mass of ship
 	int faction;
 	int displaySize;
 	point location;

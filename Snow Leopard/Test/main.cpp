@@ -56,8 +56,9 @@ int DisplayApplication::main(int argc,  char **argv)
 	state->insertObject(g,new point(320,240));
 	//state->insertObject(f,new point (200,100));
 
-	GameLogic *logic = new GameLogic(state,(Ship*)g,ic);
+	
 	Renderer* renderer = new Renderer(window,gc,state,resources);
+	GameLogic *logic = new GameLogic(state,(Ship*)g,ic,renderer);
 
 	renderer->setCamera(g);
 	renderer->setCameraZoomLevel(1.0);
