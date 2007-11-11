@@ -1,35 +1,35 @@
 #include "Ship.h"
 
 
-bool Ship::doActions(WorldState* worldState)
+bool Ship::doActions()
 {
 
-	move(worldState);
-	shoot(worldState);
+	move();
+	shoot();
 	return true;
 	
 }
 
-bool Ship::move(WorldState* worldState)
+bool Ship::move()
 {
 	return true;
 }
 
-bool Ship::move(WorldState* worldState,Direction dir)
+bool Ship::move(AbsoluteDirection dir)
 {
 	if (dir == UP)
-		worldState->moveObject(this,location.offset(0,-speed));
+		worldState->moveObject(this,location.offsetRect(0,-speed));
 	if (dir == DOWN)
-		worldState->moveObject(this,location.offset(0,speed));
+		worldState->moveObject(this,location.offsetRect(0,speed));
 	if (dir == LEFT)
-		worldState->moveObject(this,location.offset(-speed,0));
+		worldState->moveObject(this,location.offsetRect(-speed,0));
 	if (dir == RIGHT)
-		worldState->moveObject(this,location.offset(speed,0));
+		worldState->moveObject(this,location.offsetRect(speed,0));
 
 	return true;
 }
 
-bool Ship::shoot(WorldState* worldState)
+bool Ship::shoot()
 {
 	return true;
 }
@@ -39,3 +39,7 @@ Ship::Ship(std::string name, int fact) : GameObject(name,fact)
 	actionPriority = ShipPriority;
 }
 	
+bool Ship::registerWallCollision()
+{
+	return true; //if you hit a wall, don't di anything
+}

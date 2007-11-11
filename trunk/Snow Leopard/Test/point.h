@@ -7,7 +7,8 @@ struct point
 public:
 	point::point(int i,int j);
 	point::point();
-	point* point::offset(int ox, int oy);
+	point* point::offsetRect(int ox, int oy);
+	point* point::offsetPolar(double heading, double direction);
 	int x;
 	int y;
 	std::string point::toString();

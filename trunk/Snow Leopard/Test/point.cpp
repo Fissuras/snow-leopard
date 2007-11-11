@@ -12,9 +12,14 @@ point::point()
 {
 }
 
-point* point::offset(int ox, int oy)
+point* point::offsetRect(int ox, int oy)
 {
 	return new point(x+ox,y+oy);
+}
+
+point* point::offsetPolar(double heading, double distance)
+{
+	return new point(x,y);
 }
 
 std::string point::toString()

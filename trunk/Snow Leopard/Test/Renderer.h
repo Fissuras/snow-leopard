@@ -9,6 +9,7 @@
 #include <ClanLib/application.h>
 #include <map>
 #include "boost/lexical_cast.hpp"
+#include <stdlib.h>
 
 class WorldState;
 class GameObject;
@@ -19,7 +20,8 @@ public:
 	bool Renderer::Render();
 	int screenWidth;
 	int screenHeight;
-	bool Renderer::LoadSprites();
+	bool Renderer::loadSprites(const GameObjectList* list);
+	bool Renderer::loadSprite(GameObject* obj);
 	bool Renderer::setCamera(GameObject* obj);
 	bool Renderer::setCameraZoomLevel(double level);
 

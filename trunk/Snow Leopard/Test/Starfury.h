@@ -7,6 +7,8 @@
 #include "WorldState.h"
 #include "GameObject.h"
 #include "Ship.h"
+#include "Projectile.h"
+#include "SevnaMark40.h"
  
 class WorldState;
 class Ship;
@@ -16,8 +18,8 @@ public:
 	Starfury::Starfury(std::string name, int fact);
 
 protected:
-	bool move(WorldState* worldState);
-	bool shoot(WorldState* worldState);
+	bool move();
+	bool shoot();
 
 };
 

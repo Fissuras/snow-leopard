@@ -18,7 +18,7 @@ int GameObject::getID()
 	return IDCount;
 }
 
-bool GameObject::doActions(WorldState* worldState)
+bool GameObject::doActions()
 {
 	return true;
 }
@@ -31,4 +31,14 @@ bool GameObject::registerCollision(GameObjectList collisions)
 bool GameObject::operator<(GameObject &b)
 {
 	return actionPriority<b.actionPriority;
+}
+
+bool GameObject::processMovementPhysics()
+{
+	return true;
+}
+
+bool GameObject::registerWallCollision()
+{
+	return true;
 }

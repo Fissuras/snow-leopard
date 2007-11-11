@@ -3,15 +3,18 @@
 
 Starfury::Starfury(std::string name,int fact):Ship(name,fact)
 {
-	speed = 2;
 }
-bool Starfury::move(WorldState* worldState)
+bool Starfury::move()
 {
-	worldState->moveObject(this,location.offset(speed,0));
+	GameObject::processMovementPhysics();
+	worldState->moveObject(this,location.offsetRect(speed,0));
 	return true;
 }
 
-bool Starfury::shoot(WorldState* worldState_)
+bool Starfury::shoot()
 {
+	SevnaMark40* p = new SevnaMark40("Sevna",Projectile::PROJECTILE_FACT);
+	p->resourceName = "SevnaMark40";
+	worldState->insertObject(p,location.offsetPolar(heading,2));
 	return true;
 }

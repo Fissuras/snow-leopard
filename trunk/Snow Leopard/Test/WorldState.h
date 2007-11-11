@@ -29,10 +29,13 @@ bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point *p);
 GameObjectList* getAtCell(point *p);
 const GameObjectList* getAllGameObjects();
+bool cleanup();
 
 private:
 	GameObjectList*** worldMatrix;
 	GameObjectList* allObjectList;
+	GameObjectList* deleteList;
+	bool pointOutofBounds(point* p);
 };
 
 #endif
