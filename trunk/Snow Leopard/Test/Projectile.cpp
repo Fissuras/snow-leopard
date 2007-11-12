@@ -30,7 +30,8 @@ bool Projectile::move(AbsoluteDirection dir)
 
 Projectile::Projectile(std::string resourceName,CL_ResourceManager* resources) : GameObject(resourceName,resources)
 {
-	actionPriority = ProjectilePriority;
+	actionPriority = ProjectileActionPriority;
+	renderPriority = ProjectileRenderPriority;
 }
 	
 bool Projectile::registerWallCollision()

@@ -28,7 +28,6 @@ private:
 	double zoomLevel;
 	CL_GraphicContext* gc;
 	WorldState* state;
-	const GameObjectList* objects;
 	CL_ResourceManager* resources;
 	double screenStartX;
 	double screenStartY;

@@ -36,7 +36,8 @@ bool Ship::shoot()
 
 Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(resourceName,resources)
 {
-	actionPriority = ShipPriority;
+	actionPriority = ShipActionPriority;
+	renderPriority = ShipRenderPriority;
 }
 	
 bool Ship::registerWallCollision()

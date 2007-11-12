@@ -230,6 +230,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="scenery"
+					>
+					<File
+						RelativePath=".\NonInteractiveBackground.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\NonInteractiveBackground.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter

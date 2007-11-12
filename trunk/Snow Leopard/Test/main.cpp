@@ -11,6 +11,7 @@
 #include "GameLogic.h"
 #include "Starfury.h"
 #include <ctime>
+#include "NonInteractiveBackground.h"
 
 class DisplayApplication : public CL_ClanApplication
 {
@@ -43,6 +44,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
 	GameObject *g = new Starfury("Starfury",resources);
+	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
 	g->speed = 1;
@@ -50,6 +52,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	g->heading = 180;
 	WorldState *state = new WorldState();
 	state->insertObject(g,point(320,240));
+	state->insertObject(background,point(state->CoordinateSizeX / 2,state->CoordinateSizeY /2));
 	//state->insertObject(f,point(200,100));
 
 	

@@ -3,12 +3,12 @@
 //todo: use graphicContext features for translation, scaling, etc. instead of the naive SDL view
 //will allow direct use of world coordinates instead of screen pixel coordinates, which would be pretty awesome
 
+
 Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* state_, CL_ResourceManager* res)
 {
 	gc = gc_;
 	state = state_;
 	resources = res;
-	objects = state->getAllGameObjects();
 	zoomLevel = 1.0; 
 	screenStartX = 0.0;
 	screenStartY = 0.0;
@@ -28,10 +28,11 @@ bool Renderer::setCameraZoomLevel(double level)
 
 bool Renderer::Render()
 {
+	const GameObjectList* objects = state->getAllGameObjects(WorldState::RENDER_SORTED);
 	gc->clear();
 
-	screenStartX = std::abs(zoomLevel * (((screenWidth - state->CoordinateSizeX / zoomLevel) * camera->location.x) / screenWidth)); //puts it in the center
-	screenStartY = std::abs(zoomLevel * (((screenHeight - state->CoordinateSizeY / zoomLevel) * camera->location.y) / screenHeight));
+	screenStartX = (zoomLevel * (( abs(screenWidth - state->CoordinateSizeX / zoomLevel) * camera->location.x) / screenWidth)); //puts it in the center
+	screenStartY = (zoomLevel * (( abs(screenHeight - state->CoordinateSizeY / zoomLevel) * camera->location.y) / screenHeight));
 
 
 	ConstGameObjectIter itr;
