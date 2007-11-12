@@ -38,11 +38,11 @@ bool Renderer::Render()
 	for (itr = objects->begin(); itr!=objects->end();itr++)
 	{
 		GameObject* obj = *itr;
-		CL_Sprite* sprite = spriteMap[obj->ID];
-		if (sprite == NULL)
+		CL_Sprite* sprite = obj->sprite;
+		if (sprite==NULL)
 		{
-			loadSprite(obj);
-			sprite = spriteMap[obj->ID];
+			obj->loadSprite();
+			sprite = obj->sprite;
 		}
 		sprite->set_scale(zoomLevel,zoomLevel);
 		sprite->set_angle(obj->heading);
@@ -52,33 +52,4 @@ bool Renderer::Render()
 	
 	return true;
 
-}
-
-bool Renderer::loadSprites(const GameObjectList* list)
-{
-	ConstGameObjectIter itr;
-	for (itr = list->begin(); itr!=list->end();itr++)
-	{
-		GameObject* obj = *itr;
-		//if (spriteMap.find(obj->ID) != spriteMap.end()) //already loaded
-		//	continue;
-		CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources);
-		ptr->set_alignment(origin_center);
-		ptr->set_rotation_hotspot(origin_center);
-		ptr->set_base_angle(1.0);
-		spriteMap[obj->ID] = ptr;
-	}
-	return true;
-}
-
-bool Renderer::loadSprite(GameObject* obj)
-{
-	//if (spriteMap.find(obj->ID) != spriteMap.end()) //already loaded
-	//	return true;
-	CL_Sprite* ptr = new CL_Sprite(obj->resourceName,resources);
-	ptr->set_alignment(origin_center);
-	ptr->set_rotation_hotspot(origin_center);
-	ptr->set_base_angle(1.0);
-	spriteMap[obj->ID] = ptr;
-	return true;
 }

@@ -26,7 +26,11 @@ public:
 	bool registerCollision(GameObjectList collisions);
 	virtual bool registerWallCollision();
 	static int getID();
-	GameObject::GameObject(std::string displayName = "", int faction=0);
+	GameObject::GameObject(std::string resourceName,CL_ResourceManager* resources);
+	CL_Sprite* sprite;
+	bool GameObject::loadSprite();
+	GameObject::~GameObject();
+	CL_ResourceManager* resources;
 
 	std::string displayName; 
 	bool isPlayer; //right now only one ship can be a player

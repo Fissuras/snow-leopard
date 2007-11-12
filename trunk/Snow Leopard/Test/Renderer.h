@@ -20,8 +20,6 @@ public:
 	bool Renderer::Render();
 	int screenWidth;
 	int screenHeight;
-	bool Renderer::loadSprites(const GameObjectList* list);
-	bool Renderer::loadSprite(GameObject* obj);
 	bool Renderer::setCamera(GameObject* obj);
 	bool Renderer::setCameraZoomLevel(double level);
 
@@ -31,7 +29,6 @@ private:
 	CL_GraphicContext* gc;
 	WorldState* state;
 	const GameObjectList* objects;
-	std::map<int,CL_Sprite*> spriteMap;
 	CL_ResourceManager* resources;
 	double screenStartX;
 	double screenStartY;

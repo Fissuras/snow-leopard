@@ -1,20 +1,22 @@
 #include "WorldState.h"
 #include "GameObject.h"
 
-#include <iostream>
-
 //need to have a method that returns only what locations of objects changed during the last step,
 //so the openGL renderer can translate efficiently
+
+inline int round(double x)
+{
+return int(x > 0.0 ? x + 0.5 : x - 0.5);
+}
 
 WorldState::WorldState()
 {
 	CoordinateSizeX = 1024.0;
 	CoordinateSizeY = 768.0;
 
-	CellSizeX = CoordinateSizeX / coarseGraining ;
-	CellSizeY = CoordinateSizeY / coarseGraining ;
+	CellSizeX = 1 + round(CoordinateSizeX / coarseGraining) ;
+	CellSizeY = 1 + round(CoordinateSizeY / coarseGraining) ;
 
-	deleteList = new GameObjectList();
 	allObjectList = new GameObjectList();
 	worldMatrix = new GameObjectList**[CellSizeX];
 	for (int i = 0; i < CellSizeX; ++i)
@@ -30,14 +32,14 @@ WorldState::WorldState()
 }
 
 
-bool WorldState::insertObject(GameObject* gameObject, point *p)
+bool WorldState::insertObject(GameObject* gameObject, point p)
 {
 	if (pointOutofBounds(p))
 		return false;
 
-	GameObjectList* currentList = worldMatrix[p->x / coarseGraining][p->y / coarseGraining];
+	GameObjectList* currentList = worldMatrix[(round(p.x / coarseGraining))][round(p.y / coarseGraining)];
 	currentList->push_front(gameObject);
-	gameObject->location = *p;
+	gameObject->location = p;
 	allObjectList->push_front(gameObject);
 	gameObject->worldState = this;
 	return true;
@@ -45,12 +47,14 @@ bool WorldState::insertObject(GameObject* gameObject, point *p)
 
 bool WorldState::deleteObject(GameObject* gameObject)
 {
-	GameObjectList* currentList = worldMatrix[gameObject->location.x/coarseGraining][gameObject->location.y/coarseGraining];
-	deleteList->push_front(gameObject);
+	GameObjectList* currentList = worldMatrix[round(gameObject->location.x/coarseGraining)][round(gameObject->location.y/coarseGraining)];
+	allObjectList->remove(gameObject);
+	currentList->remove(gameObject);
+	delete gameObject;
 	return true;
 }
 
-bool WorldState::moveObject(GameObject* gameObject, point *p)
+bool WorldState::moveObject(GameObject* gameObject, point p)
 {
 	//replace with pixel perfect collision code
 	if (pointOutofBounds(p))
@@ -59,24 +63,23 @@ bool WorldState::moveObject(GameObject* gameObject, point *p)
 		return false;
 	}
 
-		GameObjectList* currentList = worldMatrix[gameObject->location.x / coarseGraining][gameObject->location.y/ coarseGraining];
-		GameObjectList* newList = worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
-		gameObject->location=*p;
+	GameObjectList* currentList = worldMatrix[round(gameObject->location.x / coarseGraining)][round(gameObject->location.y/ coarseGraining)];
+		GameObjectList* newList = worldMatrix[round(p.x/ coarseGraining)][round(p.y/ coarseGraining)];
 		if (currentList==newList)
 			return true;
 		newList->push_front(gameObject);
 		currentList->remove(gameObject);
-		gameObject->location=*p;
+		gameObject->location=p;
 
 		return true;
 
 }
 
-GameObjectList* WorldState::getAtCell(point *p)
+GameObjectList* WorldState::getAtCell(point p)
 {
 	if (pointOutofBounds(p))
 		return NULL;
-	return worldMatrix[p->x/ coarseGraining][p->y/ coarseGraining];
+	return worldMatrix[round(p.x/ coarseGraining)][round(p.y/ coarseGraining)];
 }
 
 const GameObjectList* WorldState::getAllGameObjects()
@@ -84,26 +87,9 @@ const GameObjectList* WorldState::getAllGameObjects()
 	return  allObjectList; //can't change the contents of the list, but _can_ change the properties of the objects
 }
 
-bool WorldState::cleanup()
+bool WorldState::pointOutofBounds(point p)
 {
-	GameObjectIter itr;
-	for (itr=deleteList->begin();itr!=deleteList->end();itr++)
-	{
-		GameObject* obj = *itr;
-		allObjectList->remove(obj);
-		GameObjectList* currentList = worldMatrix[obj->location.x / coarseGraining][obj->location.y/ coarseGraining];
-		currentList->remove(obj);
-		delete obj;
-	}
-
-	deleteList->clear();
-
-	return true;
-}
-
-bool WorldState::pointOutofBounds(point* p)
-{
-	if (p->x / coarseGraining>=CellSizeX || p->x<0 || p->y / coarseGraining>=CellSizeY || p->y<0)
+	if (round(p.x / coarseGraining)>=CellSizeX || p.x<0 || round(p.y / coarseGraining)>=CellSizeY || p.y<0)
 		return true;
 	return false;
 

@@ -1,6 +1,6 @@
 #include "SevnaMark40.h"
 
-SevnaMark40::SevnaMark40(std::string name,int fact):Projectile(name,fact)
+SevnaMark40::SevnaMark40(std::string resourceName,CL_ResourceManager* resources):Projectile(resourceName,resources)
 {
 	speed = 2;
 }

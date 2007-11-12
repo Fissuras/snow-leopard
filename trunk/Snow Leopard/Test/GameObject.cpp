@@ -1,17 +1,28 @@
 #include "GameObject.h"
-#include "WorldState.h"
 
 int GameObject::IDCount = 0;
-GameObject::GameObject(std::string name, int fact)
+GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 {
-	displayName = name;
-	faction = fact;
+	displayName = "";
+	faction = 0;
 	ID = getID();
 	speed=0.0;
 	heading=0.0;
 	actionPriority = DefPriority;
+	resourceName = resName;
+	resources = res;
+	sprite = NULL;
 }
 
+
+bool GameObject::loadSprite() //temporary test. This should happed in the constructor
+{
+	sprite = new CL_Sprite(resourceName,resources);
+	sprite->set_alignment(origin_center);
+	sprite->set_rotation_hotspot(origin_center);
+	sprite->set_base_angle(1.0);
+	return true;
+}
 int GameObject::getID()
 {
 	IDCount++;
@@ -41,4 +52,9 @@ bool GameObject::processMovementPhysics()
 bool GameObject::registerWallCollision()
 {
 	return true;
+}
+
+GameObject::~GameObject()
+{
+	delete sprite;
 }

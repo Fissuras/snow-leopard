@@ -12,22 +12,22 @@ GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Rende
 
 bool GameLogic::step()
 {
-	state->cleanup();
 
 	//should handle input with event callbacks, but I can't get them to work
 	handleInput();
 	
 	const GameObjectList* objects = state->getAllGameObjects();
 	ConstGameObjectIter itr;
-	for(itr = objects->begin();itr !=objects->end();itr++)
+	for(itr = objects->begin();itr !=objects->end();)
 	{
-		GameObject* obj = *itr;
-		if (obj == playerShip)
+		int objectID = (*itr)->ID;
+		if (*itr == playerShip)
 		{
+			itr++;
 			continue;
 		}
 		 //not very efficient. Should make the playership first or last and then not check
- 		obj->doActions();
+ 		(*itr++)->doActions(); //if the object gets deleted during this, it's ok because the iterator is already incremented
 	}
 	return true;
 }

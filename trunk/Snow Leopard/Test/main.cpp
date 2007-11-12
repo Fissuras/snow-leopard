@@ -38,25 +38,19 @@ int DisplayApplication::main(int argc,  char **argv)
 
 	CL_InputDevice keyboard = ic->get_keyboard();
 	CL_InputDevice mouse = ic->get_mouse();
-	
-	CL_ConsoleWindow console("Console");
-	console.redirect_stdio();
+
 
 	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
+	GameObject *g = new Starfury("Starfury",resources);
+	//GameObject *f = new Starfury("Starfury",resources);
+	//f->speed = 0;
+	g->speed = 10;
 
-	GameObject *g = new Starfury("Starfury",1);
-	GameObject *f = new Starfury("Starfury",1);
-	f->speed = 0;
-	g->speed = 1;
-
-
-	g->resourceName = "Starfury";
-	f->resourceName = "Starfury";
 	g->heading = 180;
 	WorldState *state = new WorldState();
-	state->insertObject(g,new point(320,240));
-	state->insertObject(f,new point (200,100));
+	state->insertObject(g,point(320,240));
+	//state->insertObject(f,point(200,100));
 
 	
 	Renderer* renderer = new Renderer(window,gc,state,resources);

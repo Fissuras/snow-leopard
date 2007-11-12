@@ -5,12 +5,12 @@
 struct point
 {
 public:
-	point::point(int i,int j);
+	point::point(double i,double j);
 	point::point();
-	point* point::offsetRect(int ox, int oy);
-	point* point::offsetPolar(double heading, double direction);
-	int x;
-	int y;
+	point point::offsetRect(double ox, double oy);
+	point point::offsetPolar(double heading, double direction);
+	double x;
+	double y;
 	std::string point::toString();
 };
 
