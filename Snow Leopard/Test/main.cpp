@@ -45,7 +45,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	GameObject *g = new Starfury("Starfury",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
-	g->speed = 10;
+	g->speed = 1;
 
 	g->heading = 180;
 	WorldState *state = new WorldState();

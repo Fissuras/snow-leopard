@@ -11,11 +11,11 @@ return int(x > 0.0 ? x + 0.5 : x - 0.5);
 
 WorldState::WorldState()
 {
-	CoordinateSizeX = 1024.0;
-	CoordinateSizeY = 768.0;
+	CoordinateSizeX = 1000.0;
+	CoordinateSizeY = 1000.0;
 
-	CellSizeX = 1 + round(CoordinateSizeX / coarseGraining) ;
-	CellSizeY = 1 + round(CoordinateSizeY / coarseGraining) ;
+	CellSizeX = (int)CoordinateSizeX / coarseGraining ;
+	CellSizeY = (int)CoordinateSizeY / coarseGraining ;
 
 	allObjectList = new GameObjectList();
 	worldMatrix = new GameObjectList**[CellSizeX];
@@ -37,7 +37,7 @@ bool WorldState::insertObject(GameObject* gameObject, point p)
 	if (pointOutofBounds(p))
 		return false;
 
-	GameObjectList* currentList = worldMatrix[(round(p.x / coarseGraining))][round(p.y / coarseGraining)];
+	GameObjectList* currentList = getListFromPoint(p);
 	currentList->push_front(gameObject);
 	gameObject->location = p;
 	allObjectList->push_front(gameObject);
@@ -47,7 +47,7 @@ bool WorldState::insertObject(GameObject* gameObject, point p)
 
 bool WorldState::deleteObject(GameObject* gameObject)
 {
-	GameObjectList* currentList = worldMatrix[round(gameObject->location.x/coarseGraining)][round(gameObject->location.y/coarseGraining)];
+	GameObjectList* currentList = getListFromPoint(gameObject->location);
 	allObjectList->remove(gameObject);
 	currentList->remove(gameObject);
 	delete gameObject;
@@ -63,14 +63,13 @@ bool WorldState::moveObject(GameObject* gameObject, point p)
 		return false;
 	}
 
-	GameObjectList* currentList = worldMatrix[round(gameObject->location.x / coarseGraining)][round(gameObject->location.y/ coarseGraining)];
-		GameObjectList* newList = worldMatrix[round(p.x/ coarseGraining)][round(p.y/ coarseGraining)];
+	GameObjectList* currentList = getListFromPoint(gameObject->location);
+		GameObjectList* newList = getListFromPoint(p);
+		gameObject->location=p;
 		if (currentList==newList)
 			return true;
 		newList->push_front(gameObject);
 		currentList->remove(gameObject);
-		gameObject->location=p;
-
 		return true;
 
 }
@@ -79,7 +78,7 @@ GameObjectList* WorldState::getAtCell(point p)
 {
 	if (pointOutofBounds(p))
 		return NULL;
-	return worldMatrix[round(p.x/ coarseGraining)][round(p.y/ coarseGraining)];
+	return getListFromPoint(p);
 }
 
 const GameObjectList* WorldState::getAllGameObjects()
@@ -93,4 +92,9 @@ bool WorldState::pointOutofBounds(point p)
 		return true;
 	return false;
 
+}
+
+GameObjectList* WorldState::getListFromPoint(point p)
+{
+	return worldMatrix[(int)p.x / coarseGraining][(int)p.y / coarseGraining];
 }

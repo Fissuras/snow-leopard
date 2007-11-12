@@ -34,6 +34,7 @@ private:
 	GameObjectList*** worldMatrix;
 	GameObjectList* allObjectList;
 	bool pointOutofBounds(point p);
+	GameObjectList* WorldState::getListFromPoint(point p);
 };
 
 #endif
