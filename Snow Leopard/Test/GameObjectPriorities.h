@@ -1,7 +1,14 @@
 #ifndef GAMEOBJECTPRIORITIES_H_
 #define GAMEOBJECTPRIORITIES_H_
 
-#define ProjectilePriority 10
-#define ShipPriority 20
-#define DefPriority 100
+#define ProjectileActionPriority 10
+#define ShipActionPriority 20
+#define DefActionPriority 100
+#define BackgroundActionPriority 101
+
+#define ProjectileRenderPriority 1
+#define ShipRenderPriority 2
+#define DefRenderPriority 2
+#define BackgroundRenderPriority 0
+
 #endif

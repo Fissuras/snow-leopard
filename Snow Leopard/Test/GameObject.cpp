@@ -8,7 +8,8 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	ID = getID();
 	speed=0.0;
 	heading=0.0;
-	actionPriority = DefPriority;
+	actionPriority = DefActionPriority;
+	renderPriority = DefRenderPriority;
 	resourceName = resName;
 	resources = res;
 	sprite = NULL;
@@ -20,7 +21,7 @@ bool GameObject::loadSprite() //temporary test. This should happed in the constr
 	sprite = new CL_Sprite(resourceName,resources);
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
-	sprite->set_base_angle(1.0);
+	sprite->set_base_angle(0.0);
 	return true;
 }
 int GameObject::getID()
@@ -37,11 +38,6 @@ bool GameObject::doActions()
 bool GameObject::registerCollision(GameObjectList collisions)
 {
 	return true;
-}
-
-bool GameObject::operator<(GameObject &b)
-{
-	return actionPriority<b.actionPriority;
 }
 
 bool GameObject::processMovementPhysics()

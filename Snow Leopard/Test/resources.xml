@@ -6,4 +6,7 @@
   <sprite name="SevnaMark40">
     <image file="SevnaMark40.png"></image>
   </sprite>
+  <sprite name="background">
+    <image file="xa-004_1024.jpg"></image>
+  </sprite>
 </resources>

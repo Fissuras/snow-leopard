@@ -11,8 +11,8 @@ return int(x > 0.0 ? x + 0.5 : x - 0.5);
 
 WorldState::WorldState()
 {
-	CoordinateSizeX = 1000.0;
-	CoordinateSizeY = 1000.0;
+	CoordinateSizeX = 1024;
+	CoordinateSizeY = 768.0;
 
 	CellSizeX = (int)CoordinateSizeX / coarseGraining ;
 	CellSizeY = (int)CoordinateSizeY / coarseGraining ;
@@ -81,10 +81,17 @@ GameObjectList* WorldState::getAtCell(point p)
 	return getListFromPoint(p);
 }
 
-const GameObjectList* WorldState::getAllGameObjects()
+
+const GameObjectList* WorldState::getAllGameObjects(SortPreference p)
 {
+	switch (p)
+	{
+	case ACTION_SORTED:  allObjectList->sort(Action());break;
+	case RENDER_SORTED:  allObjectList->sort(Render());break;
+	}
 	return  allObjectList; //can't change the contents of the list, but _can_ change the properties of the objects
 }
+
 
 bool WorldState::pointOutofBounds(point p)
 {
