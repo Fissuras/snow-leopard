@@ -34,7 +34,7 @@ bool Ship::shoot()
 	return true;
 }
 
-Ship::Ship(std::string name, int fact) : GameObject(name,fact)
+Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(resourceName,resources)
 {
 	actionPriority = ShipPriority;
 }

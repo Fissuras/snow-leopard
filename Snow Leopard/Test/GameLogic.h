@@ -26,7 +26,6 @@ private:
 	CL_InputDevice mouse;
 	void handleInput();
 	Renderer* renderer;
-	GameObjectList* deleteList;
 	
 
 public:

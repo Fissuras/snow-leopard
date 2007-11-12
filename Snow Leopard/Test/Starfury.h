@@ -15,7 +15,7 @@ class Ship;
 class Starfury: public Ship {
 
 public:
-	Starfury::Starfury(std::string name, int fact);
+	Starfury::Starfury(std::string resourceName,CL_ResourceManager* resources);
 
 protected:
 	bool move();

@@ -2,7 +2,7 @@
 #include "boost/lexical_cast.hpp"
 
 
-point::point(int i, int j)
+point::point(double i, double j)
 {
 	x = i;
 	y = j;
@@ -12,14 +12,14 @@ point::point()
 {
 }
 
-point* point::offsetRect(int ox, int oy)
+point point::offsetRect(double ox, double oy)
 {
-	return new point(x+ox,y+oy);
+	return point(x+ox,y+oy);
 }
 
-point* point::offsetPolar(double heading, double distance)
+point point::offsetPolar(double heading, double distance)
 {
-	return new point(x,y);
+	return point(x,y);
 }
 
 std::string point::toString()

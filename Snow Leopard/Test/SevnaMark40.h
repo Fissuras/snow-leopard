@@ -14,7 +14,7 @@ class Projectile;
 class SevnaMark40: public Projectile {
 
 public:
-	SevnaMark40::SevnaMark40(std::string name, int fact);
+	SevnaMark40::SevnaMark40(std::string resourceName, CL_ResourceManager* resources);
 
 protected:
 	bool move();

@@ -14,7 +14,7 @@ public:
 	bool doActions();
 	bool registerCollision(GameObjectList collisions);
 	bool registerWallCollision();
-	Ship::Ship(std::string name, int fact);
+	Ship::Ship(std::string resourceName, CL_ResourceManager* resources);
 	virtual bool move();
 	bool move(AbsoluteDirection dir);
 	virtual bool shoot();

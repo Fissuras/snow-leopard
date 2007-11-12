@@ -1,7 +1,7 @@
 #include "Starfury.h"
 
 
-Starfury::Starfury(std::string name,int fact):Ship(name,fact)
+Starfury::Starfury(std::string resourceName,CL_ResourceManager* resources):Ship(resourceName,resources)
 {
 }
 bool Starfury::move()
@@ -13,7 +13,7 @@ bool Starfury::move()
 
 bool Starfury::shoot()
 {
-	SevnaMark40* p = new SevnaMark40("Sevna",Projectile::PROJECTILE_FACT);
+	SevnaMark40* p = new SevnaMark40("SevnaMark40",GameObject::resources);
 	p->resourceName = "SevnaMark40";
 	worldState->insertObject(p,location.offsetPolar(heading,2));
 	return true;

@@ -12,7 +12,7 @@ class GameObject;
 typedef std::list<GameObject*> GameObjectList;
 typedef std::list <GameObject*>::iterator GameObjectIter;
 typedef std::list <GameObject*>::const_iterator ConstGameObjectIter;
-#define coarseGraining 20
+#define coarseGraining 100
 
 class WorldState
 {
@@ -24,18 +24,16 @@ double CoordinateSizeX;
 double CoordinateSizeY;
 
 WorldState::WorldState();
-bool insertObject(GameObject* gameObject, point *p);
+bool insertObject(GameObject* gameObject, point p);
 bool deleteObject(GameObject* gameObject);
-bool moveObject(GameObject* gameObject, point *p);
-GameObjectList* getAtCell(point *p);
+bool moveObject(GameObject* gameObject, point p);
+GameObjectList* getAtCell(point p);
 const GameObjectList* getAllGameObjects();
-bool cleanup();
 
 private:
 	GameObjectList*** worldMatrix;
 	GameObjectList* allObjectList;
-	GameObjectList* deleteList;
-	bool pointOutofBounds(point* p);
+	bool pointOutofBounds(point p);
 };
 
 #endif
