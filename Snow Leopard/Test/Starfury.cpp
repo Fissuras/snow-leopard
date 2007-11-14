@@ -18,7 +18,7 @@ bool Starfury::shoot()
 
 	if ((pulseCannon->timeLastFired==0) || (pulseCannon->timeLastFired + pulseCannon->coolDownInterval <= GameObject::worldState->time))
 	{
-		pulseCannon->fire(worldState,location,heading,GameObject::resources);
+		pulseCannon->fire(worldState,location,heading,speed,GameObject::resources);
 	}
 	return true;
 }
