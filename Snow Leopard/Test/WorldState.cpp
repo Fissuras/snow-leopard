@@ -11,7 +11,7 @@ return int(x > 0.0 ? x + 0.5 : x - 0.5);
 
 WorldState::WorldState()
 {
-	CoordinateSizeX = 1024;
+	CoordinateSizeX = 1024.0;
 	CoordinateSizeY = 768.0;
 
 	CellSizeX = (int)CoordinateSizeX / coarseGraining ;

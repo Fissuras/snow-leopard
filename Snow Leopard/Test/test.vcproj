@@ -60,11 +60,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="LinearParticle.lib"
 				LinkIncremental="2"
 				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -242,6 +244,18 @@
 						>
 					</File>
 				</Filter>
+				<Filter
+					Name="particle effects"
+					>
+				</Filter>
+				<Filter
+					Name="weapons"
+					>
+					<File
+						RelativePath=".\PulseCannon.h"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
@@ -262,6 +276,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Particle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ParticleEmitter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\point.h"
 				>
 			</File>
@@ -275,6 +297,10 @@
 			</File>
 			<File
 				RelativePath=".\Ship.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Weapon.h"
 				>
 			</File>
 			<File

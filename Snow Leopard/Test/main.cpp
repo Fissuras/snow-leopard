@@ -11,7 +11,7 @@
 #include "GameLogic.h"
 #include "Starfury.h"
 #include <ctime>
-#include "NonInteractiveBackground.h"
+#include "NonInteractiveBackground.h" 
 
 class DisplayApplication : public CL_ClanApplication
 {
@@ -32,7 +32,8 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_SetupCore setup_core;
 	CL_SetupDisplay setup_display;
 	CL_SetupGL setup_gl;
-	
+
+
 	CL_DisplayWindow* window = new CL_DisplayWindow("Snow Leopard", 640, 480);
 	CL_GraphicContext* gc = window->get_gc();
 	CL_InputContext* ic = window->get_ic();
@@ -47,9 +48,9 @@ int DisplayApplication::main(int argc,  char **argv)
 	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
-	g->speed = 1;
+	g->speed = 5;
 
-	g->heading = 180;
+	g->heading = 90;
 	WorldState *state = new WorldState();
 	state->insertObject(g,point(320,240));
 	state->insertObject(background,point(state->CoordinateSizeX / 2,state->CoordinateSizeY /2));
@@ -62,6 +63,8 @@ int DisplayApplication::main(int argc,  char **argv)
 	renderer->setCamera(g);
 	renderer->setCameraZoomLevel(1.0);
 
+    CL_FramerateCounter* framerate = new CL_FramerateCounter();
+	framerate->set_fps_limit(60);
 	//renderer->LoadSprites(state->getAllGameObjects()); currently sprites load when the corresponding object is inserted into the world
 	
 	while (true)

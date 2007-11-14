@@ -8,6 +8,9 @@
 #include "GameObject.h"
 
 class WorldState;
+
+
+
 class Ship: public GameObject {
 
 public:
@@ -17,7 +20,9 @@ public:
 	Ship::Ship(std::string resourceName, CL_ResourceManager* resources);
 	virtual bool move();
 	bool move(AbsoluteDirection dir);
+	bool move(RelativeDirection dir);
 	virtual bool shoot();
+
 
 
 };

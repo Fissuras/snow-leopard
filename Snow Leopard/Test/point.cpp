@@ -19,7 +19,7 @@ point point::offsetRect(double ox, double oy)
 
 point point::offsetPolar(double heading, double distance)
 {
-	return point(x,y);
+	return point(x + distance * cos(heading * 3.14159/180),y + distance * sin(heading * 3.14159/180));
 }
 
 std::string point::toString()

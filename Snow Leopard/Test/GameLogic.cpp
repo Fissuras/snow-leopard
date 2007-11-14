@@ -14,6 +14,7 @@ bool GameLogic::step()
 {
 
 	//should handle input with event callbacks, but I can't get them to work
+	time = CL_System::get_time();
 	handleInput();
 	
 	const GameObjectList* objects = state->getAllGameObjects();
@@ -39,6 +40,8 @@ void GameLogic::handleInput()
 		 playerShip->shoot();
 	 }
 
+#define RELATIVE_MOVEMENT
+#ifdef ABSOLUTE_MOVEMENT
 	 if (keyboard.get_keycode(CL_KEY_UP))
 	 {
 		 playerShip->move(GameObject::UP);
@@ -58,6 +61,30 @@ void GameLogic::handleInput()
 	 {
 		playerShip->move(GameObject::RIGHT);
 	 }
+#endif
+
+	 #ifdef RELATIVE_MOVEMENT
+	 if (keyboard.get_keycode(CL_KEY_UP))
+	 {
+		 playerShip->move(GameObject::FORWARD);
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_DOWN))
+	 {
+		 playerShip->move(GameObject::BACK);
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_LEFT))
+	 {
+		 playerShip->move(GameObject::TURN_LEFT);
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_RIGHT))
+	 {
+		 playerShip->move(GameObject::TURN_RIGHT);
+	 }
+#endif
+
 
 	 if (keyboard.get_keycode(CL_KEY_ESCAPE))
 	 {

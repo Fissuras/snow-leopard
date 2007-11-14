@@ -29,6 +29,20 @@ bool Ship::move(AbsoluteDirection dir)
 	return true;
 }
 
+bool Ship::move(RelativeDirection dir)
+{
+	if (dir == FORWARD)
+		worldState->moveObject(this,location.offsetPolar(heading,-speed));
+	if (dir == BACK)
+		worldState->moveObject(this,location.offsetPolar(heading,speed));
+	if (dir == TURN_LEFT)
+		heading += 1;
+	if (dir == TURN_RIGHT)
+		heading -= 1;
+
+	return true;
+}
+
 bool Ship::shoot()
 {
 	return true;
