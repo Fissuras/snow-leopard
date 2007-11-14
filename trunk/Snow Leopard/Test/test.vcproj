@@ -255,6 +255,10 @@
 						RelativePath=".\PulseCannon.h"
 						>
 					</File>
+					<File
+						RelativePath=".\ShotgunCannon.h"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

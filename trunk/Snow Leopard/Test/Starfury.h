@@ -11,6 +11,7 @@
 #include "SevnaMark40.h"
 #include "Weapon.h"
 #include "PulseCannon.h"
+#include "ShotgunCannon.h"
  
 class WorldState;
 class Ship;
@@ -23,6 +24,7 @@ protected:
 	bool move();
 	bool shoot();
 	PulseCannon* pulseCannon;
+	ShotgunCannon* shotgunCannon;
 
 };
 
