@@ -1,10 +1,10 @@
 <resources>
-  <sprite name="Starfury">
-    <image file="Androsynth.png"></image>
+  <sprite name="Starfury" base_angle="-90">
+    <image file="plane.png"></image>
   </sprite>
 
   <sprite name="SevnaMark40">
-    <image file="SevnaMark40.png"></image>
+    <image file="bomb.png"></image>
   </sprite>
   <sprite name="background">
     <image file="xa-004_1024.jpg"></image>

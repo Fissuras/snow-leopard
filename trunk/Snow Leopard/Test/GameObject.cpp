@@ -21,7 +21,6 @@ bool GameObject::loadSprite() //temporary test. This should happed in the constr
 	sprite = new CL_Sprite(resourceName,resources);
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
-	sprite->set_base_angle(0.0);
 	return true;
 }
 int GameObject::getID()
