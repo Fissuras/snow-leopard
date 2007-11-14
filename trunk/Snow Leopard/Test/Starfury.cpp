@@ -3,6 +3,7 @@
 
 Starfury::Starfury(std::string resourceName,CL_ResourceManager* resources):Ship(resourceName,resources)
 {
+	pulseCannon = new PulseCannon();
 }
 bool Starfury::move()
 {
@@ -13,6 +14,11 @@ bool Starfury::move()
 
 bool Starfury::shoot()
 {
-	
+	int time = GameObject::worldState->time;
+
+	if ((pulseCannon->timeLastFired==0) || (pulseCannon->timeLastFired + pulseCannon->coolDownInterval <= GameObject::worldState->time))
+	{
+		pulseCannon->fire(worldState,location,heading,GameObject::resources);
+	}
 	return true;
 }

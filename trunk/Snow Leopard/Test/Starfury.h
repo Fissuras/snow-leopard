@@ -9,6 +9,8 @@
 #include "Ship.h"
 #include "Projectile.h"
 #include "SevnaMark40.h"
+#include "Weapon.h"
+#include "PulseCannon.h"
  
 class WorldState;
 class Ship;
@@ -20,6 +22,7 @@ public:
 protected:
 	bool move();
 	bool shoot();
+	PulseCannon* pulseCannon;
 
 };
 

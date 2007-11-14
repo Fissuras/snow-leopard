@@ -10,7 +10,6 @@
 class WorldState;
 
 
-
 class Ship: public GameObject {
 
 public:

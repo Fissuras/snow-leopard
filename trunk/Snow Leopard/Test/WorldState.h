@@ -42,6 +42,7 @@ int CellSizeX;
 int CellSizeY;
 double CoordinateSizeX;
 double CoordinateSizeY;
+unsigned int time;
 
 WorldState::WorldState();
 bool insertObject(GameObject* gameObject, point p);

@@ -14,7 +14,7 @@ bool GameLogic::step()
 {
 
 	//should handle input with event callbacks, but I can't get them to work
-	time = CL_System::get_time();
+	state->time = CL_System::get_time();
 	handleInput();
 	
 	const GameObjectList* objects = state->getAllGameObjects();
