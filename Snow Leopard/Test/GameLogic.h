@@ -30,7 +30,6 @@ private:
 	
 
 public:
-		unsigned int time;
 		GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* renderer);
 		bool GameLogic::step();
 
