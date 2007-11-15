@@ -211,14 +211,6 @@
 				<Filter
 					Name="ships"
 					>
-					<File
-						RelativePath=".\Starfury.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\Starfury.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="projectiles"
@@ -259,6 +251,26 @@
 						RelativePath=".\ShotgunCannon.h"
 						>
 					</File>
+				</Filter>
+				<Filter
+					Name="AI Behaviors"
+					>
+					<Filter
+						Name="Movement"
+						>
+						<File
+							RelativePath=".\AI_Move_DoNothing.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Shooting"
+						>
+						<File
+							RelativePath=".\AI_Shoot_DoNothing.h"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

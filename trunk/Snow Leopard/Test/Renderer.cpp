@@ -1,5 +1,13 @@
 #include "Renderer.h"
 
+#include "GameObject.h"
+#include "WorldState.h"
+
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
+
 //todo: use graphicContext features for translation, scaling, etc. instead of the naive SDL view
 //will allow direct use of world coordinates instead of screen pixel coordinates, which would be pretty awesome
 

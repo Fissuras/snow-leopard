@@ -1,18 +1,15 @@
 #ifndef RENDERER_H_
 #define RENDERER_H_
 
-#include "WorldState.h"
-#include "GameObject.h"
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gl.h>
-#include <ClanLib/application.h>
 #include <map>
 #include "boost/lexical_cast.hpp"
 #include <stdlib.h>
 
 class WorldState;
 class GameObject;
+class CL_DisplayWindow;
+class CL_GraphicContext;
+class CL_ResourceManager;
 
 class Renderer{
 public:

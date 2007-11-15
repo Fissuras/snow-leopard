@@ -1,6 +1,7 @@
 #ifndef PULSECANNON_H_
 #define PULSECANNON_H_
 #include "WorldState.h"
+#include "Weapon.h"
 #include "SevnaMark40.h"
 
 class PulseCannon:public Weapon

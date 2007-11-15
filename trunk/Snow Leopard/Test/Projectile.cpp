@@ -1,4 +1,5 @@
 #include "Projectile.h"
+#include "WorldState.h"
 
 
 bool Projectile::doActions()

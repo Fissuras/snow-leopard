@@ -1,4 +1,8 @@
 #include "Ship.h"
+#include "AI_Move_DoNothing.h"
+#include "AI_Shoot_DoNothing.h"
+#include "PulseCannon.h"
+#include "ShotgunCannon.h"
 
 
 bool Ship::doActions()
@@ -12,6 +16,11 @@ bool Ship::doActions()
 
 bool Ship::move()
 {
+	GameObject::processMovementPhysics();
+	if (!(GameObject::isPlayer))
+	{
+	AI_Movement(worldState);
+	}
 	return true;
 }
 
@@ -52,6 +61,8 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 {
 	actionPriority = ShipActionPriority;
 	renderPriority = ShipRenderPriority;
+	AI_Movement = &AI_Move_DoNothing;
+	AI_Shooting = &AI_Shoot_DoNothing;
 }
 	
 bool Ship::registerWallCollision()

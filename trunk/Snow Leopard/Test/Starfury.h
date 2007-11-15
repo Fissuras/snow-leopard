@@ -8,10 +8,7 @@
 #include "GameObject.h"
 #include "Ship.h"
 #include "Projectile.h"
-#include "SevnaMark40.h"
-#include "Weapon.h"
-#include "PulseCannon.h"
-#include "ShotgunCannon.h"
+#include "AI_Move_DoNothing.h"
  
 class WorldState;
 class Ship;

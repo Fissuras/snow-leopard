@@ -1,12 +1,7 @@
 #ifndef SEVNAMARK40_H_
 #define SEVNAMARK40_H_
-#include <list>
-#include <string>
 #include "point.h"
-#include <set>
 #include "WorldState.h"
-#include "GameObject.h"
-#include "Ship.h"
 #include "Projectile.h"
  
 class WorldState;

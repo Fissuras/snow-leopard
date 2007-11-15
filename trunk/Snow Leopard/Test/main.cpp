@@ -12,6 +12,8 @@
 #include "Starfury.h"
 #include <ctime>
 #include "NonInteractiveBackground.h" 
+#include "AI_Move_DoNothing.h"
+#include "AI_Shoot_DoNothing.h"
 
 
 
@@ -46,11 +48,13 @@ int DisplayApplication::main(int argc,  char **argv)
 
 	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
-	GameObject *g = new Starfury("Starfury",resources);
+	GameObject *g = new Ship("Starfury",resources);
 	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
 	g->speed = 2.5;
+	g->AI_Movement = &AI_Move_DoNothing;
+	g->AI_Shoot = &AI_Shoot_DoNothing;
 
 	g->heading = 90;
 	WorldState *state = new WorldState();
