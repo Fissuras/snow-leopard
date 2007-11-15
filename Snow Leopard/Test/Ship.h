@@ -19,6 +19,7 @@ class Ship: public GameObject {
 
 public:
 	typedef std::vector<Weapon*> WeaponList;
+	typedef std::vector <Weapon*>::iterator WeaponIter;
 	
 	bool doActions();
 	bool registerCollision(GameObjectList collisions);
@@ -28,8 +29,9 @@ public:
 	bool move(AbsoluteDirection dir);
 	bool move(RelativeDirection dir);
 	virtual bool shoot();
-	void (*AI_Movement) (WorldState* );
-	void (*AI_Shooting) (WorldState* ,WeaponList*);
+	WeaponList* weapons;
+	void (*AI_Movement) (WorldState* state );
+	void (*AI_Shooting) (WorldState* state,WeaponList* weapons,point location,double heading,CL_ResourceManager* resources);
 
 
 

@@ -267,6 +267,10 @@
 						Name="Shooting"
 						>
 						<File
+							RelativePath=".\AI_Shoot_AsFastAsPossible.h"
+							>
+						</File>
+						<File
 							RelativePath=".\AI_Shoot_DoNothing.h"
 							>
 						</File>

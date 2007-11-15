@@ -50,7 +50,10 @@ void GameLogic::handleInput()
 {
 	 if (keyboard->get_keycode(CL_KEY_SPACE))
 	 {
-		 playerShip->shoot();
+		 Weapon* wpn =  playerShip->weapons->at(0);
+		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
+			playerShip->weapons->at(0)->fire(state,playerShip->location,
+			playerShip->heading,playerShip->speed,playerShip->resources);
 	 }
 
 #define RELATIVE_MOVEMENT
