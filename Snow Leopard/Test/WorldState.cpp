@@ -18,6 +18,7 @@ WorldState::WorldState()
 	CellSizeY = (int)CoordinateSizeY / coarseGraining ;
 
 	allObjectList = new GameObjectList();
+	deleteList = new GameObjectList();
 	worldMatrix = new GameObjectList**[CellSizeX];
 	for (int i = 0; i < CellSizeX; ++i)
         worldMatrix[i] = new GameObjectList*[CellSizeY];
@@ -50,7 +51,7 @@ bool WorldState::deleteObject(GameObject* gameObject)
 	GameObjectList* currentList = getListFromPoint(gameObject->location);
 	allObjectList->remove(gameObject);
 	currentList->remove(gameObject);
-	delete gameObject;
+	registerForDeletion(gameObject);
 	return true;
 }
 
@@ -74,6 +75,22 @@ bool WorldState::moveObject(GameObject* gameObject, point p)
 
 }
 
+void WorldState::registerForDeletion(GameObject* obj)
+{
+	deleteList->push_front(obj);
+}
+
+void WorldState::deleteQueued()
+{
+	ConstGameObjectIter itr;
+	deleteList->unique();
+	for(itr = deleteList->begin();itr !=deleteList->end();)
+	{
+		delete (*itr++);
+	}
+	deleteList->clear();
+}
+
 GameObjectList* WorldState::getAtCell(point p)
 {
 	if (pointOutofBounds(p))
@@ -95,7 +112,7 @@ const GameObjectList* WorldState::getAllGameObjects(SortPreference p)
 
 bool WorldState::pointOutofBounds(point p)
 {
-	if (round(p.x / coarseGraining)>=CellSizeX || p.x<0 || round(p.y / coarseGraining)>=CellSizeY || p.y<0)
+ 	if (round(p.x / coarseGraining)>=CellSizeX || p.x<0 || round(p.y / coarseGraining)>=CellSizeY || p.y<0)
 		return true;
 	return false;
 

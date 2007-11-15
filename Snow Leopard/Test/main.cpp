@@ -13,6 +13,8 @@
 #include <ctime>
 #include "NonInteractiveBackground.h" 
 
+
+
 class DisplayApplication : public CL_ClanApplication
 {
 
@@ -48,7 +50,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
-	g->speed = 5;
+	g->speed = 2.5;
 
 	g->heading = 90;
 	WorldState *state = new WorldState();
@@ -72,7 +74,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	renderer->Render();
 	window->flip();
 	CL_System::keep_alive();
-	logic->step();
+ 	logic->step();
 	}
 	
 	

@@ -8,7 +8,6 @@
 #include <set>
 
 class GameObject;
-
 typedef std::list<GameObject*> GameObjectList;
 typedef std::list <GameObject*>::iterator GameObjectIter;
 typedef std::list <GameObject*>::const_iterator ConstGameObjectIter;
@@ -43,6 +42,7 @@ int CellSizeY;
 double CoordinateSizeX;
 double CoordinateSizeY;
 unsigned int time;
+unsigned int timeElapsed;
 
 WorldState::WorldState();
 bool insertObject(GameObject* gameObject, point p);
@@ -50,12 +50,15 @@ bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point p);
 GameObjectList* getAtCell(point p);
 const GameObjectList* WorldState::getAllGameObjects(SortPreference p = UNSORTED);
+void registerForDeletion(GameObject* obj);
+void deleteQueued();
 
 private:
 	GameObjectList*** worldMatrix;
 	GameObjectList* allObjectList;
 	bool pointOutofBounds(point p);
 	GameObjectList* WorldState::getListFromPoint(point p);
+	GameObjectList* deleteList;
 };
 
 #endif
