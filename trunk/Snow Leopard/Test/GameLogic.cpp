@@ -13,8 +13,12 @@ GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Rende
 bool GameLogic::step()
 {
 
+	state->deleteQueued();
+	unsigned int currentTime = CL_System::get_time();
+	state->timeElapsed = currentTime - state->time;
+	state->time = currentTime;
+
 	//should handle input with event callbacks, but I can't get them to work
-	state->time = CL_System::get_time();
 	handleInput();
 	
 	const GameObjectList* objects = state->getAllGameObjects();
@@ -41,6 +45,7 @@ void GameLogic::handleInput()
 	 }
 
 #define RELATIVE_MOVEMENT
+#define NOPHYSICS
 #ifdef ABSOLUTE_MOVEMENT
 	 if (keyboard.get_keycode(CL_KEY_UP))
 	 {
@@ -64,6 +69,7 @@ void GameLogic::handleInput()
 #endif
 
 	 #ifdef RELATIVE_MOVEMENT
+#ifdef NOPHYSICS
 	 if (keyboard.get_keycode(CL_KEY_UP))
 	 {
 		 playerShip->move(GameObject::FORWARD);
@@ -83,6 +89,28 @@ void GameLogic::handleInput()
 	 {
 		 playerShip->move(GameObject::TURN_RIGHT);
 	 }
+#endif
+#ifdef PHYSICS
+	 if (keyboard.get_keycode(CL_KEY_UP))
+	 {
+		 playerShip->move(GameObject::FORWARD); //crap, need real vector addition
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_DOWN))
+	 {
+		 playerShip->move(GameObject::BACK);
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_LEFT))
+	 {
+		 playerShip->move(GameObject::TURN_LEFT);
+	 }
+
+	 if (keyboard.get_keycode(CL_KEY_RIGHT))
+	 {
+		 playerShip->move(GameObject::TURN_RIGHT);
+	 }
+#endif
 #endif
 
 

@@ -1,4 +1,5 @@
 #include "GameObject.h"
+#include "WorldState.h"
 
 int GameObject::IDCount = 0;
 GameObject::GameObject(std::string resName,CL_ResourceManager* res)
@@ -8,11 +9,15 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	ID = getID();
 	speed=0.0;
 	heading=0.0;
+	accelerationForce = 0.0;
+	accelerationHeading = 0.0;
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
 	resourceName = resName;
 	resources = res;
+	mass = 1;
 	sprite = NULL;
+	isPlayer = false;
 }
 
 
@@ -39,9 +44,13 @@ bool GameObject::registerCollision(GameObjectList collisions)
 	return true;
 }
 
-bool GameObject::processMovementPhysics()
+bool GameObject::processMovementPhysics() //changes object's location as a side effect, but does not update to worldstate
 {
+	int newSpeed = speed + worldState->timeElapsed * accelerationForce; //vf = vi + a(delta)t
+	worldState->moveObject(this,location.offsetPolar(heading,.5 * (speed + newSpeed) * worldState->timeElapsed));
+	speed = newSpeed;
 	return true;
+
 }
 
 bool GameObject::registerWallCollision()

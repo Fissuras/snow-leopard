@@ -10,7 +10,9 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
-class WorldState;
+class WorldState; //need to forward declare class to avoid crazy recursion
+
+
  class GameObject{
 
 public:
@@ -38,7 +40,8 @@ public:
 	//polar coordinates
 	double heading;
 	double accelerationHeading;
-	double accelerationSpeed; // = accelForce / Mass of ship  (maybe should just have a real physics engine?)
+	double accelerationForce;
+	double mass;
 	int faction;
 	int displaySize;
 	point location;

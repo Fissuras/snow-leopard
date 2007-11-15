@@ -10,6 +10,8 @@ point::point(double i, double j)
 
 point::point()
 {
+	x=0;
+	y=0;
 }
 
 point point::offsetRect(double ox, double oy)
@@ -19,6 +21,9 @@ point point::offsetRect(double ox, double oy)
 
 point point::offsetPolar(double heading, double distance)
 {
+	double intpart;
+	heading = modf(heading,&intpart);
+	heading = heading + (int)intpart % 360;
 	return point(x + distance * cos(heading * 3.14159/180),y + distance * sin(heading * 3.14159/180));
 }
 
