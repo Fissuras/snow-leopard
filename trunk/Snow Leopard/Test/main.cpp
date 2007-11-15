@@ -13,6 +13,8 @@
 #include "NonInteractiveBackground.h" 
 #include "AI_Move_DoNothing.h"
 #include "AI_Shoot_DoNothing.h"
+#include "PulseCannon.h"
+#include "ShotgunCannon.h"
 
 
 
@@ -54,6 +56,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	g->speed = 2.5;
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
+	g->weapons->push_back(new PulseCannon());
 
 	g->heading = 90;
 	WorldState *state = new WorldState();

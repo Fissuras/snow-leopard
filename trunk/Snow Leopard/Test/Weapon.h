@@ -9,7 +9,7 @@ class Weapon
 {
 	public:
 		const int coolDownInterval;
-		void fire(WorldState* state, point location, double heading,CL_ResourceManager* resources)
+		virtual void fire(WorldState* state, point location, double heading, double speed, CL_ResourceManager* resources)
 		{};
 		unsigned int timeLastFired;
 		Weapon::Weapon(int interval = 600) : coolDownInterval(interval)

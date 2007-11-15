@@ -54,6 +54,10 @@ bool Ship::move(RelativeDirection dir)
 
 bool Ship::shoot()
 {
+	if (!(GameObject::isPlayer))
+	{
+	AI_Shooting(worldState,weapons,location,heading,resources);
+	}
 	return true;
 }
 
@@ -63,6 +67,7 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 	renderPriority = ShipRenderPriority;
 	AI_Movement = &AI_Move_DoNothing;
 	AI_Shooting = &AI_Shoot_DoNothing;
+	weapons = new WeaponList();
 }
 	
 bool Ship::registerWallCollision()
