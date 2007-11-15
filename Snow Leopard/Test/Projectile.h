@@ -4,10 +4,12 @@
 #include <string>
 #include "point.h"
 #include <set>
-#include "WorldState.h"
 #include "GameObject.h"
 
 class WorldState;
+class GameObject;
+class CL_ResourceManager;
+
 class Projectile: public GameObject {
 
 public:

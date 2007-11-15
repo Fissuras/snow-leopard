@@ -1,6 +1,7 @@
 #ifndef SHOTGUNCANNON_H_
 #define SHOTGUNCANNON_H_
 #include "WorldState.h"
+#include "Weapon.h"
 #include "SevnaMark40.h"
 
 class ShotgunCannon:public Weapon

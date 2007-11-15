@@ -1,5 +1,9 @@
 #include "GameObject.h"
 #include "WorldState.h"
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
 
 int GameObject::IDCount = 0;
 GameObject::GameObject(std::string resName,CL_ResourceManager* res)

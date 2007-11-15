@@ -1,6 +1,9 @@
 #ifndef WEAPON_H_
-#define WEAPON
+#define WEAPON_H_
 #include "WorldState.h"
+
+
+class WorldState;
 
 class Weapon
 {

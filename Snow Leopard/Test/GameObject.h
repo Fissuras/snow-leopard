@@ -5,12 +5,10 @@
 #include "point.h"
 #include <set>
 #include "GameObjectPriorities.h"
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gl.h>
-#include <ClanLib/application.h>
 
 class WorldState; //need to forward declare class to avoid crazy recursion
+class CL_Sprite;
+class CL_ResourceManager;
 
 
  class GameObject{

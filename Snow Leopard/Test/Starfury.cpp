@@ -9,7 +9,14 @@ Starfury::Starfury(std::string resourceName,CL_ResourceManager* resources):Ship(
 bool Starfury::move()
 {
 	GameObject::processMovementPhysics();
-	worldState->moveObject(this,location.offsetRect(speed,0));
+	if (GameObject::isPlayer)
+	{
+
+	}
+	else
+	{
+		AI_Move_DoNothing(Ship::worldState);
+	}
 	return true;
 }
 
