@@ -16,10 +16,12 @@ bool Ship::doActions()
 
 bool Ship::move()
 {
+#ifdef PHYSICS
 	GameObject::processMovementPhysics();
+#endif
 	if (!(GameObject::isPlayer))
 	{
-	AI_Movement(worldState);
+	AI_Movement(this);
 	}
 	return true;
 }
@@ -56,7 +58,7 @@ bool Ship::shoot()
 {
 	if (!(GameObject::isPlayer))
 	{
-	AI_Shooting(worldState,weapons,location,heading,resources);
+	AI_Shooting(this);
 	}
 	return true;
 }
