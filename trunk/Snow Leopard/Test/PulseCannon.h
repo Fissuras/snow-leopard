@@ -13,7 +13,7 @@ class PulseCannon:public Weapon
 			SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
 			p->resourceName = "SevnaMark40";
 			p->heading = heading;
-			p->speed = speed + 2;
+			p->speed = speed + .5;
 			state->insertObject(p,location.offsetPolar(heading,2));
 			Weapon::timeLastFired = state->time;
 		};

@@ -30,8 +30,8 @@ public:
 	bool move(RelativeDirection dir);
 	virtual bool shoot();
 	WeaponList* weapons;
-	void (*AI_Movement) (WorldState* state );
-	void (*AI_Shooting) (WorldState* state,WeaponList* weapons,point location,double heading,CL_ResourceManager* resources);
+	void (*AI_Movement) (Ship* ship);
+	void (*AI_Shooting) (Ship* ship);
 
 
 
