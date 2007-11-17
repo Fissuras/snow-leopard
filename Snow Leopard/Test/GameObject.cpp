@@ -13,8 +13,8 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	ID = getID();
 	speed=0.0;
 	heading=0.0;
-	accelerationForce = 0.0;
-	accelerationHeading = 0.0;
+	accelMagnitude = 0.0;
+	accelHeading = 0.0;
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
 	resourceName = resName;
@@ -22,6 +22,7 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	mass = 1;
 	sprite = NULL;
 	isPlayer = false;
+	usesPhysics = false;
 }
 
 
@@ -40,6 +41,8 @@ int GameObject::getID()
 
 bool GameObject::doActions()
 {
+	if (usesPhysics)
+		processMovementPhysics();
 	return true;
 }
 
@@ -50,9 +53,7 @@ bool GameObject::registerCollision(GameObjectList collisions)
 
 bool GameObject::processMovementPhysics() //changes object's location as a side effect, but does not update to worldstate
 {
-	int newSpeed = speed + worldState->timeElapsed * accelerationForce; //vf = vi + a(delta)t
-	worldState->moveObject(this,location.offsetPolar(heading,.5 * (speed + newSpeed) * worldState->timeElapsed));
-	speed = newSpeed;
+	worldState->moveObject(this,location.offsetPolar(heading,speed * worldState->timeElapsed));
 	return true;
 
 }
@@ -60,6 +61,37 @@ bool GameObject::processMovementPhysics() //changes object's location as a side 
 bool GameObject::registerWallCollision()
 {
 	return true;
+}
+
+void GameObject::applyForceRect(double x,double y)
+{
+	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
+	double oldY = accelMagnitude * sin(accelHeading *3.14159/180);
+	//should probably be using vectors everywhere
+	double newX = oldX + x;
+	double newY = oldY + y;
+	speed = .05 * (speed + sqrt(abs(newX * newX + newY + newY)));
+	accelMagnitude = sqrt(newX*newX + newY*newY);
+	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
+}
+
+void GameObject::applyForcePolar(double heading, double magnitude)
+{
+	if (magnitude<0)
+	{
+		heading += 180;
+		magnitude = abs(magnitude); 
+	}
+
+	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
+	double oldY = accelMagnitude * sin(accelHeading * 3.14159/180);
+	//should probably be using vectors everywhere
+	double newX = oldX + magnitude * cos(heading * 3.14159/180);
+	double newY = oldY + magnitude * sin(heading * 3.14159/180);
+	speed = .05 * (speed + sqrt(newX * newX + newY + newY));
+	accelMagnitude = sqrt(newX*newX + newY*newY);
+	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
+
 }
 
 GameObject::~GameObject()

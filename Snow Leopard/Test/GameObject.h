@@ -31,15 +31,18 @@ public:
 	bool GameObject::loadSprite();
 	GameObject::~GameObject();
 	CL_ResourceManager* resources;
+	void applyForceRect(double x, double y);
+	void applyForcePolar(double heading, double magnitude);
 
 	std::string displayName; 
 	bool isPlayer; //right now only one ship can be a player
 	
 	//polar coordinates
 	double heading;
-	double accelerationHeading;
-	double accelerationForce;
 	double mass;
+	double accelHeading;
+	double accelMagnitude;
+	double thrust; //force the object can apply on itself. thrust / mass = acceleration
 	int faction;
 	int displaySize;
 	point location;
@@ -50,6 +53,7 @@ public:
 	int ID;
 	WorldState* worldState;
 	double speed;
+	bool usesPhysics;
 
  protected:
 	

@@ -8,6 +8,7 @@
 #include <ClanLib/application.h>
 #include "Ship.h"
 #include "Renderer.h"
+#include "Definitions.h"
 
 
 GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* rend)
@@ -35,12 +36,6 @@ bool GameLogic::step()
 	for(itr = objects->begin();itr !=objects->end();)
 	{
 		int objectID = (*itr)->ID;
-		if (*itr == playerShip)
-		{
-			itr++;
-			continue;
-		}
-		 //not very efficient. Should make the playership first or last and then not check
  		(*itr++)->doActions(); //if the object gets deleted during this, it's ok because the iterator is already incremented
 	}
 	return true;
@@ -56,8 +51,7 @@ void GameLogic::handleInput()
 			playerShip->heading,playerShip->speed,playerShip->resources);
 	 }
 
-#define RELATIVE_MOVEMENT
-#define NOPHYSICS
+
 #ifdef ABSOLUTE_MOVEMENT
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
@@ -105,12 +99,12 @@ void GameLogic::handleInput()
 #ifdef PHYSICS
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->move(GameObject::FORWARD); //crap, need real vector addition
+		 playerShip->applyForcePolar(0,playerShip->thrust);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->move(GameObject::BACK);
+		 playerShip->applyForcePolar(0,-playerShip->thrust);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))
@@ -138,7 +132,7 @@ void GameLogic::handleInput()
 
 	  if (keyboard->get_keycode(CL_KEY_ADD))
 	 {
-		 renderer->setCameraZoomLevel(2);
+		 renderer->setCameraZoomLevel(1.5);
 	 }
 
 }

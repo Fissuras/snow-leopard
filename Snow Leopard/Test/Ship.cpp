@@ -3,6 +3,7 @@
 #include "AI_Shoot_DoNothing.h"
 #include "PulseCannon.h"
 #include "ShotgunCannon.h"
+#include "Definitions.h"
 
 
 bool Ship::doActions()
@@ -70,9 +71,14 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 	AI_Movement = &AI_Move_DoNothing;
 	AI_Shooting = &AI_Shoot_DoNothing;
 	weapons = new WeaponList();
+	GameObject::usesPhysics = true;
 }
 	
 bool Ship::registerWallCollision()
 {
-	return true; //if you hit a wall, don't di anything
+	//cancel accelerations
+	accelHeading = 0;
+	accelMagnitude = 0;
+	speed = 0;
+	return true;
 }
