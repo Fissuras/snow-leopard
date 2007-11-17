@@ -53,10 +53,10 @@ int DisplayApplication::main(int argc,  char **argv)
 	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
 	//f->speed = 0;
-	g->speed = 2.5;
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
 	g->weapons->push_back(new PulseCannon());
+	g->thrust = .08;
 
 	g->heading = 90;
 	WorldState *state = new WorldState();
