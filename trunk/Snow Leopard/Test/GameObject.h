@@ -52,7 +52,6 @@ public:
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	int ID;
 	WorldState* worldState;
-	double speed;
 	bool usesPhysics;
 
  protected:

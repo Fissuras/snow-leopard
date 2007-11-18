@@ -12,7 +12,6 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	displayName = "";
 	faction = 0;
 	ID = getID();
-	speed=0.0;
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
 	resourceName = resName;
@@ -59,7 +58,8 @@ void GameObject::rotate(double angle)
 
 bool GameObject::processMovementPhysics()
 {
-	worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),speed * worldState->timeElapsed));
+	*moveVector += *accelVector * worldState->timeElapsed;
+	worldState->moveObject(this,location.offsetRect(moveVector->getX(),moveVector->getY()));
 	return true;
 
 }

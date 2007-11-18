@@ -18,10 +18,10 @@ class ShotgunCannon:public Weapon
 			p->moveVector->setAngle(vector->getAngle() - 24 + 6*i);
 			p->moveVector->setLength(vector->getLength() + .2);
 			state->insertObject(p,location.offsetPolar(vector->getAngle(),2));
-			delete vector;
 			}
 			
 			Weapon::timeLastFired = state->time;
+			delete vector;
 		};
 		ShotgunCannon::ShotgunCannon()
 		{
