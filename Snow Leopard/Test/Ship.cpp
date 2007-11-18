@@ -44,13 +44,19 @@ bool Ship::move(AbsoluteDirection dir)
 bool Ship::move(RelativeDirection dir)
 {
 	if (dir == FORWARD)
-		worldState->moveObject(this,location.offsetPolar(heading,speed));
+		worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),speed));
 	if (dir == BACK)
-		worldState->moveObject(this,location.offsetPolar(heading,-speed));
+		worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),-speed));
 	if (dir == TURN_LEFT)
-		heading -= 1;
+	{
+		moveVector->setAngle(moveVector->getAngle() - 1);
+		displayHeading -=1;
+	}
 	if (dir == TURN_RIGHT)
-		heading += 1;
+	{
+		moveVector->setAngle(moveVector->getAngle() + 1);
+		displayHeading +=1;
+	}
 
 	return true;
 }
@@ -77,8 +83,8 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 bool Ship::registerWallCollision()
 {
 	//cancel accelerations
-	accelHeading = 0;
-	accelMagnitude = 0;
+	GameObject::accelVector->setX(0);
+	GameObject::accelVector->setY(0);
 	speed = 0;
 	return true;
 }
