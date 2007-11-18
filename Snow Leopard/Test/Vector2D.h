@@ -34,7 +34,9 @@ static Vector2D* Vector2D::Polar(double angle,double magnitude)
 	double getAngle();
 
 	void operator=(Vector2D aVector);
+	void operator+=(Vector2D aVector);
 	Vector2D operator+(Vector2D aVector);
+	Vector2D operator*(double scale);
 
 	Vector2D();
 	~Vector2D();

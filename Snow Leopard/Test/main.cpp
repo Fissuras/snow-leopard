@@ -53,7 +53,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	Ship *g = new Ship("Starfury",resources);
 	GameObject* background = new NonInteractiveBackground("background",resources);
 	//GameObject *f = new Starfury("Starfury",resources);
-	//f->speed = 0;
+
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
 	g->weapons->push_back(new PulseCannon());

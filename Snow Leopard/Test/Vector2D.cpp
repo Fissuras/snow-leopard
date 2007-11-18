@@ -33,11 +33,15 @@ Vector2D::~Vector2D()
 void Vector2D::setX( double Xin )
 {
 	x = Xin;
+	length = sqrt(x*x + y*y);
+	angle = atan2(y,x);
 }
 
 void Vector2D::setY( double Yin )
 {
 	y = Yin;
+	length = sqrt(x*x + y*y);
+	angle = atan2(y,x);
 }
 
 void Vector2D::setLength( double Lin )
@@ -77,15 +81,26 @@ double Vector2D::getAngle()
 
 void Vector2D::operator =(Vector2D aVector)
 {
-	x = aVector.x;
-	y = aVector.y;
-	length = aVector.length;
-	angle = aVector.angle;
+	x = aVector.getX();
+	y = aVector.getY();
+}
+
+void Vector2D::operator +=(Vector2D aVector)
+{
+	x +=aVector.x;
+	y +=aVector.y;
 }
 
 Vector2D Vector2D::operator+(Vector2D vector)
 {
 	x += vector.x;
 	y += vector.y;
+	return *this;
+}
+
+Vector2D Vector2D::operator*(double scale)
+{
+	x *= scale;
+	y *= scale;
 	return *this;
 }

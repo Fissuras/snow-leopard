@@ -48,8 +48,7 @@ void GameLogic::handleInput()
 	 {
 		 Weapon* wpn =  playerShip->weapons->at(0);
 		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
-			playerShip->weapons->at(0)->fire(state,playerShip->location,
-			playerShip->moveVector->getAngle(),playerShip->speed,playerShip->resources);
+			 playerShip->weapons->at(0)->fire(state,playerShip->location, playerShip->moveVector,playerShip->resources);
 	 }
 
 

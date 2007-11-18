@@ -7,6 +7,6 @@ SevnaMark40::SevnaMark40(std::string resourceName,CL_ResourceManager* resources)
 bool SevnaMark40::move()
 {
 	GameObject::processMovementPhysics();
-	worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),speed));
+	worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),moveVector->getLength()));
 	return true;
 }
