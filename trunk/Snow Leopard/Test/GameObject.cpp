@@ -4,6 +4,7 @@
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
+#include "Vector2D.h"
 
 int GameObject::IDCount = 0;
 GameObject::GameObject(std::string resName,CL_ResourceManager* res)
@@ -12,9 +13,6 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	faction = 0;
 	ID = getID();
 	speed=0.0;
-	heading=0.0;
-	accelMagnitude = 0.0;
-	accelHeading = 0.0;
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
 	resourceName = resName;
@@ -23,10 +21,13 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	sprite = NULL;
 	isPlayer = false;
 	usesPhysics = false;
+	displayHeading = 0.0;
+	accelVector = new Vector2D();
+	moveVector = new Vector2D();
 }
 
 
-bool GameObject::loadSprite() //temporary test. This should happed in the constructor
+bool GameObject::loadSprite()
 {
 	sprite = new CL_Sprite(resourceName,resources);
 	sprite->set_alignment(origin_center);
@@ -51,9 +52,14 @@ bool GameObject::registerCollision(GameObjectList collisions)
 	return true;
 }
 
-bool GameObject::processMovementPhysics() //changes object's location as a side effect, but does not update to worldstate
+void GameObject::rotate(double angle)
 {
-	worldState->moveObject(this,location.offsetPolar(heading,speed * worldState->timeElapsed));
+	displayHeading += angle;
+}
+
+bool GameObject::processMovementPhysics()
+{
+	worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),speed * worldState->timeElapsed));
 	return true;
 
 }
@@ -63,35 +69,10 @@ bool GameObject::registerWallCollision()
 	return true;
 }
 
-void GameObject::applyForceRect(double x,double y)
+void GameObject::applyForce(Vector2D* vector, double time)
 {
-	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
-	double oldY = accelMagnitude * sin(accelHeading *3.14159/180);
-	//should probably be using vectors everywhere
-	double newX = oldX + x;
-	double newY = oldY + y;
-	speed = .05 * (speed + sqrt(abs(newX * newX + newY + newY)));
-	accelMagnitude = sqrt(newX*newX + newY*newY);
-	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
-}
-
-void GameObject::applyForcePolar(double heading, double magnitude)
-{
-	if (magnitude<0)
-	{
-		heading += 180;
-		magnitude = abs(magnitude); 
-	}
-
-	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
-	double oldY = accelMagnitude * sin(accelHeading * 3.14159/180);
-	//should probably be using vectors everywhere
-	double newX = oldX + magnitude * cos(heading * 3.14159/180);
-	double newY = oldY + magnitude * sin(heading * 3.14159/180);
-	speed = .05 * (speed + sqrt(newX * newX + newY + newY));
-	accelMagnitude = sqrt(newX*newX + newY*newY);
-	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
-
+	*accelVector = *accelVector + *vector;
+	delete vector;
 }
 
 GameObject::~GameObject()

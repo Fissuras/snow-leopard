@@ -202,6 +202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Vector2D.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\WorldState.cpp"
 				>
 			</File>
@@ -321,6 +325,10 @@
 			</File>
 			<File
 				RelativePath=".\Ship.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Vector2D.h"
 				>
 			</File>
 			<File

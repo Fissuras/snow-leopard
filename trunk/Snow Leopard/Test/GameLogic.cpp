@@ -9,6 +9,7 @@
 #include "Ship.h"
 #include "Renderer.h"
 #include "Definitions.h"
+#include "Vector2D.h"
 
 
 GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* rend)
@@ -48,7 +49,7 @@ void GameLogic::handleInput()
 		 Weapon* wpn =  playerShip->weapons->at(0);
 		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
 			playerShip->weapons->at(0)->fire(state,playerShip->location,
-			playerShip->heading,playerShip->speed,playerShip->resources);
+			playerShip->moveVector->getAngle(),playerShip->speed,playerShip->resources);
 	 }
 
 
@@ -99,22 +100,24 @@ void GameLogic::handleInput()
 #ifdef PHYSICS
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->applyForcePolar(0,playerShip->thrust);
+		 Vector2D* vector = Vector2D::Polar(playerShip->displayHeading,playerShip->thrust);
+		 playerShip->applyForce(vector,state->timeElapsed);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->applyForcePolar(0,-playerShip->thrust);
+		 Vector2D* vector = Vector2D::Polar(playerShip->displayHeading,-playerShip->thrust);
+		 playerShip->applyForce(vector,state->timeElapsed);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))
 	 {
-		 playerShip->move(GameObject::TURN_LEFT);
+		 playerShip->rotate(-1);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_RIGHT))
 	 {
-		 playerShip->move(GameObject::TURN_RIGHT);
+		 playerShip->rotate(1);
 	 }
 #endif
 #endif

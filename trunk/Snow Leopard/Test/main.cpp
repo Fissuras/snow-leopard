@@ -15,6 +15,7 @@
 #include "AI_Shoot_DoNothing.h"
 #include "PulseCannon.h"
 #include "ShotgunCannon.h"
+#include "Vector2D.h"
 
 
 
@@ -58,7 +59,6 @@ int DisplayApplication::main(int argc,  char **argv)
 	g->weapons->push_back(new PulseCannon());
 	g->thrust = .08;
 
-	g->heading = 90;
 	WorldState *state = new WorldState();
 	state->insertObject(g,point(320,240));
 	state->insertObject(background,point(state->CoordinateSizeX / 2,state->CoordinateSizeY /2));
