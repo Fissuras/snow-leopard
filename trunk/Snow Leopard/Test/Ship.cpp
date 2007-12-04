@@ -30,13 +30,13 @@ bool Ship::move()
 bool Ship::move(AbsoluteDirection dir)
 {
 	if (dir == UP)
-		worldState->moveObject(this,location.offsetRect(0,-thrust));
+		worldState->moveObject(this,location.offsetRect(0,-speed));
 	if (dir == DOWN)
-		worldState->moveObject(this,location.offsetRect(0,thrust));
+		worldState->moveObject(this,location.offsetRect(0,speed));
 	if (dir == LEFT)
-		worldState->moveObject(this,location.offsetRect(-thrust,0));
+		worldState->moveObject(this,location.offsetRect(-speed,0));
 	if (dir == RIGHT)
-		worldState->moveObject(this,location.offsetRect(thrust,0));
+		worldState->moveObject(this,location.offsetRect(speed,0));
 
 	return true;
 }
@@ -44,19 +44,13 @@ bool Ship::move(AbsoluteDirection dir)
 bool Ship::move(RelativeDirection dir)
 {
 	if (dir == FORWARD)
-		worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),thrust));
+		worldState->moveObject(this,location.offsetPolar(heading,speed));
 	if (dir == BACK)
-		worldState->moveObject(this,location.offsetPolar(moveVector->getAngle(),-thrust));
+		worldState->moveObject(this,location.offsetPolar(heading,-speed));
 	if (dir == TURN_LEFT)
-	{
-		moveVector->setAngle(moveVector->getAngle() - 1);
-		displayHeading -=1;
-	}
+		heading -= 1;
 	if (dir == TURN_RIGHT)
-	{
-		moveVector->setAngle(moveVector->getAngle() + 1);
-		displayHeading +=1;
-	}
+		heading += 1;
 
 	return true;
 }
@@ -83,9 +77,8 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 bool Ship::registerWallCollision()
 {
 	//cancel accelerations
-	GameObject::accelVector->setX(0);
-	GameObject::accelVector->setY(0);
-	GameObject::moveVector->setX(0);
-	GameObject::moveVector->setY(0);
+	accelHeading = 0;
+	accelMagnitude = 0;
+	speed = 0;
 	return true;
 }

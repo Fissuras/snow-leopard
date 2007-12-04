@@ -3,25 +3,23 @@
 #include "WorldState.h"
 #include "Weapon.h"
 #include "SevnaMark40.h"
-#include "Vector2D.h"
 
 class ShotgunCannon:public Weapon
 {
 	public:
-		static const int coolDownInterval = 1;
-		void fire(WorldState* state, point location, Vector2D* vector, CL_ResourceManager* resources)
+		static const int coolDownInterval = 600;
+		void fire(WorldState* state, point location, double heading, double speed, CL_ResourceManager* resources)
 		{
 			for (int i=0;i<5;i++)
 			{
 			SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
 			p->resourceName = "SevnaMark40";
-			p->moveVector->setAngle(vector->getAngle() - 24 + 6*i);
-			p->moveVector->setLength(vector->getLength() + .2);
-			state->insertObject(p,location.offsetPolar(vector->getAngle(),2));
+			p->heading = heading - 24 + 6*i;
+			p->speed = speed + .5;
+			state->insertObject(p,location.offsetPolar(heading,2));
 			}
 			
 			Weapon::timeLastFired = state->time;
-			delete vector;
 		};
 		ShotgunCannon::ShotgunCannon()
 		{

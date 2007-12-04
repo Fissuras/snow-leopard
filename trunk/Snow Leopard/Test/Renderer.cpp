@@ -54,7 +54,7 @@ bool Renderer::Render()
 			sprite = obj->sprite;
 		}
 		sprite->set_scale(zoomLevel,zoomLevel);
-		sprite->set_angle(obj->displayHeading);
+		sprite->set_angle(obj->heading);
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,
 			(zoomLevel * obj->location.y - screenStartY),gc);
 	}

@@ -4,13 +4,12 @@
 
 
 class WorldState;
-class Vector2D;
 
 class Weapon
 {
 	public:
 		const int coolDownInterval;
-		virtual void fire(WorldState* state, point location, Vector2D* vector, CL_ResourceManager* resources)
+		virtual void fire(WorldState* state, point location, double heading, double speed, CL_ResourceManager* resources)
 		{};
 		unsigned int timeLastFired;
 		Weapon::Weapon(int interval = 600) : coolDownInterval(interval)

@@ -3,21 +3,19 @@
 #include "WorldState.h"
 #include "Weapon.h"
 #include "SevnaMark40.h"
-#include "Vector2D.h"
 
 class PulseCannon:public Weapon
 {
 	public:
-		static const int coolDownInterval = 1;
-		void fire(WorldState* state, point location, Vector2D* vector, CL_ResourceManager* resources)
+		static const int coolDownInterval = 600;
+		void fire(WorldState* state, point location, double heading, double speed, CL_ResourceManager* resources)
 		{
 			SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
 			p->resourceName = "SevnaMark40";
-			vector->setLength(vector->getLength() + 2);
-			p->moveVector = vector;
-			state->insertObject(p,location.offsetPolar(p->moveVector->getAngle(),2));
+			p->heading = heading;
+			p->speed = speed + .5;
+			state->insertObject(p,location.offsetPolar(heading,2));
 			Weapon::timeLastFired = state->time;
-			delete vector;
 		};
 		PulseCannon::PulseCannon()
 		{
