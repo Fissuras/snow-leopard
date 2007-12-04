@@ -9,7 +9,7 @@
 class WorldState; //need to forward declare class to avoid crazy recursion
 class CL_Sprite;
 class CL_ResourceManager;
-class Vector2D;
+
 
  class GameObject{
 
@@ -31,17 +31,17 @@ public:
 	bool GameObject::loadSprite();
 	GameObject::~GameObject();
 	CL_ResourceManager* resources;
-	void applyForce(Vector2D* vector, double time);
-	void rotate(double angle);
+	void applyForceRect(double x, double y);
+	void applyForcePolar(double heading, double magnitude);
 
 	std::string displayName; 
 	bool isPlayer; //right now only one ship can be a player
 	
 	//polar coordinates
-	Vector2D* moveVector;
-	Vector2D* accelVector;
-	double displayHeading;
+	double heading;
 	double mass;
+	double accelHeading;
+	double accelMagnitude;
 	double thrust; //force the object can apply on itself. thrust / mass = acceleration
 	int faction;
 	int displaySize;
@@ -52,6 +52,7 @@ public:
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	int ID;
 	WorldState* worldState;
+	double speed;
 	bool usesPhysics;
 
  protected:
