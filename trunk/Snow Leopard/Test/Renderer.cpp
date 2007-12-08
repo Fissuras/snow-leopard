@@ -48,11 +48,6 @@ bool Renderer::Render()
 	{
 		GameObject* obj = *itr;
 		CL_Sprite* sprite = obj->sprite;
-		if (sprite==NULL)
-		{
-			obj->loadSprite();
-			sprite = obj->sprite;
-		}
 		sprite->set_scale(zoomLevel,zoomLevel);
 		sprite->set_angle(obj->displayHeading);
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,

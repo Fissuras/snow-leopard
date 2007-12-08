@@ -21,18 +21,16 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	resourceName = resName;
 	resources = res;
 	mass = 1;
-	sprite = NULL;
 	isPlayer = false;
 	usesPhysics = false;
-}
 
-
-bool GameObject::loadSprite() //temporary test. This should happed in the constructor
-{
 	sprite = new CL_Sprite(resourceName,resources);
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
-	return true;
+
+	collisionOutline = new CL_CollisionOutline((sprite->get_frame_surface(0).get_pixeldata()));
+	collisionOutline->set_alignment(origin_center);
+	collisionOutline->set_rotation_hotspot(origin_center);
 }
 int GameObject::getID()
 {
@@ -47,8 +45,9 @@ bool GameObject::doActions()
 	return true;
 }
 
-bool GameObject::registerCollision(GameObjectList collisions)
+bool GameObject::registerCollision(GameObject* collidedObject)
 {
+	std::cout << "Collided with " << collidedObject->displayName << "\n";
 	return true;
 }
 
@@ -63,11 +62,11 @@ bool GameObject::processMovementPhysics()
 	speed = sqrt((newX)*(newX) + (newY)*(newY));
 	heading = (180 * atan2(newY,newX)) / 3.14159;
 
-	std::cout << this->displayName << "Physics Update: \n";
+	/*std::cout << this->displayName << "Physics Update: \n";
 	std::cout << "Velocity Heading: " << this->heading << "\n";
 	std::cout << "Speed: " << this->speed << "\n";
 	std::cout << "AccelHeading: " << this->accelHeading << "\n";
-	std::cout << "AccelMagnitude: " << this->accelMagnitude << "\n\n";
+	std::cout << "AccelMagnitude: " << this->accelMagnitude << "\n\n";*/
 
 	worldState->moveObject(this,location.offsetPolar(heading,speed * worldState->timeElapsed));
 	
@@ -79,6 +78,14 @@ bool GameObject::processMovementPhysics()
 
 bool GameObject::registerWallCollision()
 {
+	std::cout << "Collided with wall";
+	return true;
+}
+
+bool GameObject::rotate(double angle)
+{
+	displayHeading += angle;
+	collisionOutline->rotate(angle);
 	return true;
 }
 

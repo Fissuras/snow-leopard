@@ -288,6 +288,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Factions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\GameLogic.h"
 				>
 			</File>

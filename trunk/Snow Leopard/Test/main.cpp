@@ -57,10 +57,13 @@ int DisplayApplication::main(int argc,  char **argv)
 	
 	std::cout << "Now Debugging...";
 
-	Ship *g = new Ship("Starfury",resources);
+	Ship* g = new Ship("Starfury",resources);
+	g->displayName = "Me";
+	
 	GameObject* background = new NonInteractiveBackground("background",resources);
-	//GameObject *f = new Starfury("Starfury",resources);
-	//f->speed = 0;
+	Ship* f = new Ship("Starfury",resources);
+	f->displayName = "The Other Guy";
+
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
 	g->weapons->push_back(new PulseCannon());
@@ -69,6 +72,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	g->heading = 90;
 	WorldState *state = new WorldState();
 	state->insertObject(g,point(320,240));
+	state->insertObject(f,point(200,200));
 	state->insertObject(background,point(state->CoordinateSizeX / 2,state->CoordinateSizeY /2));
 	//state->insertObject(f,point(200,100));
 

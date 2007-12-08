@@ -1,5 +1,9 @@
 #include "WorldState.h"
 #include "GameObject.h"
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
 
 //need to have a method that returns only what locations of objects changed during the last step,
 //so the openGL renderer can translate efficiently
@@ -43,6 +47,7 @@ bool WorldState::insertObject(GameObject* gameObject, point p)
 	gameObject->location = p;
 	allObjectList->push_front(gameObject);
 	gameObject->worldState = this;
+	gameObject->collisionOutline->set_translation(p.x,p.y);
 	return true;
 }
 
@@ -64,6 +69,28 @@ bool WorldState::moveObject(GameObject* gameObject, point p)
 		return false;
 	}
 
+	//test for and report collisions
+	//currently tests against all objects (does not scale well)
+	//update with more sophisticated filtering in the future
+
+	GameObjectIter itr;
+	if (gameObject->usesPhysics)
+	{
+		for (itr = allObjectList->begin();itr != allObjectList->end(); itr++)
+		{
+			if ((*itr)->usesPhysics)
+			{
+				if ((*itr)->collisionOutline->collide(*(gameObject->collisionOutline)))
+				{
+					(*itr)->registerCollision(gameObject);
+					gameObject->registerCollision(*itr);
+				}
+			}
+
+		}
+	}
+
+
 	GameObjectList* currentList = getListFromPoint(gameObject->location);
 		GameObjectList* newList = getListFromPoint(p);
 		gameObject->location=p;
@@ -71,6 +98,8 @@ bool WorldState::moveObject(GameObject* gameObject, point p)
 			return true;
 		newList->push_front(gameObject);
 		currentList->remove(gameObject);
+
+		gameObject->collisionOutline->set_translation(p.x,p.y);
 		return true;
 
 }
