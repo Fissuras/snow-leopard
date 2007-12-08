@@ -47,7 +47,9 @@ bool GameObject::doActions()
 
 bool GameObject::registerCollision(GameObject* collidedObject)
 {
-	std::cout << "Collided with " << collidedObject->displayName << "\n";
+	std::cout << displayName <<  " Collided with " << collidedObject->displayName << "\n";
+	std::cout << "MyPosition: " << collisionOutline->get_translation()<< "\n";
+	std::cout << "TheirPosition: " << collidedObject->collisionOutline->get_translation()<< "\n";
 	return true;
 }
 

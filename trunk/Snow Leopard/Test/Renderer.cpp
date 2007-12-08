@@ -22,6 +22,8 @@ Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* 
 	screenStartY = 0.0;
 	screenWidth = window->get_width();
 	screenHeight = window->get_height();
+	font = new CL_Font("Times New Roman",30);
+	font->set_color(255,0,0);
 }
 bool Renderer::setCamera(GameObject* obj)
 {
@@ -53,6 +55,11 @@ bool Renderer::Render()
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,
 			(zoomLevel * obj->location.y - screenStartY),gc);
 	}
+
+	itr = objects->begin();
+	font->draw(1,1,(*(itr++))->location.toString());
+	font->draw(1,50,(*(itr++))->location.toString());
+	font->draw(1,100,(*(itr))->location.toString());
 	
 	return true;
 
