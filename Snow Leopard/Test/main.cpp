@@ -15,6 +15,7 @@
 #include "AI_Shoot_DoNothing.h"
 #include "PulseCannon.h"
 #include "ShotgunCannon.h"
+#include "Definitions.h"
 
 
 
@@ -46,8 +47,15 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_InputDevice keyboard = ic->get_keyboard();
 	CL_InputDevice mouse = ic->get_mouse();
 
-
+	CL_ConsoleWindow* console = new CL_ConsoleWindow("Debugging");
 	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
+
+#ifdef DEBUG
+	console->redirect_stdio();
+#endif
+	
+	
+	std::cout << "Now Debugging...";
 
 	Ship *g = new Ship("Starfury",resources);
 	GameObject* background = new NonInteractiveBackground("background",resources);
@@ -56,7 +64,7 @@ int DisplayApplication::main(int argc,  char **argv)
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
 	g->weapons->push_back(new PulseCannon());
-	g->thrust = .08;
+	g->thrust = .005;
 
 	g->heading = 90;
 	WorldState *state = new WorldState();
@@ -73,7 +81,6 @@ int DisplayApplication::main(int argc,  char **argv)
 
     CL_FramerateCounter* framerate = new CL_FramerateCounter();
 	framerate->set_fps_limit(60);
-	//renderer->LoadSprites(state->getAllGameObjects()); currently sprites load when the corresponding object is inserted into the world
 	
 	while (true)
 	{
