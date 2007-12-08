@@ -39,6 +39,7 @@ public:
 	
 	//polar coordinates
 	double heading;
+	double displayHeading;
 	double mass;
 	double accelHeading;
 	double accelMagnitude;

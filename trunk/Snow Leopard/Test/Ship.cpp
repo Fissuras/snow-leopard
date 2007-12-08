@@ -77,7 +77,6 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 bool Ship::registerWallCollision()
 {
 	//cancel accelerations
-	accelHeading = 0;
 	accelMagnitude = 0;
 	speed = 0;
 	return true;

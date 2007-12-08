@@ -48,7 +48,7 @@ void GameLogic::handleInput()
 		 Weapon* wpn =  playerShip->weapons->at(0);
 		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
 			playerShip->weapons->at(0)->fire(state,playerShip->location,
-			playerShip->heading,playerShip->speed,playerShip->resources);
+			playerShip->displayHeading,playerShip->speed,playerShip->resources);
 	 }
 
 
@@ -99,22 +99,22 @@ void GameLogic::handleInput()
 #ifdef PHYSICS
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->applyForcePolar(0,playerShip->thrust);
+		 playerShip->applyForcePolar(playerShip->displayHeading,playerShip->thrust);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->applyForcePolar(0,-playerShip->thrust);
+		 playerShip->applyForcePolar(playerShip->displayHeading,-playerShip->thrust);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))
 	 {
-		 playerShip->move(GameObject::TURN_LEFT);
+		 playerShip->displayHeading -= 1;
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_RIGHT))
 	 {
-		 playerShip->move(GameObject::TURN_RIGHT);
+		 playerShip->displayHeading += 1;
 	 }
 #endif
 #endif

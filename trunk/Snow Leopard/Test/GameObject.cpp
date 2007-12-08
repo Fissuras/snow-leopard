@@ -9,6 +9,7 @@ int GameObject::IDCount = 0;
 GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 {
 	displayName = "";
+	displayHeading = 0.0;
 	faction = 0;
 	ID = getID();
 	speed=0.0;
@@ -51,9 +52,27 @@ bool GameObject::registerCollision(GameObjectList collisions)
 	return true;
 }
 
-bool GameObject::processMovementPhysics() //changes object's location as a side effect, but does not update to worldstate
+bool GameObject::processMovementPhysics()
 {
+	//new velocity components
+	double newX = .5 * accelMagnitude * cos(accelHeading * 3.14159/180) * worldState->timeElapsed
+		+ speed * cos(heading * 3.14159/180);
+	double newY = .5 * accelMagnitude * sin(accelHeading *3.14159/180) * worldState->timeElapsed
+		+ speed * sin(heading * 3.14159/180); 
+
+	speed = sqrt((newX)*(newX) + (newY)*(newY));
+	heading = (180 * atan2(newY,newX)) / 3.14159;
+
+	std::cout << this->displayName << "Physics Update: \n";
+	std::cout << "Velocity Heading: " << this->heading << "\n";
+	std::cout << "Speed: " << this->speed << "\n";
+	std::cout << "AccelHeading: " << this->accelHeading << "\n";
+	std::cout << "AccelMagnitude: " << this->accelMagnitude << "\n\n";
+
 	worldState->moveObject(this,location.offsetPolar(heading,speed * worldState->timeElapsed));
+	
+	accelHeading = 0; //should allow applied forces to have durations. Until then, everything gets re-composited every tick
+	accelMagnitude = 0;
 	return true;
 
 }
@@ -63,6 +82,7 @@ bool GameObject::registerWallCollision()
 	return true;
 }
 
+//cleanup and adapt polar to use Rect's code
 void GameObject::applyForceRect(double x,double y)
 {
 	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
@@ -70,28 +90,15 @@ void GameObject::applyForceRect(double x,double y)
 	//should probably be using vectors everywhere
 	double newX = oldX + x;
 	double newY = oldY + y;
-	speed = .05 * (speed + sqrt(abs(newX * newX + newY + newY)));
 	accelMagnitude = sqrt(newX*newX + newY*newY);
 	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
 }
 
 void GameObject::applyForcePolar(double heading, double magnitude)
 {
-	if (magnitude<0)
-	{
-		heading += 180;
-		magnitude = abs(magnitude); 
-	}
-
-	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);
-	double oldY = accelMagnitude * sin(accelHeading * 3.14159/180);
-	//should probably be using vectors everywhere
-	double newX = oldX + magnitude * cos(heading * 3.14159/180);
-	double newY = oldY + magnitude * sin(heading * 3.14159/180);
-	speed = .05 * (speed + sqrt(newX * newX + newY + newY));
-	accelMagnitude = sqrt(newX*newX + newY*newY);
-	accelHeading = (180 * atan2(newY,newX)) / 3.14159;
-
+	double X = magnitude * cos(heading * 3.14159/180);
+	double Y = magnitude * sin(heading * 3.14159/180);
+	applyForceRect(X,Y);
 }
 
 GameObject::~GameObject()
