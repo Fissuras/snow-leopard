@@ -10,6 +10,7 @@ class GameObject;
 class CL_DisplayWindow;
 class CL_GraphicContext;
 class CL_ResourceManager;
+class CL_Font;
 
 class Renderer{
 public:
@@ -28,6 +29,7 @@ private:
 	CL_ResourceManager* resources;
 	double screenStartX;
 	double screenStartY;
+	CL_Font* font;
 
 };
 

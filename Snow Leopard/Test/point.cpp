@@ -1,6 +1,9 @@
 #include "point.h"
 #include "boost/lexical_cast.hpp"
 
+int nround(double a) {
+return int(a + 0.5);
+}
 
 point::point(double i, double j)
 {
@@ -29,5 +32,5 @@ point point::offsetPolar(double heading, double distance)
 
 std::string point::toString()
 {
-	return boost::lexical_cast<std::string>((x)) + "," + boost::lexical_cast<std::string>(y);
+	return boost::lexical_cast<std::string>((nround(x))) + "," + boost::lexical_cast<std::string>(nround(y));
 }
