@@ -8,10 +8,6 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
-//todo: use graphicContext features for translation, scaling, etc. instead of the naive SDL view
-//will allow direct use of world coordinates instead of screen pixel coordinates, which would be pretty awesome
-
-
 Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* state_, CL_ResourceManager* res)
 {
 	gc = gc_;
@@ -54,6 +50,8 @@ bool Renderer::Render()
 		sprite->set_angle(obj->displayHeading);
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,
 			(zoomLevel * obj->location.y - screenStartY),gc);
+		obj->collisionOutline->draw_smallest_enclosing_disc(zoomLevel * obj->location.x -screenStartX,
+			(zoomLevel * obj->location.y - screenStartY),CL_Color(255,255,255,128),gc);
 	}
 
 	itr = objects->begin();

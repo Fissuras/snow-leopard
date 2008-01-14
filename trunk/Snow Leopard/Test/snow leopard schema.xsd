@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="WorldState">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Ship"/>
+      </xs:sequence>
+      <xs:attribute name="description" use="optional" type="xs:NCName"/>
+      <xs:attribute name="nextID" use="required" type="xs:integer"/>
+      <xs:attribute name="time" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Ship">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Hull"/>
+        <xs:element ref="Socket"/>
+      </xs:sequence>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="name" use="optional" type="xs:NCName"/>
+      <xs:attribute name="xPosition" use="optional" type="xs:integer"/>
+      <xs:attribute name="yPosition" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Hull">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Prefix"/>
+      </xs:sequence>
+      <xs:attribute name="HP" use="optional" type="xs:integer"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="optional"/>
+      <xs:attribute name="pictureSource" use="optional" type="xs:NCName"/>
+      <xs:attribute name="scale" use="optional" type="xs:integer" default="20"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Socket">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Item"/>
+      </xs:sequence>
+      <xs:attribute name="energy" use="required" type="xs:integer"/>
+      <xs:attribute name="mass" use="required" type="xs:integer"/>
+      <xs:attribute name="type" use="required" type="xs:NCName"/>
+      <xs:attribute name="xPosition" use="required" type="xs:integer"/>
+      <xs:attribute name="yPosition" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Item">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="Prefix"/>
+      </xs:sequence>
+      <xs:attribute name="amount" use="optional" type="xs:integer" default="1"/>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="optional"/>
+      <xs:attribute name="type" use="optional" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Prefix">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:NCName"/>
+      <xs:attribute name="name" use="optional" type="xs:NCName"/>
+      <xs:attribute name="order" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -24,11 +24,11 @@ GameObject::GameObject(std::string resName,CL_ResourceManager* res)
 	isPlayer = false;
 	usesPhysics = false;
 
-	sprite = new CL_Sprite(resourceName,resources);
+	sprite = new CL_Sprite(resourceName + "/sprite",resources);
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
 
-	collisionOutline = new CL_CollisionOutline((sprite->get_frame_surface(0).get_pixeldata()));
+	collisionOutline = new CL_CollisionOutline((sprite->get_frame_pixeldata(0)));
 	collisionOutline->set_alignment(origin_center);
 	collisionOutline->set_rotation_hotspot(origin_center);
 }

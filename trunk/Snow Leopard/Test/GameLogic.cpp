@@ -109,12 +109,12 @@ void GameLogic::handleInput()
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))
 	 {
-		 playerShip->rotate(-1);
+		 playerShip->rotate(-2);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_RIGHT))
 	 {
-		 playerShip->rotate(1);
+		 playerShip->rotate(2);
 	 }
 #endif
 #endif
