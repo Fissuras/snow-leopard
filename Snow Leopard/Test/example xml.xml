@@ -1,0 +1,14 @@
+<?xml version="1.0"?><WorldState description="ftfghfgrf" nextID="56" time="4456346" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:///d:/Desktop/generated%20schema.xml.xsd">
+<Ship id="342" name="J" xPosition="36" yPosition="456">
+<Hull HP="150" id="SH2" name="Solarian Hull MK2" pictureSource="something.png" scale="20">
+<Prefix id="hull_battered" name="Battered" order="1"></Prefix> 
+</Hull>
+<Socket energy="50" mass="200" type="triangle" xPosition="50" yPosition="0">
+<Item amount="1" id="SPT" name="Simple Photon Thruster" type="Thruster">
+<Prefix id="thruster_overvolted" name="Overvolted" order="1"></Prefix>
+<Prefix id="Adze"/> <!--specifies the company that made the product. Other XML files will give the rest of the info -->
+</Item>
+<Item amount="53" id="SPT_turbo" name="Photon Collectors" type="Thruster_turbo"></Item>
+</Socket>
+</Ship>
+</WorldState>

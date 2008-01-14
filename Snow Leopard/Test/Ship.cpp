@@ -4,6 +4,10 @@
 #include "PulseCannon.h"
 #include "ShotgunCannon.h"
 #include "Definitions.h"
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
 
 
 bool Ship::doActions()
@@ -72,6 +76,10 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 	AI_Shooting = &AI_Shoot_DoNothing;
 	weapons = new WeaponList();
 	GameObject::usesPhysics = true;
+	CL_Resource thrust_resource = resources->get_resource(resourceName + "/thrust");
+	CL_ResourceData_Float thrust_data(thrust_resource);
+	thrust = thrust_data.value;
+	std::cout << thrust;
 }
 	
 bool Ship::registerWallCollision()

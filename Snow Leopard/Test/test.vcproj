@@ -342,12 +342,36 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\resources.xml"
+				RelativePath=".\example xml.xml"
 				>
 			</File>
 			<File
 				RelativePath=".\small.ico"
 				>
+			</File>
+			<File
+				RelativePath="..\..\..\snow leopard schema.xsd"
+				>
+			</File>
+			<File
+				RelativePath=".\snow leopard schema.xsd"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCXMLDataGeneratorTool"
+						Output="$(InputName1).dll"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCXMLDataGeneratorTool"
+						Output="$(InputName1).dll"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test.ico"
@@ -358,6 +382,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\brokenthings.txt"
+			>
+		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
