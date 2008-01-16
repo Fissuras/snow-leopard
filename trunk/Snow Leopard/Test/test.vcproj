@@ -350,8 +350,12 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\snow leopard base schema.xsd"
+				RelativePath=".\snow leopard schema.xsd"
 				>
+				<File
+					RelativePath=".\snow leopard schema.h"
+					>
+				</File>
 			</File>
 			<File
 				RelativePath=".\test.ico"
