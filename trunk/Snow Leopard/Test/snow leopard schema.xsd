@@ -1,67 +1,290 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
-  <xs:element name="WorldState">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Ship"/>
-      </xs:sequence>
-      <xs:attribute name="description" use="optional" type="xs:NCName"/>
-      <xs:attribute name="nextID" use="required" type="xs:integer"/>
-      <xs:attribute name="time" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Ship">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Hull"/>
-        <xs:element ref="Socket"/>
-      </xs:sequence>
-      <xs:attribute name="id" use="required" type="xs:integer"/>
-      <xs:attribute name="name" use="optional" type="xs:NCName"/>
-      <xs:attribute name="xPosition" use="optional" type="xs:integer"/>
-      <xs:attribute name="yPosition" use="optional" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Hull">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element ref="Prefix"/>
-      </xs:sequence>
-      <xs:attribute name="HP" use="optional" type="xs:integer"/>
-      <xs:attribute name="id" use="required" type="xs:NCName"/>
-      <xs:attribute name="name" use="optional"/>
-      <xs:attribute name="pictureSource" use="optional" type="xs:NCName"/>
-      <xs:attribute name="scale" use="optional" type="xs:integer" default="20"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Socket">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="Item"/>
-      </xs:sequence>
-      <xs:attribute name="energy" use="required" type="xs:integer"/>
-      <xs:attribute name="mass" use="required" type="xs:integer"/>
-      <xs:attribute name="type" use="required" type="xs:NCName"/>
-      <xs:attribute name="xPosition" use="required" type="xs:integer"/>
-      <xs:attribute name="yPosition" use="required" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Item">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element minOccurs="0" ref="Prefix"/>
-      </xs:sequence>
-      <xs:attribute name="amount" use="optional" type="xs:integer" default="1"/>
-      <xs:attribute name="id" use="required" type="xs:NCName"/>
-      <xs:attribute name="name" use="optional"/>
-      <xs:attribute name="type" use="optional" type="xs:NCName"/>
-    </xs:complexType>
-  </xs:element>
-  <xs:element name="Prefix">
-    <xs:complexType>
-      <xs:attribute name="id" use="required" type="xs:NCName"/>
-      <xs:attribute name="name" use="optional" type="xs:NCName"/>
-      <xs:attribute name="order" use="optional" type="xs:integer"/>
-    </xs:complexType>
-  </xs:element>
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://code.google.com/p/snow-leopard/" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://code.google.com/p/snow-leopard/">
+
+	<xs:attributeGroup name="std">
+		<xs:attribute name="description" type="xs:string"/>
+		<xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="name" type="xs:string"/>
+	</xs:attributeGroup>
+
+	<xs:attribute name="time" type="xs:integer"/>
+
+	<xs:attributeGroup name="position">
+		<xs:attribute name="xPosition" type="xs:integer"/>
+		<xs:attribute name="yPosition" type="xs:integer"/>
+	</xs:attributeGroup>
+
+	<xs:attributeGroup name="capacitors">
+				<xs:attribute name="capacitor_type" type="Capacitor_Type"/>
+			<xs:attribute name="capacitor_amount" type="xs:integer"/>
+	</xs:attributeGroup>
+		<xs:attributeGroup name="missile_ammo">
+				<xs:attribute name="missile_ammo_type" type="Missile_Ammo_Type"/>
+			<xs:attribute name="missile_ammo_amount" type="xs:integer"/>
+	</xs:attributeGroup>
+			<xs:attributeGroup name="gun_ammo">
+				<xs:attribute name="gun_ammo_type" type="Gun_Ammo_Type"/>
+			<xs:attribute name="gun_ammo_amount" type="xs:integer"/>
+	</xs:attributeGroup>
+
+	<xs:attributeGroup name="image">
+		<xs:attribute name="pictureSource" type="xs:string"/>
+		<xs:attribute name="scale" type="xs:integer" default="20"/>
+	</xs:attributeGroup>
+
+	<xs:attribute name="recharge_time" type="xs:integer"/>
+	<xs:attributeGroup name="socket">
+	<xs:attribute name="mass" type="Socket_Mass"/>
+	<xs:attribute name="energy" type="Socket_Energy"/>
+	<xs:attribute name="type" type="Socket_Type"/>
+	</xs:attributeGroup>
+
+	<xs:attributeGroup name="stdItem">
+		<xs:attribute name="mass" type="xs:integer"/>
+		<xs:attribute name="energy_drain" type="xs:integer"/>
+		<xs:attribute name="reliability" type="xs:integer"/>
+		<xs:attribute name="HP" type="xs:integer"/>
+		<xs:attribute name="socket_type" type="xs:string"/>
+	</xs:attributeGroup>
+
+	<xs:element name="WorldState">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Entity"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="std"/>
+			<xs:attribute ref="time"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Entity">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element maxOccurs="1" ref="BaseImage"/>
+				<xs:element ref="Socket"/>
+			</xs:sequence>
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="position"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="BaseImage">
+		<xs:complexType>
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Socket">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element maxOccurs="1" ref="Beam_Weapon"/>
+				<xs:element maxOccurs="1" ref="Gun_Weapon"/>
+				<xs:element maxOccurs="1" ref="Missile_Weapon"/>
+				<xs:element maxOccurs="1" ref="Device"/>
+				<xs:element maxOccurs="1" ref="Engine"/>
+				<xs:element maxOccurs="1" ref="Powerplant"/>
+			</xs:choice>
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="position"/>
+			<xs:attributeGroup ref="socket"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Beam_Weapon">
+		<xs:complexType>
+
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+			<xs:attributeGroup ref="capacitors"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Gun_Weapon">
+		<xs:complexType>
+
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+			<xs:attribute name="subtype" type="Gun_Type"/>
+			<xs:attribute name="caliber" type="Gun_Caliber"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Missile_Weapon">
+		<xs:complexType>
+
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+			<xs:attribute name="missile_size" type="Missile_Size"/>
+			<xs:attribute name="multishot" type="Missile_Shot_Number"/>
+			<xs:attribute name="ammo_type" type="Missile_Ammo_Type"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Device">
+		<xs:complexType>
+
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+
+			<xs:attribute name="subtype" type="Device_Type"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Engine">
+		<xs:complexType>
+
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+
+			<xs:attribute name="subtype" type="Engine_Type"/>
+
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Powerplant">
+		<xs:complexType>
+			<xs:attributeGroup ref="std"/>
+			<xs:attributeGroup ref="image"/>
+			<xs:attribute name="subtype" type="Power_Type"/>
+			<xs:attributeGroup ref="capacitors"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="General_Prefix">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Overvolted"/>
+			<xs:enumeration value="High Quality"/>
+			<xs:enumeration value="Reliable"/>
+			<xs:enumeration value="Parallel"/>
+			<xs:enumeration value="Cheap"/>
+			<xs:enumeration value="Unreliable"/>
+			<xs:enumeration value="Weak"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Size_Prefix">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Compact"/>
+			<xs:enumeration value="Miniturized"/>
+			<xs:enumeration value="Micro"/>
+			<xs:enumeration value="Nano"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Engine_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ion Thruster"/>
+			<xs:enumeration value="Photon Thruster"/>
+			<xs:enumeration value="Field Effect Drive"/>
+			<xs:enumeration value="Quantum Effect Drive"/>
+			<xs:enumeration value="Reactionless Drive"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Power_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Nuclear fission plant"/>
+			<xs:enumeration value="Nuclear fusion plant"/>
+			<xs:enumeration value="Partial Antimatter Annihilation Plant"/>
+			<xs:enumeration value="Complete Antimatter Annihilation Plant"/>
+			<xs:enumeration value="Zero Point Energy Extractor"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Device_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ECM"/>
+			<xs:enumeration value="ECCM"/>
+			<xs:enumeration value="Gravity Manipulator"/>
+			<xs:enumeration value="Gravitational Field Stabilizer"/>
+			<xs:enumeration value="Salvage Beam"/>
+			<xs:enumeration value="Repair Bots"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Gun_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Machine Gun"/>
+			<xs:enumeration value="Gauss Gun"/>
+			<xs:enumeration value="Wide-angle gun"/>
+			<xs:enumeration value="Machine wide-angle gun"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Missile_Ammo_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Incendiary Missile"/>
+			<xs:enumeration value="Bio-Missile"/>
+			<xs:enumeration value="Nanobot Missile"/>
+			<xs:enumeration value="Piercing Missile"/>
+			<xs:enumeration value="Towing Missile "/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Gun_Caliber">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="5"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Missile_Size">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="50"/>
+			<xs:enumeration value="100"/>
+			<xs:enumeration value="200"/>
+			<xs:enumeration value="500"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+		<xs:simpleType name="Missile_Shot_Number">
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="5"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Gun_Ammo_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Lead rounds"/>
+			<xs:enumeration value="Depleted uranium rounds"/>
+			<xs:enumeration value="Diamond rounds"/>
+			<xs:enumeration value="Techtronium alloy rounds"/>
+			<xs:enumeration value="Bio-warfare rounds"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Capacitor_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Ultracapacitor"/>
+			<xs:enumeration value="Hypercapacitor"/>
+			<xs:enumeration value="Nanocapacitor"/>
+			<xs:enumeration value="Picocapacitor"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Socket_Mass"><!-- mega-->
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="5"/>
+			<xs:enumeration value="10"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="50"/>
+			<xs:enumeration value="100"/>
+			<xs:enumeration value="200"/>
+			<xs:enumeration value="500"/>
+			<xs:enumeration value="1000"/>
+		</xs:restriction>
+	</xs:simpleType>
+		<xs:simpleType name="Socket_Type"><!-- mega-->
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Triangle"/>
+			<xs:enumeration value="Square"/>
+			<xs:enumeration value="Rectangle"/>
+			<xs:enumeration value="Octagon"/>
+			<xs:enumeration value="Shell"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="Socket_Energy"><!-- kilo-->
+		<xs:restriction base="xs:integer">
+			<xs:enumeration value="5"/>
+			<xs:enumeration value="20"/>
+			<xs:enumeration value="100"/>
+			<xs:enumeration value="500"/>
+			<xs:enumeration value="2000"/>
+			<xs:enumeration value="5000"/>
+			<xs:enumeration value="20000"/>
+			<xs:enumeration value="100000"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="Beam_Weapon_Type">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Laser"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

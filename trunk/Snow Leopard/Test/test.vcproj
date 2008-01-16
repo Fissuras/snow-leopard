@@ -350,28 +350,8 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\snow leopard schema.xsd"
+				RelativePath="..\..\..\snow leopard base schema.xsd"
 				>
-			</File>
-			<File
-				RelativePath=".\snow leopard schema.xsd"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCXMLDataGeneratorTool"
-						Output="$(InputName1).dll"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCXMLDataGeneratorTool"
-						Output="$(InputName1).dll"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\test.ico"
