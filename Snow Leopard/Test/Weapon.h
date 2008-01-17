@@ -1,11 +1,12 @@
 #ifndef WEAPON_H_
 #define WEAPON_H_
 #include "WorldState.h"
+#include "Component.h"
 
 
 class WorldState;
 
-class Weapon
+class Weapon:public Component
 {
 	public:
 		const int coolDownInterval;

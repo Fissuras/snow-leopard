@@ -74,12 +74,8 @@ Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(
 	renderPriority = ShipRenderPriority;
 	AI_Movement = &AI_Move_DoNothing;
 	AI_Shooting = &AI_Shoot_DoNothing;
-	weapons = new WeaponList();
+	components = new ComponentList();
 	GameObject::usesPhysics = true;
-	CL_Resource thrust_resource = resources->get_resource(resourceName + "/thrust");
-	CL_ResourceData_Float thrust_data(thrust_resource);
-	thrust = thrust_data.value;
-	std::cout << thrust;
 }
 	
 bool Ship::registerWallCollision()

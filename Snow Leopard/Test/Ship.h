@@ -18,7 +18,7 @@ class CL_ResourceManager;
 class Ship: public GameObject {
 
 public:
-	typedef std::vector<Weapon*> WeaponList;
+	typedef std::vector<Component*> ComponentList;
 	typedef std::vector <Weapon*>::iterator WeaponIter;
 	
 	bool doActions();
@@ -29,7 +29,7 @@ public:
 	bool move(AbsoluteDirection dir);
 	bool move(RelativeDirection dir);
 	virtual bool shoot();
-	WeaponList* weapons;
+	ComponentList* components;
 	void (*AI_Movement) (Ship* ship);
 	void (*AI_Shooting) (Ship* ship);
 
