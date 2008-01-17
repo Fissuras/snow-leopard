@@ -66,7 +66,7 @@ int DisplayApplication::main(int argc,  char **argv)
 
 	g->AI_Movement = &AI_Move_DoNothing;
 	g->AI_Shooting = &AI_Shoot_DoNothing;
-	g->weapons->push_back(new PulseCannon());
+	g->components->push_back(new PulseCannon());
 	g->thrust = .005;
 
 	g->heading = 90;

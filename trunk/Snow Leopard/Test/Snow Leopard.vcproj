@@ -3,8 +3,8 @@
 	ProjectType="Visual C++"
 	Version="9.00"
 	Name="Snow Leopard"
-	ProjectGUID="{5BEE51A4-91C0-4D39-B664-93A0F978C77E}"
-	RootNamespace="SnowLeopard"
+	ProjectGUID="{E28CCECD-ED68-45C3-8967-CCE0AEF8B8BC}"
+	RootNamespace="test"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -40,13 +40,11 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				UseUnicodeResponseFiles="false"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				EnableEnhancedInstructionSet="0"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -62,10 +60,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="LinearParticle.lib"
 				LinkIncremental="2"
+				IgnoreAllDefaultLibraries="false"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				TargetMachine="1"
+				Profile="true"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -94,7 +95,7 @@
 			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
 			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
-			CharacterSet="1"
+			CharacterSet="2"
 			WholeProgramOptimization="1"
 			>
 			<Tool
@@ -116,8 +117,8 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
-				RuntimeLibrary="2"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
@@ -134,10 +135,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="SDL.lib SDLMain.lib SDL_TTF.lib SDL_image.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
-				SubSystem="1"
+				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
 				TargetMachine="1"
@@ -182,15 +182,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GLRenderer.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\main.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\point.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Projectile.cpp"
 				>
 			</File>
 			<File
@@ -206,17 +206,91 @@
 				>
 			</File>
 			<Filter
-				Name="Ships"
+				Name="content"
 				>
-				<File
-					RelativePath=".\Starfury.cpp"
+				<Filter
+					Name="ships"
 					>
-				</File>
+				</Filter>
+				<Filter
+					Name="projectiles"
+					>
+					<File
+						RelativePath=".\SevnaMark40.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\SevnaMark40.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="scenery"
+					>
+					<File
+						RelativePath=".\NonInteractiveBackground.cpp"
+						>
+					</File>
+					<File
+						RelativePath=".\NonInteractiveBackground.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="particle effects"
+					>
+				</Filter>
+				<Filter
+					Name="Components"
+					>
+					<File
+						RelativePath=".\PulseCannon.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ShotgunCannon.h"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="AI Behaviors"
+					>
+					<Filter
+						Name="Movement"
+						>
+						<File
+							RelativePath=".\AI_Move_DoNothing.h"
+							>
+						</File>
+					</Filter>
+					<Filter
+						Name="Shooting"
+						>
+						<File
+							RelativePath=".\AI_Shoot_AsFastAsPossible.h"
+							>
+						</File>
+						<File
+							RelativePath=".\AI_Shoot_DoNothing.h"
+							>
+						</File>
+					</Filter>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
 			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Definitions.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Factions.h"
+				>
+			</File>
 			<File
 				RelativePath=".\GameLogic.h"
 				>
@@ -230,11 +304,19 @@
 				>
 			</File>
 			<File
-				RelativePath=".\GLRenderer.h"
+				RelativePath=".\Particle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ParticleEmitter.h"
 				>
 			</File>
 			<File
 				RelativePath=".\point.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Projectile.h"
 				>
 			</File>
 			<File
@@ -246,24 +328,63 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Weapon.h"
+				>
+			</File>
+			<File
 				RelativePath=".\WorldState.h"
 				>
 			</File>
-			<Filter
-				Name="Ships"
-				>
-				<File
-					RelativePath=".\Starfury.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath=".\example xml.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\resources.xml"
+				>
+			</File>
+			<File
+				RelativePath=".\Sample Hull.png"
+				>
+			</File>
+			<File
+				RelativePath=".\small.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\snow leopard schema.xsd"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\test.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\test.rc"
+				>
+			</File>
 		</Filter>
+		<File
+			RelativePath=".\brokenthings.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\ReadMe.txt"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

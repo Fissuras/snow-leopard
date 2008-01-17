@@ -30,6 +30,13 @@
   <xs:attributeGroup name="image">
     <xs:attribute name="pictureSource" type="xs:string"/>
     <xs:attribute name="scale" type="xs:integer" default="20"/>
+    <xs:attribute name="base_angle" type="xs:integer" default="0"/>
+    <xs:attribute name="translation_origin" type="Origin_Type"/>
+    <xs:attribute name="rotation_origin" type="Origin_Type"/>
+    <xs:attribute name="translation_offset_x" type="xs:integer"/>
+    <xs:attribute name="translation_offset_y" type="xs:integer"/>
+    <xs:attribute name="rotation_offset_x" type="xs:integer"/>
+    <xs:attribute name="rotation_offset_y" type="xs:integer"/>
   </xs:attributeGroup>
 
   <xs:attribute name="recharge_time" type="xs:integer"/>
@@ -204,6 +211,19 @@
       <xs:enumeration value="Nanobot Missile"/>
       <xs:enumeration value="Piercing Missile"/>
       <xs:enumeration value="Towing Missile "/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Origin_Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="top_left"/>
+      <xs:enumeration value="top_center"/>
+      <xs:enumeration value="top_right"/>
+      <xs:enumeration value="center_left"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="center_right"/>
+      <xs:enumeration value="bottom_left"/>
+      <xs:enumeration value="bottom_center"/>
+      <xs:enumeration value="bottom_right"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="Gun_Caliber">
