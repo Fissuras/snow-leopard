@@ -8,8 +8,6 @@
 #include <ClanLib/display.h>
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
-#include "snow leopard schema.h"
-
 
 bool Ship::doActions()
 {
