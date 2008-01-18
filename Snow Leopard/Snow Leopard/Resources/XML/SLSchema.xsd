@@ -2,56 +2,67 @@
 <xs:schema targetNamespace="http://code.google.com/p/snow-leopard/" elementFormDefault="qualified" attributeFormDefault="unqualified" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://code.google.com/p/snow-leopard/">
 
   <xs:attributeGroup name="std">
-    <xs:attribute name="description" type="xs:string"/>
+    <xs:attribute name="description" type="xs:string" default=""/>
     <xs:attribute name="id" type="xs:string"/>
-    <xs:attribute name="name" type="xs:string"/>
+    <xs:attribute name="name" type="xs:string" default="NoName"/>
   </xs:attributeGroup>
 
   
 
   <xs:attributeGroup name="position">
-    <xs:attribute name="xPosition" type="xs:integer"/>
-    <xs:attribute name="yPosition" type="xs:integer"/>
+    <xs:attribute name="xPosition" type="xs:double" default="0"/>
+    <xs:attribute name="yPosition" type="xs:double" default="0"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="capacitors">
     <xs:attribute name="capacitor_type" type="Capacitor_Type"/>
-    <xs:attribute name="capacitor_amount" type="xs:integer"/>
+    <xs:attribute name="capacitor_amount" type="xs:integer" default="0"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="missile_ammo">
-    <xs:attribute name="missile_ammo_type" type="Missile_Ammo_Type"/>
-    <xs:attribute name="missile_ammo_amount" type="xs:integer"/>
+    <xs:attribute name="missile_ammo_type" type="Missile_Ammo_Type" default="Incendiary Missile"/>
+    <xs:attribute name="missile_ammo_amount" type="xs:integer" default="0"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="gun_ammo">
-    <xs:attribute name="gun_ammo_type" type="Gun_Ammo_Type"/>
-    <xs:attribute name="gun_ammo_amount" type="xs:integer"/>
+    <xs:attribute name="gun_ammo_type" type="Gun_Ammo_Type" default="Lead Rounds"/>
+    <xs:attribute name="gun_ammo_amount" type="xs:integer" default="0"/>
   </xs:attributeGroup>
 
   <xs:attributeGroup name="image">
     <xs:attribute name="pictureSource" type="xs:string"/>
     <xs:attribute name="scale" type="xs:integer" default="20"/>
     <xs:attribute name="base_angle" type="xs:integer" default="0"/>
-    <xs:attribute name="translation_origin" type="Origin_Type"/>
-    <xs:attribute name="rotation_origin" type="Origin_Type"/>
-    <xs:attribute name="translation_offset_x" type="xs:integer"/>
-    <xs:attribute name="translation_offset_y" type="xs:integer"/>
-    <xs:attribute name="rotation_offset_x" type="xs:integer"/>
-    <xs:attribute name="rotation_offset_y" type="xs:integer"/>
+    <xs:attribute name="current_angle" type="xs:integer" default="0"/>
+    <xs:attribute name="translation_origin" type="Origin_Type" default="center"/>
+    <xs:attribute name="rotation_origin" type="Origin_Type" default="center"/>
+    <xs:attribute name="translation_offset_x" type="xs:integer" default="0"/>
+    <xs:attribute name="translation_offset_y" type="xs:integer" default="0"/>
+    <xs:attribute name="rotation_offset_x" type="xs:integer" default="0"/>
+    <xs:attribute name="rotation_offset_y" type="xs:integer" default="0"/>
   </xs:attributeGroup>
 
-  <xs:attribute name="recharge_time" type="xs:integer"/>
-  <xs:attributeGroup name="socket">
-    <xs:attribute name="mass" type="Socket_Mass"/>
-    <xs:attribute name="energy" type="Socket_Energy"/>
-    <xs:attribute name="type" type="Socket_Type"/>
+  <xs:attributeGroup name="movement">
+    <xs:attribute name="movementHeading" type="xs:integer" default="0"/>
+    <xs:attribute name ="movementSpeed" type ="xs:integer" default="0"/>
+    <xs:attribute name ="accelerationMagnitude" type="xs:integer" default="0"/>
+    <xs:attribute name="accelerationHeading" type="xs:integer" default="0"/>
   </xs:attributeGroup>
+
+  <xs:attribute name="recharge_time" type="xs:integer" default="200"/>
+  
+  <xs:attributeGroup name="socket">
+    <xs:attribute name="mass" type="Socket_Mass" default="20"/>
+    <xs:attribute name="energy" type="Socket_Energy" default="20"/>
+    <xs:attribute name="type" type="Socket_Type" default="Triangle"/>
+  </xs:attributeGroup>
+
+  <xs:attribute name="usesPhysics" type="xs:boolean" default="true"/>
 
   <xs:attributeGroup name="stdItem">
-    <xs:attribute name="mass" type="xs:integer"/>
-    <xs:attribute name="energy_drain" type="xs:integer"/>
-    <xs:attribute name="reliability" type="xs:integer"/>
-    <xs:attribute name="HP" type="xs:integer"/>
-    <xs:attribute name="socket_type" type="xs:string"/>
+    <xs:attribute name="mass" type="xs:double" default="20"/>
+    <xs:attribute name="energy_drain" type="xs:double" default="20"/>
+    <xs:attribute name="reliability" type="xs:double" default="100"/>
+    <xs:attribute name="HP" type="xs:double" default="100"/>
+    <xs:attribute name="socket_type" type="xs:string" default="Triangle"/>
   </xs:attributeGroup>
 
   <xs:element name="WorldState">
@@ -60,7 +71,9 @@
         <xs:element maxOccurs="unbounded" ref="Entity"/>
       </xs:sequence>
       <xs:attributeGroup ref="std"/>
-      <xs:attribute name="time" type="xs:integer"/>
+      <xs:attribute name="time" type="xs:integer" default="0"/>
+      <xs:attribute name="CoordinateSizeX" type="xs:double" default="1024"/>
+      <xs:attribute name="CoordinateSizeY" type="xs:double" default="768"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="Entity">
@@ -71,6 +84,10 @@
       </xs:sequence>
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="position"/>
+      <xs:attributeGroup ref="movement"/>
+      <xs:attribute name="isPlayer" type="xs:boolean" default="false"/>
+      <xs:attribute name="faction" type ="xs:string" default="none"/>
+      <xs:attribute ref="usesPhysics"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="BaseImage">
@@ -101,6 +118,7 @@
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
       <xs:attributeGroup ref="capacitors"/>
+      <xs:attributeGroup ref="movement"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="Gun_Weapon">
@@ -108,8 +126,10 @@
 
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
-      <xs:attribute name="subtype" type="Gun_Type"/>
-      <xs:attribute name="caliber" type="Gun_Caliber"/>
+      <xs:attribute name="subtype" type="Gun_Type" default="Machine Gun"/>
+      <xs:attribute name="caliber" type="Gun_Caliber" default="5"/>
+      <xs:attributeGroup ref="movement"/>
+      <xs:attributeGroup ref="gun_ammo"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="Missile_Weapon">
@@ -117,9 +137,10 @@
 
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
-      <xs:attribute name="missile_size" type="Missile_Size"/>
-      <xs:attribute name="multishot" type="Missile_Shot_Number"/>
-      <xs:attribute name="ammo_type" type="Missile_Ammo_Type"/>
+      <xs:attribute name="missile_size" type="Missile_Size" default="500"/>
+      <xs:attribute name="multishot" type="Missile_Shot_Number" default="1"/>
+      <xs:attributeGroup ref="missile_ammo"/>
+      <xs:attributeGroup ref="movement"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="Device">
@@ -127,8 +148,9 @@
 
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
+      <xs:attributeGroup ref="movement"/>
 
-      <xs:attribute name="subtype" type="Device_Type"/>
+      <xs:attribute name="subtype" type="Device_Type" use="required"/>
     </xs:complexType>
   </xs:element>
   <xs:element name="Engine">
@@ -136,8 +158,9 @@
 
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
+      <xs:attributeGroup ref="movement"/>
 
-      <xs:attribute name="subtype" type="Engine_Type"/>
+      <xs:attribute name="subtype" type="Engine_Type" default="Ion Thruster"/>
 
     </xs:complexType>
   </xs:element>
@@ -145,8 +168,9 @@
     <xs:complexType>
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="image"/>
-      <xs:attribute name="subtype" type="Power_Type"/>
+      <xs:attribute name="subtype" type="Power_Type" default="Nuclear Fission Plant"/>
       <xs:attributeGroup ref="capacitors"/>
+      <xs:attributeGroup ref="movement"/>
     </xs:complexType>
   </xs:element>
   <xs:simpleType name="General_Prefix">
@@ -179,8 +203,8 @@
   </xs:simpleType>
   <xs:simpleType name="Power_Type">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="Nuclear fission plant"/>
-      <xs:enumeration value="Nuclear fusion plant"/>
+      <xs:enumeration value="Nuclear Fission Plant"/>
+      <xs:enumeration value="Nuclear Fusion Plant"/>
       <xs:enumeration value="Partial Antimatter Annihilation Plant"/>
       <xs:enumeration value="Complete Antimatter Annihilation Plant"/>
       <xs:enumeration value="Zero Point Energy Extractor"/>
@@ -245,6 +269,7 @@
 
   <xs:simpleType name="Missile_Shot_Number">
     <xs:restriction base="xs:integer">
+      <xs:enumeration value="1"/>
       <xs:enumeration value="5"/>
       <xs:enumeration value="10"/>
       <xs:enumeration value="20"/>

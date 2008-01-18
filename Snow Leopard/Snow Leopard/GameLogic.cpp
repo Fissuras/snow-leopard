@@ -43,7 +43,6 @@ bool GameLogic::step()
 	ConstGameObjectIter itr;
 	for(itr = objects->begin();itr !=objects->end();)
 	{
-		int objectID = (*itr)->ID;
  		(*itr++)->doActions(); //if the object gets deleted during this, it's ok because the iterator is already incremented
 	}
 	return true;

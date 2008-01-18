@@ -1,2 +1,0 @@
-clanlib .80 
-codesynthesis xsd
