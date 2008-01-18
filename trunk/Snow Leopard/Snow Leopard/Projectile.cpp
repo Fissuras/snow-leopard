@@ -29,7 +29,7 @@ bool Projectile::move(AbsoluteDirection dir)
 	return true;
 }
 
-Projectile::Projectile(std::string resourceName,CL_ResourceManager* resources) : GameObject(resourceName,resources)
+Projectile::Projectile(xerces DOMNode* rootNode) : GameObject(rootNode)
 {
 	actionPriority = ProjectileActionPriority;
 	renderPriority = ProjectileRenderPriority;

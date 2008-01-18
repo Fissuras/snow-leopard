@@ -15,7 +15,27 @@
 #include "AI_Shoot_DoNothing.h"
 #include "PulseCannon.h"
 #include "ShotgunCannon.h"
+
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include "XercesString.h"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
 #include "Definitions.h"
+
+XERCES_CPP_NAMESPACE_USE
 
 
 
@@ -38,7 +58,8 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_SetupCore setup_core;
 	CL_SetupDisplay setup_display;
 	CL_SetupGL setup_gl;
-
+	
+	XMLPlatformUtils::Initialize();
 
 	CL_DisplayWindow* window = new CL_DisplayWindow("Snow Leopard", 640, 480);
 	CL_GraphicContext* gc = window->get_gc();
@@ -48,7 +69,6 @@ int DisplayApplication::main(int argc,  char **argv)
 	CL_InputDevice mouse = ic->get_mouse();
 
 	CL_ConsoleWindow* console = new CL_ConsoleWindow("Debugging");
-	CL_ResourceManager* resources = new CL_ResourceManager("resources.xml");
 
 #ifdef DEBUG
 	console->redirect_stdio();
@@ -56,31 +76,25 @@ int DisplayApplication::main(int argc,  char **argv)
 	
 	
 	std::cout << "Now Debugging...";
-
-	Ship* g = new Ship("Starfury",resources);
-	g->displayName = "Me";
 	
-	GameObject* background = new NonInteractiveBackground("background",resources);
-	Ship* f = new Ship("Starfury",resources);
-	f->displayName = "The Other Guy";
+	static const XMLCh gLS[] = { chLatin_L, chLatin_S, chNull };
+	DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(gLS);
+    DOMBuilder* parser = ((DOMImplementationLS*)impl)->createDOMBuilder(DOMImplementationLS::MODE_SYNCHRONOUS,0);
 
-	g->AI_Movement = &AI_Move_DoNothing;
-	g->AI_Shooting = &AI_Shoot_DoNothing;
-	g->components->push_back(new PulseCannon());
-	g->thrust = .005;
-
-	g->heading = 90;
-	WorldState *state = new WorldState();
-	state->insertObject(g,point(320,240));
-	state->insertObject(f,point(200,200));
-	state->insertObject(background,point(state->CoordinateSizeX / 2,state->CoordinateSizeY /2));
-	//state->insertObject(f,point(200,100));
-
+    parser->setFeature(XMLUni::fgDOMNamespaces,true);
+    parser->setFeature(XMLUni::fgXercesSchema, true);
+    parser->setFeature(XMLUni::fgXercesSchemaFullChecking, true);
 	
-	Renderer* renderer = new Renderer(window,gc,state,resources);
-	GameLogic *logic = new GameLogic(state,(Ship*)g,ic,renderer);
+#define xerces XERCES_CPP_NAMESPACE_QUALIFIER
+	std::string xmlFile = "Resources\\XML\\example.xml";
+	xerces DOMNode* doc;
+	doc = parser->parseURI(XercesString(xmlFile).xmlCh());
 
-	renderer->setCamera(g);
+	WorldState *state = new WorldState(doc);
+	
+	Renderer* renderer = new Renderer(window,gc,state);
+	GameLogic *logic = new GameLogic(state,ic,renderer);
+
 	renderer->setCameraZoomLevel(1.0);
 
     CL_FramerateCounter* framerate = new CL_FramerateCounter();
@@ -94,6 +108,6 @@ int DisplayApplication::main(int argc,  char **argv)
  	logic->step();
 	}
 	
-	
+	XMLPlatformUtils::Terminate();
 	return 0;
 }

@@ -41,10 +41,11 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;XML_LIBRARY;WIN32_LEAN_AND_MEAN"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
+				TreatWChar_tAsBuiltInType="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				DebugInformationFormat="4"
@@ -60,9 +61,10 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="LinearParticle.lib"
+				AdditionalDependencies="xerces-c_static_2.lib"
 				LinkIncremental="2"
 				IgnoreAllDefaultLibraries="false"
+				IgnoreDefaultLibraryNames="LibCMI.lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -215,14 +217,6 @@
 				<Filter
 					Name="projectiles"
 					>
-					<File
-						RelativePath=".\SevnaMark40.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\SevnaMark40.h"
-						>
-					</File>
 				</Filter>
 				<Filter
 					Name="scenery"
@@ -288,6 +282,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DOMHelpers.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Factions.h"
 				>
 			</File>
@@ -328,6 +326,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Resources\XML\SLSchema.xsd"
+				>
+				<File
+					RelativePath=".\SLSchema.h"
+					>
+				</File>
+			</File>
+			<File
+				RelativePath=".\StrX.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Weapon.h"
 				>
 			</File>
@@ -335,50 +345,17 @@
 				RelativePath=".\WorldState.h"
 				>
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
-			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
-			>
 			<File
-				RelativePath=".\example xml.xml"
-				>
-			</File>
-			<File
-				RelativePath=".\resources.xml"
-				>
-			</File>
-			<File
-				RelativePath=".\Sample Hull.png"
-				>
-			</File>
-			<File
-				RelativePath=".\small.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\snow leopard schema.xsd"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCustomBuildTool"
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\test.ico"
-				>
-			</File>
-			<File
-				RelativePath=".\test.rc"
+				RelativePath=".\XercesString.h"
 				>
 			</File>
 		</Filter>
 		<File
 			RelativePath=".\brokenthings.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\Resources\XML\example.xml"
 			>
 		</File>
 		<File

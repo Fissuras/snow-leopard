@@ -5,8 +5,25 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
-//need to have a method that returns only what locations of objects changed during the last step,
-//so the openGL renderer can translate efficiently
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include "XercesString.h"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
+#include "DOMHelpers.h"
+
 
 inline int round(double x)
 {
@@ -15,6 +32,7 @@ return int(x > 0.0 ? x + 0.5 : x - 0.5);
 
 WorldState::WorldState()
 {
+	description = "";
 	CoordinateSizeX = 1024.0;
 	CoordinateSizeY = 768.0;
 
@@ -33,6 +51,47 @@ WorldState::WorldState()
 		{
 			worldMatrix[i][j] = new GameObjectList();
 		}
+	}
+}
+
+WorldState::WorldState(xerces DOMNode* rootNode)
+{
+	xerces DOMNode* worldStateNode = rootNode->getFirstChild();
+	xerces DOMNamedNodeMap* attributes =  worldStateNode->getAttributes();
+
+
+	CoordinateSizeX = getAttributeDouble ("CoordinateSizeX",attributes);
+	CoordinateSizeY = getAttributeDouble ("CoordinateSizeY",attributes);
+	time = getAttributeInt ("time",attributes);
+	id = getAttributeStr("id",attributes);
+	name = getAttributeStr("name",attributes);
+	description = getAttributeStr("description",attributes);
+
+
+
+	CellSizeX = (int)CoordinateSizeX / coarseGraining ;
+	CellSizeY = (int)CoordinateSizeY / coarseGraining ;
+
+	allObjectList = new GameObjectList();
+	deleteList = new GameObjectList();
+	worldMatrix = new GameObjectList**[CellSizeX];
+	for (int i = 0; i < CellSizeX; ++i)
+        worldMatrix[i] = new GameObjectList*[CellSizeY];
+
+	for (int i=0;i<CellSizeX;i++)
+	{
+		for (int j=0;j<CellSizeY;j++)
+		{
+			worldMatrix[i][j] = new GameObjectList();
+		}
+	}
+
+	for (int x = 0;x<worldStateNode->getChildNodes()->getLength();x++)
+	{
+		xerces DOMNode* entityNode = worldStateNode->getChildNodes()->item(x);
+		xerces DOMNamedNodeMap* entityAttributes = entityNode->getAttributes();
+		point p(getAttributeDouble("xPosition",entityAttributes),getAttributeDouble("yPosition",entityAttributes));
+		insertObject(new GameObject(entityNode),p);
 	}
 }
 

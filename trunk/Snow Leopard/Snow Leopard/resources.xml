@@ -1,24 +1,7 @@
 <resources>
-  <section name="Starfury">
-    <sprite name="sprite" base_angle="-90">
-      <image file="plane.png"></image>
-    </sprite>
-    <double name="thrust">.005</double>
-    <section name="weapons">
-      <weapon name="PulseCannon"></weapon>
-    </section>
-    
-  </section>
-
-  <section name="SevnaMark40">
-    <sprite name="sprite">
-      <image file="bomb.png"></image>
-    </sprite>
-  </section>
-
-  <section name ="background">
-    <sprite name="sprite">
-      <image file="xa-004_1024.jpg"></image>
-    </sprite>
-  </section>
+  <Directory id="XML" location="Resources\XML"/>
+  <Directory id="Hulls" location="Resources\Hulls"/>
+  <Directory id="Components" location="Resources\Components"/>
+  <Directory id="Backgrounds" location="Resources\Backgrounds"/>
+  <Directory id="Ammo" location="Resources\Ammo"/>
 </resources>

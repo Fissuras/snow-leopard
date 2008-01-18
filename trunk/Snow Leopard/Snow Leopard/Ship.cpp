@@ -67,7 +67,7 @@ bool Ship::shoot()
 	return true;
 }
 
-Ship::Ship(std::string resourceName,CL_ResourceManager* resources) : GameObject(resourceName,resources)
+Ship::Ship(xerces DOMNode* rootNode) : GameObject(rootNode)
 {
 	actionPriority = ShipActionPriority;
 	renderPriority = ShipRenderPriority;

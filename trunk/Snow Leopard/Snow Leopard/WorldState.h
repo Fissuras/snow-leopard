@@ -7,7 +7,27 @@
 #include "point.h"
 #include <set>
 
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include "XercesString.h"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
+
+
 class GameObject;
+class DOMNode;
 typedef std::list<GameObject*> GameObjectList;
 typedef std::list <GameObject*>::iterator GameObjectIter;
 typedef std::list <GameObject*>::const_iterator ConstGameObjectIter;
@@ -43,8 +63,13 @@ double CoordinateSizeX;
 double CoordinateSizeY;
 unsigned int time;
 unsigned int timeElapsed;
+std::string description;
+std::string name;
+std::string id;
 
 WorldState::WorldState();
+#define xerces XERCES_CPP_NAMESPACE_QUALIFIER
+WorldState::WorldState(xerces DOMNode* rootNode);
 bool insertObject(GameObject* gameObject, point p);
 bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point p);
@@ -52,6 +77,9 @@ GameObjectList* getAtCell(point p);
 const GameObjectList* WorldState::getAllGameObjects(SortPreference p = UNSORTED);
 void registerForDeletion(GameObject* obj);
 void deleteQueued();
+static void WorldState::loadFromDOM(xerces DOMNode* node);
+void WorldState::saveToDOM(xerces DOMNode* node);
+
 
 private:
 	GameObjectList*** worldMatrix;

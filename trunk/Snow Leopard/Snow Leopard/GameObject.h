@@ -6,10 +6,29 @@
 #include <set>
 #include "GameObjectPriorities.h"
 
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include "XercesString.h"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
+#define xerces XERCES_CPP_NAMESPACE_QUALIFIER
+
 class WorldState; //need to forward declare class to avoid crazy recursion
 class CL_Sprite;
 class CL_CollisionOutline;
-class CL_ResourceManager;
+class DOMNode;
 
 
  class GameObject{
@@ -27,10 +46,9 @@ public:
 	virtual bool registerCollision(GameObject* collidedObject);
 	virtual bool registerWallCollision();
 	static int getID();
-	GameObject::GameObject(std::string resourceName,CL_ResourceManager* resources);
+	GameObject::GameObject(xerces DOMNode* rootNode);
 	CL_Sprite* sprite;
 	GameObject::~GameObject();
-	CL_ResourceManager* resources;
 	void applyForceRect(double x, double y);
 	void applyForcePolar(double heading, double magnitude);
 	bool rotate(double angle);
@@ -43,6 +61,7 @@ public:
 	double displayHeading;
 	CL_CollisionOutline* collisionOutline;
 	double mass;
+	double rotationalInertia;
 	double accelHeading;
 	double accelMagnitude;
 	double thrust; //force the object can apply on itself. thrust / mass = acceleration
@@ -53,7 +72,7 @@ public:
 	int renderPriority;
 	std::string resourceName;
 	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
-	int ID;
+	std::string ID;
 	WorldState* worldState;
 	double speed;
 	bool usesPhysics;

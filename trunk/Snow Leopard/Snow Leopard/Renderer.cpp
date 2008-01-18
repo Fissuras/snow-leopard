@@ -8,11 +8,10 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
-Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* state_, CL_ResourceManager* res)
+Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* state_)
 {
 	gc = gc_;
 	state = state_;
-	resources = res;
 	zoomLevel = 1.0; 
 	screenStartX = 0.0;
 	screenStartY = 0.0;
