@@ -45,13 +45,19 @@ public:
 	virtual bool doActions();
 	virtual bool registerCollision(GameObject* collidedObject);
 	virtual bool registerWallCollision();
-	static int getID();
 	GameObject::GameObject(xerces DOMNode* rootNode);
 	CL_Sprite* sprite;
 	GameObject::~GameObject();
 	void applyForceRect(double x, double y);
 	void applyForcePolar(double heading, double magnitude);
 	bool rotate(double angle);
+
+	static int GameObject::getID()
+{
+	IDCount++;
+	return IDCount;
+}
+
 
 	std::string displayName; 
 	bool isPlayer; //right now only one ship can be a player

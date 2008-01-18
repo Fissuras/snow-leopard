@@ -27,12 +27,12 @@ class PulseCannon:public Weapon
 		static const int coolDownInterval = 600;
 		void fire(WorldState* state, point location, double heading, double speed, CL_ResourceManager* resources)
 		{
-			SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
+			/*SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
 			p->resourceName = "SevnaMark40";
 			p->heading = heading;
 			p->speed = speed + .5;
 			state->insertObject(p,location.offsetPolar(heading,2));
-			Weapon::timeLastFired = state->time;
+			Weapon::timeLastFired = state->time;*/
 		};
 		PulseCannon::PulseCannon()
 		{

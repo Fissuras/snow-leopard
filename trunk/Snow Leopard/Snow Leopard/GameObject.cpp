@@ -31,19 +31,19 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 {
 	xerces DOMNamedNodeMap* attributes =  rootNode->getAttributes();
 	displayName = getAttributeStr("Name",attributes);
-	displayHeading = getAttributeStr("current_angle",attributes;
-	faction = getAttributeStr("faction",attributes);
+	displayHeading = getAttributeDouble("current_angle",attributes);
+	faction = getAttributeInt("faction",attributes);
 	ID = getAttributeStr("id",attributes);
 	speed=getAttributeDouble("movementSpeed",attributes);
 	heading=getAttributeDouble("movementHeading",attributes);
 	accelMagnitude = getAttributeDouble("AccelerationMagnitude",attributes);
-	accelHeading = 0.0;
+	accelHeading = getAttributeDouble("AccelerationHeading",attributes);
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
-	mass = 1;
-	rotationalInertia = 1;
-	isPlayer = false;
-	usesPhysics = false;
+	mass = NULL; //need to fill these two by calculations on the components
+	rotationalInertia = NULL;
+	isPlayer = getAttributeBool("isPlayer",attributes);
+	usesPhysics = getAttributeBool("usesPhysics",attributes);
 
 	sprite = new CL_Sprite();
 	sprite->set_alignment(origin_center);
@@ -53,11 +53,7 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	collisionOutline->set_alignment(origin_center);
 	collisionOutline->set_rotation_hotspot(origin_center);
 }
-int GameObject::getID()
-{
-	IDCount++;
-	return IDCount;
-}
+
 
 bool GameObject::doActions()
 {
