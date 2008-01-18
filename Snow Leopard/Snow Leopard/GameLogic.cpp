@@ -20,6 +20,14 @@ GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Rende
 	renderer = rend;
 }
 
+GameLogic::GameLogic(WorldState* worldState,CL_InputContext* ic,Renderer* rend)
+{
+	state=worldState;
+	keyboard = &ic->get_keyboard();
+	mouse = &ic->get_mouse();
+	renderer = rend;
+}
+
 bool GameLogic::step()
 {
 
@@ -48,7 +56,7 @@ void GameLogic::handleInput()
 		 Weapon* wpn =  (Weapon* )playerShip->components->at(0);
 		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
 			wpn->fire(state,playerShip->location,
-			playerShip->displayHeading,playerShip->speed,playerShip->resources);
+			playerShip->displayHeading,playerShip->speed);
 	 }
 
 

@@ -24,7 +24,7 @@ public:
 	bool doActions();
 	bool registerCollision(GameObjectList collisions);
 	bool registerWallCollision();
-	Ship::Ship(std::string resourceName, CL_ResourceManager* resources);
+	Ship::Ship(xerces DOMNode* rootNode);
 	virtual bool move();
 	bool move(AbsoluteDirection dir);
 	bool move(RelativeDirection dir);

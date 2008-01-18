@@ -14,7 +14,7 @@ class CL_Font;
 
 class Renderer{
 public:
-	Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc, WorldState* state,CL_ResourceManager* res);
+	Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc, WorldState* state);
 	bool Renderer::Render();
 	int screenWidth;
 	int screenHeight;

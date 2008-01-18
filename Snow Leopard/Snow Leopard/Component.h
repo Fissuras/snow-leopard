@@ -8,7 +8,7 @@ class WorldState;
 class Component
 {
 	public:
-		virtual void activate(WorldState* state, point location, CL_ResourceManager* resources)
+		virtual void activate(WorldState* state, point location)
 		{};
 		unsigned int timeLastActivated;
 };

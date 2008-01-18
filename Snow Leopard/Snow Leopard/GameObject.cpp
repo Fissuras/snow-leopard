@@ -5,26 +5,47 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
+
+#include <xercesc/util/PlatformUtils.hpp>
+#include <xercesc/parsers/AbstractDOMParser.hpp>
+#include <xercesc/dom/DOMImplementation.hpp>
+#include <xercesc/dom/DOMImplementationLS.hpp>
+#include <xercesc/dom/DOMImplementationRegistry.hpp>
+#include <xercesc/dom/DOMBuilder.hpp>
+#include <xercesc/dom/DOMException.hpp>
+#include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMNodeList.hpp>
+#include <xercesc/dom/DOMError.hpp>
+#include <xercesc/dom/DOMLocator.hpp>
+#include <xercesc/dom/DOMNamedNodeMap.hpp>
+#include <xercesc/dom/DOMAttr.hpp>
+#include <xercesc/framework/LocalFileInputSource.hpp>
+#include <xercesc/util/XMLString.hpp>
+#include "XercesString.h"
+#include "xercesc/framework/Wrapper4InputSource.hpp"
+#include "DOMHelpers.h"
+#define xerces XERCES_CPP_NAMESPACE_QUALIFIER
+
 int GameObject::IDCount = 0;
-GameObject::GameObject(std::string resName,CL_ResourceManager* res)
+GameObject::GameObject(xerces DOMNode* rootNode)
 {
-	displayName = "";
-	displayHeading = 0.0;
-	faction = 0;
-	ID = getID();
-	speed=0.0;
-	heading=0.0;
-	accelMagnitude = 0.0;
+	xerces DOMNamedNodeMap* attributes =  rootNode->getAttributes();
+	displayName = getAttributeStr("Name",attributes);
+	displayHeading = getAttributeStr("current_angle",attributes;
+	faction = getAttributeStr("faction",attributes);
+	ID = getAttributeStr("id",attributes);
+	speed=getAttributeDouble("movementSpeed",attributes);
+	heading=getAttributeDouble("movementHeading",attributes);
+	accelMagnitude = getAttributeDouble("AccelerationMagnitude",attributes);
 	accelHeading = 0.0;
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
-	resourceName = resName;
-	resources = res;
 	mass = 1;
+	rotationalInertia = 1;
 	isPlayer = false;
 	usesPhysics = false;
 
-	sprite = new CL_Sprite(resourceName + "/sprite",resources);
+	sprite = new CL_Sprite();
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
 
