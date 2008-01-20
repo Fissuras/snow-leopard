@@ -286,10 +286,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Factions.h"
-				>
-			</File>
-			<File
 				RelativePath=".\GameLogic.h"
 				>
 			</File>
@@ -299,14 +295,6 @@
 			</File>
 			<File
 				RelativePath=".\GameObjectPriorities.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Particle.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ParticleEmitter.h"
 				>
 			</File>
 			<File
@@ -337,15 +325,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\StrX.h"
-				>
-			</File>
-			<File
 				RelativePath=".\Weapon.h"
 				>
 			</File>
 			<File
 				RelativePath=".\WorldState.h"
+				>
+			</File>
+			<File
+				RelativePath=".\xerces.h"
 				>
 			</File>
 			<File
@@ -363,6 +351,10 @@
 		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\resources.xml"
 			>
 		</File>
 	</Files>
