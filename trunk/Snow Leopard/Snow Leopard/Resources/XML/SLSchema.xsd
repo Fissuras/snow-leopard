@@ -23,7 +23,7 @@
     <xs:attribute name="missile_ammo_amount" type="xs:integer" default="0"/>
   </xs:attributeGroup>
   <xs:attributeGroup name="gun_ammo">
-    <xs:attribute name="gun_ammo_type" type="Gun_Ammo_Type" default="Lead Rounds"/>
+    <xs:attribute name="gun_ammo_type" type="Gun_Ammo_Type" default="Lead rounds"/>
     <xs:attribute name="gun_ammo_amount" type="xs:integer" default="0"/>
   </xs:attributeGroup>
 
@@ -80,7 +80,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="1" ref="BaseImage"/>
-        <xs:element ref="Socket"/>
+        <xs:element maxOccurs="unbounded" ref="Socket"/>
       </xs:sequence>
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="position"/>

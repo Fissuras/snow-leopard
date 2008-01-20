@@ -64,7 +64,7 @@
 				AdditionalDependencies="xerces-c_static_2.lib"
 				LinkIncremental="2"
 				IgnoreAllDefaultLibraries="false"
-				IgnoreDefaultLibraryNames="LibCMI.lib"
+				IgnoreDefaultLibraryNames="libcmt"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -328,10 +328,13 @@
 			<File
 				RelativePath=".\Resources\XML\SLSchema.xsd"
 				>
-				<File
-					RelativePath=".\SLSchema.h"
+				<FileConfiguration
+					Name="Debug|Win32"
 					>
-				</File>
+					<Tool
+						Name="VCCustomBuildTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\StrX.h"
