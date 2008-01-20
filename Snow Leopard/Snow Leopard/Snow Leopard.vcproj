@@ -238,11 +238,43 @@
 					Name="Components"
 					>
 					<File
-						RelativePath=".\PulseCannon.h"
+						RelativePath=".\BeamCannon.h"
 						>
 					</File>
 					<File
-						RelativePath=".\ShotgunCannon.h"
+						RelativePath=".\Cannon.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ECCM.h"
+						>
+					</File>
+					<File
+						RelativePath=".\ECM.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GravitationalFieldStabilizer.h"
+						>
+					</File>
+					<File
+						RelativePath=".\GravityManipulator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\PowerPlant.h"
+						>
+					</File>
+					<File
+						RelativePath=".\RepairBots.h"
+						>
+					</File>
+					<File
+						RelativePath=".\SalvageBeam.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Thruster.h"
 						>
 					</File>
 				</Filter>
@@ -277,6 +309,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Component.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Definitions.h"
 				>
@@ -323,6 +359,10 @@
 						Name="VCCustomBuildTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\Socket.h"
+				>
 			</File>
 			<File
 				RelativePath=".\Weapon.h"
