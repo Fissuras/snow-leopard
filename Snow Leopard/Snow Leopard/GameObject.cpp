@@ -14,6 +14,7 @@
 #include <xercesc/dom/DOMBuilder.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
@@ -30,24 +31,33 @@ int GameObject::IDCount = 0;
 GameObject::GameObject(xerces DOMNode* rootNode)
 {
 	xerces DOMNamedNodeMap* attributes =  rootNode->getAttributes();
-	displayName = getAttributeStr("Name",attributes);
-	displayHeading = getAttributeDouble("current_angle",attributes);
+	displayName = getAttributeStr("name",attributes);
+	//displayHeading = getAttributeDouble("current_angle",attributes);
 	faction = getAttributeInt("faction",attributes);
 	ID = getAttributeStr("id",attributes);
 	speed=getAttributeDouble("movementSpeed",attributes);
 	heading=getAttributeDouble("movementHeading",attributes);
-	accelMagnitude = getAttributeDouble("AccelerationMagnitude",attributes);
-	accelHeading = getAttributeDouble("AccelerationHeading",attributes);
+	accelMagnitude = getAttributeDouble("accelerationMagnitude",attributes);
+	accelHeading = getAttributeDouble("accelerationHeading",attributes);
 	actionPriority = DefActionPriority;
 	renderPriority = DefRenderPriority;
 	mass = NULL; //need to fill these two by calculations on the components
 	rotationalInertia = NULL;
 	isPlayer = getAttributeBool("isPlayer",attributes);
 	usesPhysics = getAttributeBool("usesPhysics",attributes);
-
-	sprite = new CL_Sprite();
+	
+	xerces DOMNodeList* BaseImageList = ((xerces DOMElement*) rootNode)->getElementsByTagName(XercesString("BaseImage").xmlCh());
+	xerces DOMNode* BaseImage = BaseImageList->item(0);
+	std::string filename = getAttributeStr("pictureSource",BaseImage->getAttributes());
+	CL_PNGProvider image(filename);
+	CL_SpriteDescription* desc = new CL_SpriteDescription();
+	desc->add_frame(image);
+	sprite = new CL_Sprite(*desc);
+	delete desc;
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
+
+
 
 	collisionOutline = new CL_CollisionOutline((sprite->get_frame_pixeldata(0)));
 	collisionOutline->set_alignment(origin_center);

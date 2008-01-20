@@ -13,6 +13,7 @@
 #include <xercesc/dom/DOMBuilder.hpp>
 #include <xercesc/dom/DOMException.hpp>
 #include <xercesc/dom/DOMDocument.hpp>
+#include <xercesc/dom/DOMElement.hpp>
 #include <xercesc/dom/DOMNodeList.hpp>
 #include <xercesc/dom/DOMError.hpp>
 #include <xercesc/dom/DOMLocator.hpp>
@@ -85,10 +86,11 @@ WorldState::WorldState(xerces DOMNode* rootNode)
 			worldMatrix[i][j] = new GameObjectList();
 		}
 	}
-
-	for (int x = 0;x<worldStateNode->getChildNodes()->getLength();x++)
+	xerces DOMNodeList* entities = ((xerces DOMElement*)worldStateNode)->getElementsByTagName(XercesString("Entity").xmlCh());
+	for (int x = 0;x<entities->getLength();x++)
 	{
-		xerces DOMNode* entityNode = worldStateNode->getChildNodes()->item(x);
+		xerces DOMElement* entityNode = (xerces DOMElement*)entities->item(x);
+		std::cout << "now reading node" << entityNode->getAttribute(XercesString("id").xmlCh());
 		xerces DOMNamedNodeMap* entityAttributes = entityNode->getAttributes();
 		point p(getAttributeDouble("xPosition",entityAttributes),getAttributeDouble("yPosition",entityAttributes));
 		insertObject(new GameObject(entityNode),p);
