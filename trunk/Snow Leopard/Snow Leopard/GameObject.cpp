@@ -26,7 +26,8 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	rotationalInertia = NULL;
 	isPlayer = getAttributeBool("isPlayer",attributes);
 	usesPhysics = getAttributeBool("usesPhysics",attributes);
-	
+
+	//set up the base sprite
 	xerces DOMNodeList* BaseImageList = ((xerces DOMElement*) rootNode)->getElementsByTagName(XercesString("BaseImage").xmlCh());
 	xerces DOMNode* BaseImage = BaseImageList->item(0);
 	std::string filename = getAttributeStr("pictureSource",BaseImage->getAttributes());
@@ -38,11 +39,11 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	sprite->set_alignment(origin_center);
 	sprite->set_rotation_hotspot(origin_center);
 
-
-
 	collisionOutline = new CL_CollisionOutline((sprite->get_frame_pixeldata(0)));
 	collisionOutline->set_alignment(origin_center);
 	collisionOutline->set_rotation_hotspot(origin_center);
+
+
 }
 
 
@@ -99,7 +100,6 @@ bool GameObject::rotate(double angle)
 	return true;
 }
 
-//cleanup and adapt polar to use Rect's code
 void GameObject::applyForceRect(double x,double y)
 {
 	double oldX = accelMagnitude * cos(accelHeading * 3.14159/180);

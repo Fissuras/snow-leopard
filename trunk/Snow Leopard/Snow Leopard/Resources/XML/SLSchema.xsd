@@ -311,7 +311,8 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="Triangle"/>
       <xs:enumeration value="Square"/>
-      <xs:enumeration value="Rectangle"/>
+      <xs:enumeration value="Pentagon"/>
+      <xs:enumeration value="Hexagon"/>
       <xs:enumeration value="Octagon"/>
       <xs:enumeration value="Shell"/>
     </xs:restriction>
