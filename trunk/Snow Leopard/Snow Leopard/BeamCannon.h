@@ -7,7 +7,6 @@
 class BeamCannon:public Weapon
 {
 	public:
-		static const int coolDownInterval = 600;
 		void fire(WorldState* state, point location, double heading, double speed)
 		{
 			/*SevnaMark40* p = new SevnaMark40("SevnaMark40",resources);
@@ -17,9 +16,8 @@ class BeamCannon:public Weapon
 			state->insertObject(p,location.offsetPolar(heading,2));
 			Weapon::timeLastFired = state->time;*/
 		};
-		BeamCannon::BeamCannon()
+		BeamCannon::BeamCannon(xerces DOMNode* rootNode):Weapon(xerces DOMNode* rootNode)
 		{
-			Weapon::timeLastFired = 0;
 		};
 };
 

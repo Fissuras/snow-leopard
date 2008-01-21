@@ -13,8 +13,6 @@
 #include "NonInteractiveBackground.h" 
 #include "AI_Move_DoNothing.h"
 #include "AI_Shoot_DoNothing.h"
-#include "PulseCannon.h"
-#include "ShotgunCannon.h"
 
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>

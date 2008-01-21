@@ -5,6 +5,11 @@
 #include "point.h"
 #include <set>
 #include "GameObjectPriorities.h"
+#include <ClanLib/core.h>
+#include <ClanLib/display.h>
+#include <ClanLib/gl.h>
+#include <ClanLib/application.h>
+
 
 #include "xerces.h"
 
@@ -65,6 +70,33 @@ public:
 	WorldState* worldState;
 	double speed;
 	bool usesPhysics;
+
+	//stupid hack to convert between the CL_Origin enum and string values
+	
+	//static std::string origin_type_map[] = {"origin_top_left","origin_top_center","origin_top_right","origin_center_left","origin_center","origin_center_right","origin_bottom_left","origin_bottom_center","origin_bottom_right"};
+	static CL_Origin GameObject::getOriginfromString(std::string str)
+	{
+		if (str== "origin_top_left")
+			return origin_top_left;
+		else if (str== "origin_top_left")
+			return origin_top_left;
+		else if (str== "origin_top_center")
+			return origin_top_center;
+		else if (str== "origin_top_right")
+			return origin_top_right;
+		else if (str== "origin_center_left")
+			return origin_center_left;
+		else if (str== "origin_center")
+			return origin_center;
+		else if (str== "origin_center_right")
+			return origin_center_right;
+		else if (str== "origin_bottom_left")
+			return origin_bottom_left;
+		else if (str== "origin_bottom_center")
+			return origin_bottom_center;
+		else if (str== "origin_bottom_right")
+			return origin_bottom_right;
+	}
 
  protected:
 	

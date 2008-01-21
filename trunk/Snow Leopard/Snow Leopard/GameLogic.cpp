@@ -52,9 +52,7 @@ void GameLogic::handleInput()
 {
 	 if (keyboard->get_keycode(CL_KEY_SPACE))
 	 {
-		 Weapon* wpn =  (Weapon* )playerShip->components->at(0);
-		 if (((wpn->timeLastFired==0) || (wpn->timeLastFired + wpn->coolDownInterval <= state->time)))
-			wpn->fire(state,playerShip->location);
+		 //fire weapon
 	 }
 
 

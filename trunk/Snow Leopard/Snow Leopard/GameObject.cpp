@@ -1,9 +1,5 @@
 #include "GameObject.h"
 #include "WorldState.h"
-#include <ClanLib/core.h>
-#include <ClanLib/display.h>
-#include <ClanLib/gl.h>
-#include <ClanLib/application.h>
 
 
 #include "xerces.h"
@@ -30,19 +26,30 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	//set up the base sprite
 	xerces DOMNodeList* BaseImageList = ((xerces DOMElement*) rootNode)->getElementsByTagName(XercesString("BaseImage").xmlCh());
 	xerces DOMNode* BaseImage = BaseImageList->item(0);
-	std::string filename = getAttributeStr("pictureSource",BaseImage->getAttributes());
+	xerces DOMNamedNodeMap* BaseImageAttributes = BaseImage->getAttributes();
+	std::string filename = getAttributeStr("pictureSource",BaseImageAttributes);
 	CL_PNGProvider image(filename);
 	CL_SpriteDescription* desc = new CL_SpriteDescription();
 	desc->add_frame(image);
 	sprite = new CL_Sprite(*desc);
 	delete desc;
-	sprite->set_alignment(origin_center);
-	sprite->set_rotation_hotspot(origin_center);
+	
+	CL_Origin translationOrigin = getOriginfromString(getAttributeStr("translation_origin",BaseImageAttributes));
+	CL_Origin rotationOrigin = getOriginfromString(getAttributeStr("rotation_origin",BaseImageAttributes));
+	int translation_offset_x = getAttributeInt("translation_offset_x",BaseImageAttributes);
+	int translation_offset_y = getAttributeInt("translation_offset_y",BaseImageAttributes);
+	int rotation_offset_x = getAttributeInt("rotation_offset_x",BaseImageAttributes);
+	int rotation_offset_y = getAttributeInt("rotation_offset_y",BaseImageAttributes);
+	sprite->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
+	sprite->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
+	sprite->set_base_angle(getAttributeDouble("base_angle",BaseImageAttributes));
+	sprite->set_angle(getAttributeDouble("current_angle",BaseImageAttributes));
+
+	//need to add code to set the scale. This requires communicating with the worldState at runtime
 
 	collisionOutline = new CL_CollisionOutline((sprite->get_frame_pixeldata(0)));
-	collisionOutline->set_alignment(origin_center);
-	collisionOutline->set_rotation_hotspot(origin_center);
-
+	collisionOutline->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
+	collisionOutline->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
 
 }
 
