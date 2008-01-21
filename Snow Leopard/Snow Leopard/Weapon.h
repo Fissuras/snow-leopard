@@ -9,7 +9,6 @@ class WorldState;
 class Weapon:public Component
 {
 	public:
-		const int coolDownInterval;
 		void activate(WorldState* state,point location)
 		{
 			fire(state,location);
@@ -17,7 +16,8 @@ class Weapon:public Component
 		virtual void fire(WorldState* state, point location)
 		{};
 		unsigned int timeLastFired;
-		Weapon::Weapon();
+		Weapon::Weapon(xerces DOMNode* rootNode):Component(rootNode)
+		{};
 };
 
 #endif

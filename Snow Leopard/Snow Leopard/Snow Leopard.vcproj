@@ -211,14 +211,6 @@
 				Name="content"
 				>
 				<Filter
-					Name="ships"
-					>
-				</Filter>
-				<Filter
-					Name="projectiles"
-					>
-				</Filter>
-				<Filter
 					Name="scenery"
 					>
 					<File
@@ -259,6 +251,10 @@
 					</File>
 					<File
 						RelativePath=".\GravityManipulator.h"
+						>
+					</File>
+					<File
+						RelativePath=".\Hull.h"
 						>
 					</File>
 					<File

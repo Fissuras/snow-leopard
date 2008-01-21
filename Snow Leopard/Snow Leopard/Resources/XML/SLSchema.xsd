@@ -29,7 +29,7 @@
 
   <xs:attributeGroup name="image">
     <xs:attribute name="pictureSource" type="xs:string"/>
-    <xs:attribute name="scale" type="xs:integer" default="20"/>
+    <xs:attribute name="scale" type="xs:integer" default="20"/> <!--in meters per pixel-->
     <xs:attribute name="base_angle" type="xs:integer" default="0"/>
     <xs:attribute name="current_angle" type="xs:integer" default="0"/>
     <xs:attribute name="translation_origin" type="Origin_Type" default="center"/>
@@ -72,8 +72,8 @@
       </xs:sequence>
       <xs:attributeGroup ref="std"/>
       <xs:attribute name="time" type="xs:integer" default="0"/>
-      <xs:attribute name="CoordinateSizeX" type="xs:double" default="1024"/>
-      <xs:attribute name="CoordinateSizeY" type="xs:double" default="768"/>
+      <xs:attribute name="CoordinateSizeX" type="xs:double" default="1024"/> <!--in kilometers-->
+      <xs:attribute name="CoordinateSizeY" type="xs:double" default="768"/>  <!--in kilometers-->
     </xs:complexType>
   </xs:element>
   <xs:element name="Entity">

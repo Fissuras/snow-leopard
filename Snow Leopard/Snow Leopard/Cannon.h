@@ -8,7 +8,6 @@
 class Cannon:public Weapon
 {
 public:
-	static const int coolDownInterval = 600;
 	void fire(WorldState* state, point location, double displayHeading, double speed)
 	{
 		for (int i=0;i<5;i++)
@@ -22,9 +21,8 @@ public:
 
 		Weapon::timeLastFired = state->time;
 	};
-	ShotgunCannon::ShotgunCannon()
+	ShotgunCannon::ShotgunCannon(xerces DOMNode* rootNode):Weapon(rootNode)
 	{
-		Weapon::timeLastFired = 0;
 	};
 };
 

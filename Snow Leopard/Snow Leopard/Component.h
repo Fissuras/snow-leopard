@@ -13,6 +13,8 @@ class Component:public GameObject
 		virtual void activate(WorldState* state, point location)
 		{};
 		unsigned int timeLastActivated;
+		Component::Component(xerces DOMNode* rootNode):GameObject(rootNode)
+		{};
 
 };
 

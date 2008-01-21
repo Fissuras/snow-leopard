@@ -1,8 +1,6 @@
 #include "Ship.h"
 #include "AI_Move_DoNothing.h"
 #include "AI_Shoot_DoNothing.h"
-#include "PulseCannon.h"
-#include "ShotgunCannon.h"
 #include "Definitions.h"
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
