@@ -80,7 +80,7 @@
     <xs:complexType>
       <xs:sequence>
         <xs:element maxOccurs="1" ref="BaseImage"/>
-        <xs:element maxOccurs="unbounded" ref="Socket"/>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Socket"/>
       </xs:sequence>
       <xs:attributeGroup ref="std"/>
       <xs:attributeGroup ref="position"/>

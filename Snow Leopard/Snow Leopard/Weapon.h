@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "xerces.h"
 #include "point.h"
+#include "Projectile.h"
 
 class WorldState;
 

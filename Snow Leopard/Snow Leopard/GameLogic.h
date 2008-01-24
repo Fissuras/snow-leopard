@@ -24,7 +24,6 @@ private:
 	
 
 public:
-		GameLogic::GameLogic(WorldState* worldState,Ship* player,CL_InputContext* ic,Renderer* renderer);
 		GameLogic::GameLogic(WorldState* worldState,CL_InputContext* ic,Renderer* renderer);
 		bool GameLogic::step();
 

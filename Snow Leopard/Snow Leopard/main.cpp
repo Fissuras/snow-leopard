@@ -11,27 +11,10 @@
 #include "GameLogic.h"
 #include <ctime>
 #include "NonInteractiveBackground.h" 
-#include "AI_Move_DoNothing.h"
-#include "AI_Shoot_DoNothing.h"
+#include "xerces.h"
 
-#include <xercesc/util/PlatformUtils.hpp>
-#include <xercesc/parsers/AbstractDOMParser.hpp>
-#include <xercesc/dom/DOMImplementation.hpp>
-#include <xercesc/dom/DOMImplementationLS.hpp>
-#include <xercesc/dom/DOMImplementationRegistry.hpp>
-#include <xercesc/dom/DOMBuilder.hpp>
-#include <xercesc/dom/DOMException.hpp>
-#include <xercesc/dom/DOMDocument.hpp>
-#include <xercesc/dom/DOMNodeList.hpp>
-#include <xercesc/dom/DOMError.hpp>
-#include <xercesc/dom/DOMLocator.hpp>
-#include <xercesc/dom/DOMNamedNodeMap.hpp>
-#include <xercesc/dom/DOMAttr.hpp>
-#include <xercesc/framework/LocalFileInputSource.hpp>
-#include <xercesc/util/XMLString.hpp>
-#include "XercesString.h"
-#include "xercesc/framework/Wrapper4InputSource.hpp"
 #include "Definitions.h"
+
 
 XERCES_CPP_NAMESPACE_USE
 
@@ -89,7 +72,6 @@ int DisplayApplication::main(int argc,  char **argv)
 	doc = parser->parseURI(XercesString(xmlFile).xmlCh());
 
 	WorldState *state = new WorldState(doc);
-	
 	Renderer* renderer = new Renderer(window,gc,state);
 	GameLogic *logic = new GameLogic(state,ic,renderer);
 
@@ -97,7 +79,7 @@ int DisplayApplication::main(int argc,  char **argv)
 
     CL_FramerateCounter* framerate = new CL_FramerateCounter();
 	framerate->set_fps_limit(60);
-	
+
 	while (true)
 	{
 	renderer->Render();

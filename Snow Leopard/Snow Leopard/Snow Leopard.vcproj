@@ -262,6 +262,10 @@
 						>
 					</File>
 					<File
+						RelativePath=".\Projectile.h"
+						>
+					</File>
+					<File
 						RelativePath=".\RepairBots.h"
 						>
 					</File>
@@ -280,22 +284,10 @@
 					<Filter
 						Name="Movement"
 						>
-						<File
-							RelativePath=".\AI_Move_DoNothing.h"
-							>
-						</File>
 					</Filter>
 					<Filter
 						Name="Shooting"
 						>
-						<File
-							RelativePath=".\AI_Shoot_AsFastAsPossible.h"
-							>
-						</File>
-						<File
-							RelativePath=".\AI_Shoot_DoNothing.h"
-							>
-						</File>
 					</Filter>
 				</Filter>
 			</Filter>
@@ -305,6 +297,18 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\Resources\XML\BehaviorTree.xsd"
+				>
+			</File>
+			<File
+				RelativePath=".\BehaviorTreeNode.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\BehaviorTreeNode.h"
+				>
+			</File>
 			<File
 				RelativePath=".\Component.h"
 				>
@@ -330,11 +334,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\point.h"
+				RelativePath=".\ObjectBehavior.h"
 				>
 			</File>
 			<File
-				RelativePath=".\Projectile.h"
+				RelativePath=".\point.h"
 				>
 			</File>
 			<File
@@ -383,6 +387,10 @@
 		</File>
 		<File
 			RelativePath=".\Resources\XML\example.xml"
+			>
+		</File>
+		<File
+			RelativePath=".\Resources\XML\ProjectileBehaviorTree.xml"
 			>
 		</File>
 		<File

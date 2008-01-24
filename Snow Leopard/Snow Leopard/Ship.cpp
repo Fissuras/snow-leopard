@@ -1,6 +1,4 @@
 #include "Ship.h"
-#include "AI_Move_DoNothing.h"
-#include "AI_Shoot_DoNothing.h"
 #include "Definitions.h"
 #include <ClanLib/core.h>
 #include <ClanLib/display.h>
@@ -31,13 +29,13 @@ bool Ship::move()
 bool Ship::move(AbsoluteDirection dir)
 {
 	if (dir == UP)
-		worldState->moveObject(this,location.offsetRect(0,-speed));
+		worldState->moveObject(this,location.offsetRect(0,-100));
 	if (dir == DOWN)
-		worldState->moveObject(this,location.offsetRect(0,speed));
+		worldState->moveObject(this,location.offsetRect(0,100));
 	if (dir == LEFT)
-		worldState->moveObject(this,location.offsetRect(-speed,0));
+		worldState->moveObject(this,location.offsetRect(-100,0));
 	if (dir == RIGHT)
-		worldState->moveObject(this,location.offsetRect(speed,0));
+		worldState->moveObject(this,location.offsetRect(100,0));
 
 	return true;
 }
@@ -45,9 +43,9 @@ bool Ship::move(AbsoluteDirection dir)
 bool Ship::move(RelativeDirection dir)
 {
 	if (dir == FORWARD)
-		worldState->moveObject(this,location.offsetPolar(heading,speed));
+		worldState->moveObject(this,location.offsetPolar(heading,100));
 	if (dir == BACK)
-		worldState->moveObject(this,location.offsetPolar(heading,-speed));
+		worldState->moveObject(this,location.offsetPolar(heading,-100));
 	if (dir == TURN_LEFT)
 		heading -= 1;
 	if (dir == TURN_RIGHT)
@@ -69,8 +67,8 @@ Ship::Ship(xerces DOMNode* rootNode) : GameObject(rootNode)
 {
 	actionPriority = ShipActionPriority;
 	renderPriority = ShipRenderPriority;
-	AI_Movement = &AI_Move_DoNothing;
-	AI_Shooting = &AI_Shoot_DoNothing;
+	//AI_Movement = &AI_Move_DoNothing;
+//	AI_Shooting = &AI_Shoot_DoNothing;
 	components = new ComponentList();
 	GameObject::usesPhysics = true;
 }
@@ -80,5 +78,7 @@ bool Ship::registerWallCollision()
 	//cancel accelerations
 	accelMagnitude = 0;
 	speed = 0;
+
+	
 	return true;
 }
