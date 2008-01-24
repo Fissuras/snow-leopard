@@ -1,5 +1,5 @@
-#ifndef SHOTGUNCANNON_H_
-#define SHOTGUNCANNON_H_
+#ifndef CANNON_H_
+#define CANNON_H_
 #include "WorldState.h"
 #include "Weapon.h"
 #include "xerces.h"
@@ -8,7 +8,8 @@
 class Cannon:public Weapon
 {
 public:
-	void fire(WorldState* state, point location, double displayHeading, double speed)
+	template <class Projectile>
+	void fire()
 	{
 		for (int i=0;i<5;i++)
 		{

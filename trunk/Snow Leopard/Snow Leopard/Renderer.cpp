@@ -19,6 +19,7 @@ Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* 
 	screenHeight = window->get_height();
 	font = new CL_Font("Times New Roman",30);
 	font->set_color(255,0,0);
+	camera = state->getCamera();
 }
 bool Renderer::setCamera(GameObject* obj)
 {
@@ -49,14 +50,7 @@ bool Renderer::Render()
 		sprite->set_angle(obj->displayHeading);
 		sprite->draw(zoomLevel * obj->location.x -screenStartX,
 			(zoomLevel * obj->location.y - screenStartY),gc);
-		obj->collisionOutline->draw_smallest_enclosing_disc(zoomLevel * obj->location.x -screenStartX,
-			(zoomLevel * obj->location.y - screenStartY),CL_Color(255,255,255,128),gc);
 	}
-
-	itr = objects->begin();
-	font->draw(1,1,(*(itr++))->location.toString());
-	font->draw(1,50,(*(itr++))->location.toString());
-	font->draw(1,100,(*(itr))->location.toString());
 	
 	return true;
 

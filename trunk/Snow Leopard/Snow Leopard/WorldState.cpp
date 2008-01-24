@@ -36,6 +36,18 @@ WorldState::WorldState()
 	}
 }
 
+GameObject* WorldState::getCamera() //returns a random object marked as being a player. Need to add code to verify there is only one
+{
+	GameObjectIter itr;
+	for (itr = allObjectList->begin();itr != allObjectList->end(); itr++)
+	{
+		if ((*itr)->isPlayer)
+			return *itr;
+	}
+	throw std::exception("no camera defined");
+	return NULL;
+}
+
 WorldState::WorldState(xerces DOMNode* rootNode)
 {
 	xerces DOMNode* worldStateNode = rootNode->getFirstChild();
@@ -46,8 +58,11 @@ WorldState::WorldState(xerces DOMNode* rootNode)
 	CoordinateSizeY = getAttributeDouble ("CoordinateSizeY",attributes);
 	time = getAttributeInt ("time",attributes);
 	id = getAttributeStr("id",attributes);
+	std::cout <<id;
 	name = getAttributeStr("name",attributes);
+	std::cout <<name;
 	description = getAttributeStr("description",attributes);
+	std::cout <<description;
 
 
 

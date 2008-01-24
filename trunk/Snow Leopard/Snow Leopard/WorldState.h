@@ -45,16 +45,16 @@ int CellSizeX;
 int CellSizeY;
 double CoordinateSizeX;
 double CoordinateSizeY;
-unsigned int time;
+unsigned long long time;
 unsigned int timeElapsed;
 std::string description;
 std::string name;
 std::string id;
 
 WorldState::WorldState();
-#define xerces XERCES_CPP_NAMESPACE_QUALIFIER
 WorldState::WorldState(xerces DOMNode* rootNode);
 bool insertObject(GameObject* gameObject, point p);
+GameObject* getCamera();
 bool deleteObject(GameObject* gameObject);
 bool moveObject(GameObject* gameObject, point p);
 GameObjectList* getAtCell(point p);

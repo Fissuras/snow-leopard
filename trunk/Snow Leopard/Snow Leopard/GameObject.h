@@ -10,6 +10,8 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
+#include <alive/brain.h>
+#include <alive/Action.h>
 
 #include "xerces.h"
 
@@ -58,14 +60,11 @@ public:
 	double rotationalInertia;
 	double accelHeading;
 	double accelMagnitude;
-	double thrust; //force the object can apply on itself. thrust / mass = acceleration
 	int faction;
 	int displaySize;
 	point location;
 	int actionPriority;
 	int renderPriority;
-	std::string resourceName;
-	std::string imageSource; //should eventually be removed and replaced with dynamic bitmap generator
 	std::string ID;
 	WorldState* worldState;
 	double speed;
@@ -76,26 +75,25 @@ public:
 	//static std::string origin_type_map[] = {"origin_top_left","origin_top_center","origin_top_right","origin_center_left","origin_center","origin_center_right","origin_bottom_left","origin_bottom_center","origin_bottom_right"};
 	static CL_Origin GameObject::getOriginfromString(std::string str)
 	{
-		if (str== "origin_top_left")
+		if      (str== "top_left")
 			return origin_top_left;
-		else if (str== "origin_top_left")
-			return origin_top_left;
-		else if (str== "origin_top_center")
+		else if (str== "top_center")
 			return origin_top_center;
-		else if (str== "origin_top_right")
+		else if (str== "top_right")
 			return origin_top_right;
-		else if (str== "origin_center_left")
+		else if (str== "center_left")
 			return origin_center_left;
-		else if (str== "origin_center")
+		else if (str== "center")
 			return origin_center;
-		else if (str== "origin_center_right")
+		else if (str== "center_right")
 			return origin_center_right;
-		else if (str== "origin_bottom_left")
+		else if (str== "bottom_left")
 			return origin_bottom_left;
-		else if (str== "origin_bottom_center")
+		else if (str== "bottom_center")
 			return origin_bottom_center;
-		else if (str== "origin_bottom_right")
+		else if (str== "bottom_right")
 			return origin_bottom_right;
+		throw std::exception("invalid origin string");
 	}
 
  protected:

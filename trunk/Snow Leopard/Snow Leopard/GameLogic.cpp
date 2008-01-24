@@ -10,22 +10,13 @@
 #include "Renderer.h"
 #include "Definitions.h"
 
-
-GameLogic::GameLogic(WorldState* worldState,Ship* ship,CL_InputContext* ic,Renderer* rend)
-{
-	state=worldState;
-	keyboard = &ic->get_keyboard();
-	mouse = &ic->get_mouse();
-	playerShip = ship;
-	renderer = rend;
-}
-
 GameLogic::GameLogic(WorldState* worldState,CL_InputContext* ic,Renderer* rend)
 {
 	state=worldState;
 	keyboard = &ic->get_keyboard();
 	mouse = &ic->get_mouse();
 	renderer = rend;
+	playerShip = (Ship*) state->getCamera();
 }
 
 bool GameLogic::step()
@@ -59,22 +50,22 @@ void GameLogic::handleInput()
 #ifdef ABSOLUTE_MOVEMENT
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->move(GameObject::UP);
+		 state->moveObject(playerShip,playerShip->location.offsetRect(0,-10));
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->move(GameObject::DOWN);
+		 state->moveObject(playerShip,playerShip->location.offsetRect(0,10));
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))
 	 {
-		playerShip->move(GameObject::LEFT);
+		state->moveObject(playerShip,playerShip->location.offsetRect(-10,0));
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_RIGHT))
 	 {
-		playerShip->move(GameObject::RIGHT);
+		state->moveObject(playerShip,playerShip->location.offsetRect(10,0));
 	 }
 #endif
 
@@ -103,12 +94,12 @@ void GameLogic::handleInput()
 #ifdef PHYSICS
 	 if (keyboard->get_keycode(CL_KEY_UP))
 	 {
-		 playerShip->applyForcePolar(playerShip->displayHeading,playerShip->thrust);
+		 playerShip->applyForcePolar(playerShip->displayHeading,.005);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_DOWN))
 	 {
-		 playerShip->applyForcePolar(playerShip->displayHeading,-playerShip->thrust);
+		 playerShip->applyForcePolar(playerShip->displayHeading,-.005);
 	 }
 
 	 if (keyboard->get_keycode(CL_KEY_LEFT))

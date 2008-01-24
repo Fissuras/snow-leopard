@@ -43,7 +43,8 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	sprite->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
 	sprite->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
 	sprite->set_base_angle(getAttributeDouble("base_angle",BaseImageAttributes));
-	sprite->set_angle(getAttributeDouble("current_angle",BaseImageAttributes));
+
+	displayHeading = getAttributeDouble("current_angle",BaseImageAttributes);
 
 	//need to add code to set the scale. This requires communicating with the worldState at runtime
 
@@ -63,9 +64,9 @@ bool GameObject::doActions()
 
 bool GameObject::registerCollision(GameObject* collidedObject)
 {
-	std::cout << displayName <<  " Collided with " << collidedObject->displayName << "\n";
+	/*std::cout << displayName <<  " Collided with " << collidedObject->displayName << "\n";
 	std::cout << "MyPosition: " << collisionOutline->get_translation()<< "\n";
-	std::cout << "TheirPosition: " << collidedObject->collisionOutline->get_translation()<< "\n";
+	std::cout << "TheirPosition: " << collidedObject->collisionOutline->get_translation()<< "\n";*/
 	return true;
 }
 
@@ -96,7 +97,25 @@ bool GameObject::processMovementPhysics()
 
 bool GameObject::registerWallCollision()
 {
-	std::cout << "Collided with wall";
+	//move a little away from the wall if too close
+	accelMagnitude = 0;
+	speed = 0;
+	std::cout << location.x << "," << location.y << "\n";
+	if (GameObject::location.x < 5)
+	{
+		GameObject::location.x=5;
+		std::cout << "fixed location";
+	}
+	if (GameObject::location.y < 5)
+	{
+		GameObject::location.y = 5;
+		std::cout << "fixed location";
+	}
+	//for some reason it works fine without this code
+	//if (GameObject::location.x > (WorldState.CoordinateSizeX - 1))
+	//	GameObject::location.x = WorldState.CoordinateSizeX - 1;
+	//if (GameObject::location.y > (WorldState.CoordinateSizeY - 1))
+	//	GameObject::location.y = WorldState.CoordinateSizeY - 1;
 	return true;
 }
 
@@ -127,5 +146,6 @@ void GameObject::applyForcePolar(double heading, double magnitude)
 
 GameObject::~GameObject()
 {
+	std::cout <<"deleting" << displayName;
 	delete sprite;
 }
