@@ -10,15 +10,13 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
-#include <alive/brain.h>
-#include <alive/Action.h>
-
 #include "xerces.h"
 
 class WorldState; //need to forward declare class to avoid crazy recursion
 class CL_Sprite;
 class CL_CollisionOutline;
 class DOMNode;
+class BehaviorTreeNode;
 
 
  class GameObject{
@@ -29,7 +27,7 @@ public:
 	enum RelativeDirection { TURN_LEFT,TURN_RIGHT,FORWARD,BACK};
 
 
-	typedef std::list<GameObject*> GameObjectList;
+	typedef std::vector<GameObject*> GameObjectList;
 	typedef std::set <GameObject*>::iterator GameObjectIter;
 	bool operator<(GameObject &b);
 	virtual bool doActions();
@@ -41,6 +39,10 @@ public:
 	void applyForceRect(double x, double y);
 	void applyForcePolar(double heading, double magnitude);
 	bool rotate(double angle);
+
+	BehaviorTreeNode* brain;
+
+	GameObjectList targetPriorities;
 
 	static int GameObject::getID()
 {

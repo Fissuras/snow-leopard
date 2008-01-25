@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "WorldState.h"
+#include "turnTowardsTarget.h"
 
 
 #include "xerces.h"
@@ -51,6 +52,9 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	collisionOutline = new CL_CollisionOutline((sprite->get_frame_pixeldata(0)));
 	collisionOutline->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
 	collisionOutline->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
+
+	//brain = new turnTowardsTarget();
+	//brain->init(this);
 
 }
 

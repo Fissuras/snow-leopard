@@ -27,5 +27,6 @@ public:
 		GameLogic::GameLogic(WorldState* worldState,CL_InputContext* ic,Renderer* renderer);
 		bool GameLogic::step();
 
+
 };
 #endif

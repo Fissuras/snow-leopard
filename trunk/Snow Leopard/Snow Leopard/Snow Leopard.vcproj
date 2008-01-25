@@ -284,6 +284,14 @@
 					<Filter
 						Name="Movement"
 						>
+						<File
+							RelativePath=".\turnTowardsTarget.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\turnTowardsTarget.h"
+							>
+						</File>
 					</Filter>
 					<Filter
 						Name="Shooting"
@@ -331,6 +339,14 @@
 			</File>
 			<File
 				RelativePath=".\GameObjectPriorities.h"
+				>
+			</File>
+			<File
+				RelativePath=".\mtrand.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\mtrand.h"
 				>
 			</File>
 			<File
