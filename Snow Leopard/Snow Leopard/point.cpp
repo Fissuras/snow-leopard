@@ -30,6 +30,11 @@ point point::offsetPolar(double heading, double distance)
 	return point(x + distance * cos(heading * 3.14159/180),y + distance * sin(heading * 3.14159/180));
 }
 
+double point::angleTo(point p)
+{
+	return atan2(p.y,p.x) - atan2(y,x);
+}
+
 std::string point::toString()
 {
 	return boost::lexical_cast<std::string>((nround(x))) + "," + boost::lexical_cast<std::string>(nround(y));

@@ -11,6 +11,7 @@ public:
 	point::point();
 	point point::offsetRect(double ox, double oy);
 	point point::offsetPolar(double heading, double distance);
+	double angleTo(point p);
 	double x;
 	double y;
 	std::string point::toString();
