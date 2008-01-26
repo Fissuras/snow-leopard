@@ -3,6 +3,8 @@
 #include "WorldState.h"
 #include "Component.h"
 #include "xerces.h"
+namespace SL
+{
 
 class SalvageBeam:public Component
 {
@@ -11,5 +13,5 @@ public:
 	{
 	};
 };
-
+}
 #endif

@@ -5,7 +5,9 @@
 #include "point.h"
 #include "Projectile.h"
 
-class WorldState;
+namespace SL
+{
+	class WorldState;
 
 class Weapon:public Component
 {
@@ -20,5 +22,5 @@ class Weapon:public Component
 		Weapon::Weapon(xerces DOMNode* rootNode):Component(rootNode)
 		{};
 };
-
+}
 #endif

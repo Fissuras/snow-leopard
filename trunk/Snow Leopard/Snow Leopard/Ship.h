@@ -6,14 +6,13 @@
 #include "point.h"
 #include <set>
 #include "GameObject.h"
-
-
-
 #include "Weapon.h"
 
-class WorldState;
 class CL_ResourceManager;
 
+namespace SL
+{
+class WorldState;
 
 class Ship: public GameObject {
 
@@ -36,4 +35,6 @@ public:
 
 
 };
+
+}
 #endif

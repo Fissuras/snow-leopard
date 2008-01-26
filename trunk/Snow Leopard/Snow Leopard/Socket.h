@@ -3,6 +3,8 @@
 #include <string>
 #include "point.h"
 
+namespace SL
+{
 enum socketType{TRIANGLE_SOCKET,SQUARE_SOCKET,PENTAGON_SOCKET,HEXAGON_SOCKET,OCTAGON_SOCKET,SHELL_SOCKET};
 
 struct socket
@@ -21,6 +23,6 @@ public:
 private:
 	Component* myComponent;
 }
-
+}
 
 #endif

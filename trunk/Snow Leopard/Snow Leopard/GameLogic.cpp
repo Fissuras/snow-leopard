@@ -10,6 +10,8 @@
 #include "Renderer.h"
 #include "Definitions.h"
 
+using namespace SL;
+
 GameLogic::GameLogic(WorldState* worldState,CL_InputContext* ic,Renderer* rend)
 {
 	state=worldState;

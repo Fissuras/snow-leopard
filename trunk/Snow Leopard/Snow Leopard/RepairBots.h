@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "xerces.h"
 
+namespace SL
+{
 class RepairBots:public Component
 {
 public:
@@ -11,5 +13,5 @@ public:
 	{
 	};
 };
-
+}
 #endif

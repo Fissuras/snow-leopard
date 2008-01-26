@@ -211,18 +211,6 @@
 				Name="content"
 				>
 				<Filter
-					Name="scenery"
-					>
-					<File
-						RelativePath=".\NonInteractiveBackground.cpp"
-						>
-					</File>
-					<File
-						RelativePath=".\NonInteractiveBackground.h"
-						>
-					</File>
-				</Filter>
-				<Filter
 					Name="particle effects"
 					>
 				</Filter>
@@ -347,10 +335,6 @@
 			</File>
 			<File
 				RelativePath=".\mtrand.h"
-				>
-			</File>
-			<File
-				RelativePath=".\ObjectBehavior.h"
 				>
 			</File>
 			<File

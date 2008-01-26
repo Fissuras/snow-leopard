@@ -1,6 +1,9 @@
 #include "point.h"
 #include "boost/lexical_cast.hpp"
 
+using namespace SL;
+
+
 int nround(double a) {
 return int(a + 0.5);
 }

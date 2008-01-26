@@ -6,6 +6,7 @@
 #include <ClanLib/application.h>
 #include "xerces.h"
 
+using namespace SL;
 
 inline int round(double x)
 {

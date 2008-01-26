@@ -4,6 +4,7 @@
 
 
 #include "xerces.h"
+using namespace SL;
 
 int GameObject::IDCount = 0;
 GameObject::GameObject(xerces DOMNode* rootNode)
@@ -53,9 +54,8 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	collisionOutline->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
 	collisionOutline->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
 
-	//brain = new turnTowardsTarget();
-	//brain->init(this);
-
+	brain = new turnTowardsTarget();
+	brain->init(this);
 }
 
 

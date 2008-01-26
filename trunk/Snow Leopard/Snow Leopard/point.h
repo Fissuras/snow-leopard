@@ -4,6 +4,8 @@
 #include <math.h>
 #include <cmath>
 
+namespace SL
+{
 struct point
 {
 public:
@@ -17,4 +19,5 @@ public:
 	std::string point::toString();
 };
 
+}
 #endif

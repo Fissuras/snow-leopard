@@ -12,12 +12,14 @@
 
 #include "xerces.h"
 
-class WorldState; //need to forward declare class to avoid crazy recursion
 class CL_Sprite;
 class CL_CollisionOutline;
+
+namespace SL
+{
+class WorldState; //need to forward declare class to avoid crazy recursion
 class DOMNode;
 class BehaviorTreeNode;
-
 
  class GameObject{
 
@@ -106,5 +108,5 @@ public:
 	 static int IDCount;
 
 };
-
+}
 #endif

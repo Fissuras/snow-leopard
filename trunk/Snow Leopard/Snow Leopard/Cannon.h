@@ -5,6 +5,9 @@
 #include "xerces.h"
 
 //capable of any ammo type, number of shots, shot density, angle of shooting, etc.
+namespace SL
+{
+
 class Cannon:public Weapon
 {
 public:
@@ -26,5 +29,7 @@ public:
 	{
 	};
 };
+
+}
 
 #endif

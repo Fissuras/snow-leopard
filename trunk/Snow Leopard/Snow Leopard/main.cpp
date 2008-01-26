@@ -10,15 +10,11 @@
 #include "point.h"
 #include "GameLogic.h"
 #include <ctime>
-#include "NonInteractiveBackground.h" 
 #include "xerces.h"
 
 #include "Definitions.h"
 
-
-XERCES_CPP_NAMESPACE_USE
-
-
+using namespace SL;
 
 class DisplayApplication : public CL_ClanApplication
 {
