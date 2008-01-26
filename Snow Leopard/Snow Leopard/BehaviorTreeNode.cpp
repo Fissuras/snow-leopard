@@ -1,51 +1,54 @@
 #include "BehaviorTreeNode.h"
 #include "mtrand.h"
-BEHAVIOR_STATUS SequentialNode::execute(GameObject* object)
+
+using namespace SL;
+
+BehaviorTreeNode::BEHAVIOR_STATUS SequentialNode::execute(GameObject* object)
 	{
 		BehaviorTreeNode* currentTask = children.at(currentPosition);
 		BEHAVIOR_STATUS result = currentTask->execute(object);
 
-		if (result == SUCCESS)
+		if (result == SL_SUCCESS)
 		{
 			if (currentPosition == children.size()) //finished last task
 			{
-				return SUCCESS;
+				return SL_SUCCESS;
 			}
 			else
 			{
 				currentPosition++;
-				return RUNNING;
+				return SL_RUNNING;
 			}
 		}
 		return result;
 	}
 
-BEHAVIOR_STATUS PrioritySelectorNode::execute(GameObject* object)
+BehaviorTreeNode::BEHAVIOR_STATUS PrioritySelectorNode::execute(GameObject* object)
 {
-	if (*currentlyRunningNode) //there's one still running
+	if (*currentlySL_RUNNINGNode) //there's one still SL_RUNNING
 	{
-		BEHAVIOR_STATUS status = (*currentlyRunningNode)->execute(object);
-		if (status == RUNNING)
-			return RUNNING;
-		else if (status == SUCCESS)
+		BEHAVIOR_STATUS status = (*currentlySL_RUNNINGNode)->execute(object);
+		if (status == SL_RUNNING)
+			return SL_RUNNING;
+		else if (status == SL_SUCCESS)
 		{
-			delete &currentlyRunningNode;
-			return SUCCESS;
+			delete &currentlySL_RUNNINGNode;
+			return SL_SUCCESS;
 		}
 	}
 
 	else //need to choose one
 	{
-		currentlyRunningNode = children.begin();
+		currentlySL_RUNNINGNode = children.begin();
 		BEHAVIOR_STATUS status;
-        while ((status = (*currentlyRunningNode)->execute(object)) == FAILURE) //keep trying children until one doesn't fail
+        while ((status = (*currentlySL_RUNNINGNode)->execute(object)) == SL_FAILURE) //keep trying children until one doesn't fail
         {
-			currentlyRunningNode++;
-            if (currentlyRunningNode == children.end()) //all of the children failed
-                return FAILURE;
+			currentlySL_RUNNINGNode++;
+            if (currentlySL_RUNNINGNode == children.end()) //all of the children failed
+                return SL_FAILURE;
         }
-		if (status == SUCCESS)
-			delete &currentlyRunningNode;
+		if (status == SL_SUCCESS)
+			delete &currentlySL_RUNNINGNode;
         return status;
 	}
 
@@ -64,14 +67,14 @@ bool ProbabilitySelectorNode::addChild(BehaviorTreeNode* node, double weighting)
 	return true;
 }
 
-BEHAVIOR_STATUS ProbabilitySelectorNode::execute(GameObject *object)
+BehaviorTreeNode::BEHAVIOR_STATUS ProbabilitySelectorNode::execute(GameObject *object)
 {
 	//check if we've already chosen a node to run
-	if (&currentlyRunningNode)
+	if (&currentlySL_RUNNINGNode)
 	{
-		BEHAVIOR_STATUS status = ((*currentlyRunningNode).first)->execute(object);
-		if (status != RUNNING)
-			delete &currentlyRunningNode;
+		BEHAVIOR_STATUS status = ((*currentlySL_RUNNINGNode).first)->execute(object);
+		if (status != SL_RUNNING)
+			delete &currentlySL_RUNNINGNode;
 		return status;
 	}
 
@@ -88,13 +91,13 @@ BEHAVIOR_STATUS ProbabilitySelectorNode::execute(GameObject *object)
 		{
 			BEHAVIOR_STATUS status = (*itr).first->execute(object);
 
-			if (status == RUNNING)
-				currentlyRunningNode = itr;
+			if (status == SL_RUNNING)
+				currentlySL_RUNNINGNode = itr;
 			return status;
 		}
 	}
 
 	
 
-	return SUCCESS;
+	return SL_SUCCESS;
 }

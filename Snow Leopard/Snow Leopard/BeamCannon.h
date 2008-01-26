@@ -4,6 +4,8 @@
 #include "Weapon.h"
 #include "xerces.h"
 
+namespace SL
+{
 class BeamCannon:public Weapon
 {
 	public:
@@ -20,5 +22,5 @@ class BeamCannon:public Weapon
 		{
 		};
 };
-
+}
 #endif

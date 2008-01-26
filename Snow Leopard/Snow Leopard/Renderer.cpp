@@ -8,6 +8,8 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
+using namespace SL;
+
 Renderer::Renderer(CL_DisplayWindow* window,CL_GraphicContext* gc_, WorldState* state_)
 {
 	gc = gc_;

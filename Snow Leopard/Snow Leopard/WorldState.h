@@ -9,6 +9,8 @@
 
 #include "xerces.h"
 
+namespace SL
+{
 
 class GameObject;
 class DOMNode;
@@ -73,4 +75,5 @@ private:
 	GameObjectList* deleteList;
 };
 
+}
 #endif

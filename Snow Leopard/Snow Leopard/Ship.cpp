@@ -5,6 +5,8 @@
 #include <ClanLib/gl.h>
 #include <ClanLib/application.h>
 
+using namespace SL;
+
 bool Ship::doActions()
 {
 

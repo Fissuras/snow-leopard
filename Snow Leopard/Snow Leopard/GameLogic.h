@@ -1,14 +1,16 @@
 #ifndef GAMELOGIC_H_
 #define GAMELOGIC_H_
 
+class CL_InputContext;
+class CL_InputDevice;
 
-
+namespace SL
+{
+	
 class WorldState;
 class GameObject;
 class Ship;
 class Renderer;
-class CL_InputContext;
-class CL_InputDevice;
 
 
 class GameLogic {
@@ -29,4 +31,5 @@ public:
 
 
 };
+}
 #endif

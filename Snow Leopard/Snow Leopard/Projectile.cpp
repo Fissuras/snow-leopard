@@ -1,6 +1,7 @@
 #include "Projectile.h"
 #include "WorldState.h"
 
+using namespace SL;
 
 bool Projectile::doActions()
 {

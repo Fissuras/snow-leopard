@@ -4,6 +4,8 @@
 #include <string>
 #include "GameObject.h"
 
+namespace SL
+{
 
 class WorldState;
 
@@ -17,5 +19,5 @@ class Component:public GameObject
 		{};
 
 };
-
+}
 #endif

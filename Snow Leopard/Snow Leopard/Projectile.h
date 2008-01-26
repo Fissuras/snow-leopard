@@ -8,12 +8,10 @@
 #include "Definitions.h"
 
 
-
-
-class WorldState;
+namespace SL
+{
+	class WorldState;
 class GameObject;
-
-
 
 class Projectile: public GameObject {
 
@@ -35,4 +33,6 @@ public:
 
 
 };
+
+}
 #endif
