@@ -6,6 +6,9 @@
 
 namespace SL
 {
+	
+
+
 struct point
 {
 public:

@@ -9,6 +9,14 @@
 
 using namespace SL;
 
+double mod (double toMod, int op)
+{
+	double intpart;
+	toMod = modf(toMod,&intpart);
+	toMod = toMod + (int)intpart % op;
+	return toMod;
+}
+
 bool turnTowardsTarget::init(SL::GameObject *object)
 {
 	return true;
@@ -34,14 +42,17 @@ BehaviorTreeNode::BEHAVIOR_STATUS turnTowardsTarget::execute(GameObject* object)
 	double angle = 57.2957795 * atan2(resultantVector.y,resultantVector.x);
 
 	std::cout << angle << "\n" ;
-	std::cout << "myAngle: " << object->displayHeading << "\n";
+	
+	double angleBetween = ( mod( ((object->displayHeading -180 - angle) + 180),360) - 180);
 
-	if (object->displayHeading -180 < angle)
+	std::cout << "myAngle: " << angleBetween << "\n";
+
+	if ( angleBetween < -2)
 	{
-		object->rotate(1);
+		object->rotate(1); //clockwise
 		return SL_RUNNING;
 	}
-	else if (object->displayHeading -180 > angle)
+	else if (angleBetween > 2)
 	{
 		object->rotate(-1);
 		return SL_RUNNING;
