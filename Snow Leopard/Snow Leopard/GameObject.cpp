@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "WorldState.h"
 #include "turnTowardsTarget.h"
+#include "goStraight.h"
+#include "BehaviorTreeNode.h"
 
 
 #include "xerces.h"
@@ -66,7 +68,12 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 
 	targetPriorities = new GameObjectList();
 
-	brain = new turnTowardsTarget();
+	brain = new ParallelNode();
+	goStraight* gs = new goStraight();
+	turnTowardsTarget* tt = new turnTowardsTarget();
+	((SequentialNode*) brain)->addChild(tt);
+	((SequentialNode*) brain)->addChild(gs);
+	
 	brain->init(this);
 }
 
