@@ -23,6 +23,11 @@ BehaviorTreeNode::BEHAVIOR_STATUS SequentialNode::execute(GameObject* object)
 		return result;
 	}
 
+bool SequentialNode::init(GameObject* object)
+{
+	currentPosition = 0;
+	return true;
+}
 BehaviorTreeNode::BEHAVIOR_STATUS PrioritySelectorNode::execute(GameObject* object)
 {
 	if (*currentlySL_RUNNINGNode) //there's one still SL_RUNNING
@@ -100,4 +105,34 @@ BehaviorTreeNode::BEHAVIOR_STATUS ProbabilitySelectorNode::execute(GameObject *o
 	
 
 	return SL_SUCCESS;
+}
+
+bool ParallelNode::init(GameObject* object)
+{
+	return true;
+}
+
+BehaviorTreeNode::BEHAVIOR_STATUS ParallelNode::execute(GameObject* object)
+{
+	BehaviorTreeListIter itr;
+	for (itr = children.begin() ; itr != children.end() ; itr++)
+	{
+		BEHAVIOR_STATUS status;
+		if (!(childrenStatus[*itr]))
+		{
+			BEHAVIOR_STATUS status = (*itr)->execute(object);
+			if (status == SL_FAILURE || status == SL_ERROR)
+				return status;
+			if (status == SL_SUCCESS)
+				childrenStatus[*itr] = true;
+		}
+		
+			
+			bool succeeded = true;
+		for (childrenStatusIterator = childrenStatus.begin();childrenStatusIterator != childrenStatus.end() ; childrenStatusIterator++)
+		{
+			if ((*childrenStatusIterator).second)
+				succeeded = false;
+		}
+	}
 }

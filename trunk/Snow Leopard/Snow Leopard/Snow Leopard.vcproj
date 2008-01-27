@@ -273,6 +273,14 @@
 						Name="Movement"
 						>
 						<File
+							RelativePath=".\goStraight.cpp"
+							>
+						</File>
+						<File
+							RelativePath=".\goStraight.h"
+							>
+						</File>
+						<File
 							RelativePath=".\turnTowardsTarget.cpp"
 							>
 						</File>

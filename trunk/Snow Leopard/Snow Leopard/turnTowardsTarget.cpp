@@ -45,8 +45,6 @@ BehaviorTreeNode::BEHAVIOR_STATUS turnTowardsTarget::execute(GameObject* object)
 	
 	double angleBetween = ( mod( ((object->displayHeading -180 - angle) + 180),360) - 180);
 
-	std::cout << "myAngle: " << angleBetween << "\n";
-
 	if ( angleBetween < -2)
 	{
 		object->rotate(1); //clockwise
