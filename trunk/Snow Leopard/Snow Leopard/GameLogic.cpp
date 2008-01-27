@@ -132,4 +132,10 @@ void GameLogic::handleInput()
 		 renderer->setCameraZoomLevel(1.5);
 	 }
 
+	  if (keyboard->get_keycode(CL_KEY_LSHIFT))
+	  {
+		  playerShip->accelMagnitude = 0;
+		  playerShip->speed = 0;
+	  }
+
 }

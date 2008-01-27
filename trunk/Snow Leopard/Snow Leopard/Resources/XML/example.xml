@@ -7,6 +7,13 @@
     </Socket>
   </Entity>
 
+  <Entity xPosition="500" yPosition="500" name="Firefly" id="enemy" isPlayer="false"  description="transport hauler beloved by smugglers" >
+    <BaseImage current_angle="180"  pictureSource="resources\hulls\sample Hull.png" scale="20" id="fireflyimage"/>
+    <Socket mass="10" energy="20" type="Triangle" xPosition="-30" yPosition="0" id="frontleftsocket">
+      <Engine pictureSource="resources\hulls\sample Hull.png" scale="20" subtype="Photon Thruster" id="fireflyengine"/>
+    </Socket>
+  </Entity>
+
   <Entity xPosition="530" yPosition="280" name="BackgroundImage" id="background">
     <BaseImage pictureSource="resources\backgrounds\background.png" scale="20" id="BackgroundImage"/>
   </Entity>
