@@ -6,6 +6,16 @@
 #include "xerces.h"
 using namespace SL;
 
+
+double mod5 (double toMod, int op)
+{
+	double intpart;
+	toMod = modf(toMod,&intpart);
+	toMod = toMod + (int)intpart % op;
+	return toMod;
+}
+
+
 int GameObject::IDCount = 0;
 GameObject::GameObject(xerces DOMNode* rootNode)
 {
@@ -128,6 +138,7 @@ bool GameObject::registerWallCollision()
 bool GameObject::rotate(double angle)
 {
 	displayHeading += angle;
+	displayHeading = mod5(displayHeading,360);
 	collisionOutline->rotate(angle);
 	return true;
 }

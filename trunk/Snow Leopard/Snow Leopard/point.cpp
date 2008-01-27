@@ -8,6 +8,8 @@ int nround(double a) {
 return int(a + 0.5);
 }
 
+
+
 point::point(double i, double j)
 {
 	x = i;
