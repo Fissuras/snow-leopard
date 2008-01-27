@@ -54,6 +54,8 @@ GameObject::GameObject(xerces DOMNode* rootNode)
 	collisionOutline->set_alignment(translationOrigin,translation_offset_x,translation_offset_y);
 	collisionOutline->set_rotation_hotspot(rotationOrigin,rotation_offset_x,rotation_offset_y);
 
+	targetPriorities = new GameObjectList();
+
 	brain = new turnTowardsTarget();
 	brain->init(this);
 }
@@ -63,6 +65,8 @@ bool GameObject::doActions()
 {
 	if (usesPhysics)
 		processMovementPhysics();
+	if (!(isPlayer))
+		brain->execute(this);
 	return true;
 }
 
@@ -104,16 +108,14 @@ bool GameObject::registerWallCollision()
 	//move a little away from the wall if too close
 	accelMagnitude = 0;
 	speed = 0;
-	std::cout << location.x << "," << location.y << "\n";
-	if (GameObject::location.x < 5)
+	//std::cout << location.x << "," << location.y << "\n";
+	if (GameObject::location.x < 0)
 	{
-		GameObject::location.x=5;
-		std::cout << "fixed location";
+		GameObject::location.x=0;
 	}
-	if (GameObject::location.y < 5)
+	if (GameObject::location.y < 0)
 	{
-		GameObject::location.y = 5;
-		std::cout << "fixed location";
+		GameObject::location.y = 0;
 	}
 	//for some reason it works fine without this code
 	//if (GameObject::location.x > (WorldState.CoordinateSizeX - 1))

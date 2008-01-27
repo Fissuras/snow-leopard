@@ -44,7 +44,7 @@ public:
 
 	BehaviorTreeNode* brain;
 
-	GameObjectList targetPriorities;
+	GameObjectList* targetPriorities;
 
 	static int GameObject::getID()
 {

@@ -17,6 +17,7 @@ public:
 	double x;
 	double y;
 	std::string point::toString();
+	void normalize();
 };
 
 }

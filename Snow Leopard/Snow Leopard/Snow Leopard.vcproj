@@ -285,6 +285,10 @@
 						Name="Shooting"
 						>
 					</Filter>
+					<Filter
+						Name="Sensing"
+						>
+					</Filter>
 				</Filter>
 			</Filter>
 		</Filter>

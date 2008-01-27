@@ -38,6 +38,13 @@ double point::angleTo(point p)
 	return atan2(p.y,p.x) - atan2(y,x);
 }
 
+void point::normalize()
+{
+	double length = x*x + y*y;
+	x /= length;
+	y /= length;
+}
+
 std::string point::toString()
 {
 	return boost::lexical_cast<std::string>((nround(x))) + "," + boost::lexical_cast<std::string>(nround(y));

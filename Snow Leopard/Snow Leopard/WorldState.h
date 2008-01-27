@@ -15,8 +15,8 @@ namespace SL
 class GameObject;
 class DOMNode;
 typedef std::list<GameObject*> GameObjectList;
-typedef std::list <GameObject*>::iterator GameObjectIter;
-typedef std::list <GameObject*>::const_iterator ConstGameObjectIter;
+typedef GameObjectList::iterator GameObjectIter;
+typedef GameObjectList::const_iterator ConstGameObjectIter;
 #define coarseGraining 100
 
 
