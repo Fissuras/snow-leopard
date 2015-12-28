@@ -1,0 +1,1 @@
+Dev. for shmup/strat.
